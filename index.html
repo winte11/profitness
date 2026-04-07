@@ -32,7 +32,6 @@
         .nav-btn:hover { color: #2563eb; }
         .nav-active { color: #2563eb; border-bottom-color: #2563eb; }
 
-        /* 智库左侧菜单激活样式 */
         .article-btn { width: 100%; text-align: left; padding: 0.5rem 0.75rem; font-size: 0.875rem; border-radius: 0.375rem; transition: all 0.2s; color: #4b5563; }
         .article-btn:hover { background-color: #f3f4f6; }
         .article-active { background-color: #eff6ff; color: #2563eb; font-weight: 600; border-left: 3px solid #2563eb; }
@@ -52,6 +51,7 @@
                 </div>
                 <div class="flex items-center space-x-2 md:space-x-8 overflow-x-auto">
                     <button onclick="switchTab('planner')" id="tab-planner" class="nav-btn nav-active whitespace-nowrap">排餐系统</button>
+                    <button onclick="switchTab('training')" id="tab-training" class="nav-btn whitespace-nowrap">智能训练引擎</button>
                     <button onclick="switchTab('food')" id="tab-food" class="nav-btn whitespace-nowrap">终极食物库</button>
                     <button onclick="switchTab('learn')" id="tab-learn" class="nav-btn whitespace-nowrap">高阶智库</button>
                 </div>
@@ -70,10 +70,11 @@
             <div class="card space-y-4 shadow-sm border border-gray-100">
                 <div class="grid grid-cols-2 gap-4">
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">当前周期目标</label>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">当前周期目标 (按月度规划)</label>
                         <select id="goal" class="bg-gray-50">
-                            <option value="cut">严格减脂 (制造500大卡缺口)</option>
-                            <option value="bulk">干净增肌 (制造300大卡盈余)</option>
+                            <option value="cut">严格减脂 (制造500大卡缺口/月减重~2kg)</option>
+                            <option value="recomp">塑形线条 (制造300大卡缺口/缓慢掉秤保肌肉)</option>
+                            <option value="bulk">干净增肌 (制造300大卡盈余/月增重~1kg)</option>
                         </select>
                     </div>
                     <div>
@@ -92,9 +93,9 @@
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">日常活动量 (NEAT)</label>
                         <select id="activity" class="bg-gray-50">
-                            <option value="1.2">久坐办公</option>
-                            <option value="1.375">轻度活动</option>
-                            <option value="1.55">中度活动</option>
+                            <option value="1.2">久坐办公 (网课/考研自习室钉子户)</option>
+                            <option value="1.375">轻度活动 (每天规律校园走动/偶尔骑单车)</option>
+                            <option value="1.55">中度活动 (体育生/每天规律有氧+上课跑动)</option>
                         </select>
                     </div>
                 </div>
@@ -102,10 +103,13 @@
                 <div>
                     <label class="block text-sm font-medium text-gray-700 mb-1">今日训练时机</label>
                     <select id="workoutTime" class="bg-gray-50">
-                        <option value="evening">晚饭后训练 (最常见)</option>
-                        <option value="morning">早晨/早饭后训练</option>
-                        <option value="noon">午饭前后训练</option>
-                        <option value="rest">今日休息</option>
+                        <option value="morning">早饭后练</option>
+                        <option value="noon_before">午饭前练</option>
+                        <option value="noon_after">午饭后练</option>
+                        <option value="evening_before">晚饭前练</option>
+                        <option value="evening_after">晚饭后练 (最常见)</option>
+                        <option value="night">夜里练 (20:00后)</option>
+                        <option value="rest">今日休息 (无力量训练)</option>
                     </select>
                 </div>
 
@@ -130,28 +134,116 @@
                         <tbody id="meal-plan-body"></tbody>
                     </table>
                 </div>
+
+                <div class="mt-8 border-t border-gray-200 pt-6">
+                    <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
+                        <svg class="w-4 h-4 mr-1 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        背后的计算原理 (为什么这么算？)
+                    </h3>
+                    <div class="text-xs text-gray-600 space-y-2">
+                        <p><strong>• 月度热量目标引擎：</strong>本工具采用公认准确度最高的 <span class="text-gray-800 font-medium">Mifflin-St Jeor 公式</span>计算你的静息消耗。根据你的月度目标：严格减脂会创造 500 kcal 缺口；塑形线条创造 300 kcal 缺口（更温和，最大程度保护肌肉流失，适合新手红利期）；干净增肌创造 300 kcal 盈余（最大化合成代谢且尽量少长多余脂肪）。</p>
+                        <p><strong>• 宏量营养素 (Macros) 保护层：</strong>减脂期由于热量亏空，优先保证极高蛋白质摄入（2.2g/kg）以锁住肌肉纤维；塑形期蛋白系数适中（2.0g/kg）；增肌期则适当降低蛋白（1.8g/kg）而将热量让渡给碳水化合物。脂肪始终锁定在内分泌健康的安全底线之上。</p>
+                        <p><strong>• 动态营养时机 (Nutrient Timing)：</strong>系统会根据你选择的“训练时机”重新打乱当天三大营养素的分配比重。核心逻辑是：在力量训练前储备适量糖原；在训练后的“合成代谢视窗期”倾注你当天最大比例的碳水与蛋白，并在此刻刻意避开脂肪（因为脂肪会大幅减缓核心营养的吸收速度）。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sec-training" class="space-y-6 hidden">
+            <div class="text-center pb-4 border-b border-gray-200">
+                <h1 class="text-3xl font-bold text-gray-900">小凡解剖学：智能训练引擎</h1>
+                <p class="text-gray-500 mt-2 text-sm">基于肌肉协同发力与关节活动学，为你定制精准的抗阻力训练计划。</p>
+            </div>
+
+            <div class="card space-y-4 shadow-sm border border-gray-100">
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">训练分化模式</label>
+                        <select id="trainSplit" class="bg-gray-50" onchange="updateTrainDays()">
+                            <option value="3day">三分化 (3次练遍全身/适合绝大多数人)</option>
+                            <option value="4day">四分化 (4次练遍全身/肩部独立轰炸)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">今日目标肌群</label>
+                        <select id="trainDay" class="bg-gray-50">
+                            </select>
+                    </div>
+                </div>
+
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">当前训练侧重</label>
+                        <select id="trainGoal" class="bg-gray-50">
+                            <option value="bulk">整体增肌围度 (大重量机械张力)</option>
+                            <option value="shape">减脂/线条塑形 (高代谢压力消耗)</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">重点强化部位 (额外加餐)</label>
+                        <select id="targetMuscle" class="bg-gray-50">
+                            <option value="none">均衡发展 (暂无重点)</option>
+                            <option value="chest">胸部厚度 (强化推力)</option>
+                            <option value="back">背部宽度 (强化拉力)</option>
+                            <option value="shoulder">饱满球形肩 (强化中/后束)</option>
+                            <option value="legs">腿臀核心 (下肢驱动)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <button onclick="generateTraining()" class="w-full bg-gray-900 font-bold py-3 px-4 rounded-lg transition duration-200 mt-6 text-white shadow-md text-lg hover:bg-gray-800">
+                    🏋️‍♂️ 生成今日专属课表
+                </button>
+            </div>
+
+            <div id="training-result-section" class="card space-y-6 hidden border-t-4 border-gray-800">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-xl font-bold text-gray-900">今日课表：<span id="train-title-display" class="text-blue-600"></span></h2>
+                    <div class="text-right">
+                        <p class="text-sm font-bold text-gray-700">要求次数：<span id="train-reps-display" class="text-red-600"></span></p>
+                        <p class="text-sm font-bold text-gray-700">组间休息：<span id="train-rest-display" class="text-blue-600"></span></p>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto rounded-lg border border-gray-200">
+                    <table class="data-table mt-0">
+                        <thead><tr><th style="width: 20%;">部位</th><th>推荐动作 (选1-2个)</th><th>建议组数</th><th>要求</th></tr></thead>
+                        <tbody id="training-plan-body"></tbody>
+                    </table>
+                </div>
+
+                <div class="mt-8 border-t border-gray-200 pt-6 bg-gray-50 p-4 rounded-lg">
+                    <h3 class="text-sm font-bold text-gray-800 mb-3 flex items-center">
+                        <svg class="w-5 h-5 mr-1 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                        小凡硬核解剖学解析 (为什么这么排？)
+                    </h3>
+                    <div id="training-explanation" class="text-sm text-gray-600 space-y-2">
+                        </div>
+                </div>
             </div>
         </section>
 
         <section id="sec-food" class="space-y-8 hidden">
             <div class="text-center pb-4 border-b border-gray-200">
                 <h1 class="text-3xl font-bold text-gray-900">小凡独立测算：终极食物成分字典</h1>
-                <p class="text-gray-500 mt-2 text-sm">掌握这40种核心食材，你的眼睛就是最准的秤。（以下数据均为 <strong class="text-blue-600">每100克</strong> 可食用部分含量）</p>
+                <p class="text-gray-500 mt-2 text-sm">掌握核心食材的生熟转化率，你的眼睛就是最准的秤。（以下数据均为 <strong class="text-blue-600">每100克</strong> 可食用部分含量）</p>
             </div>
 
             <div class="card shadow-sm border border-gray-100">
                 <h2 class="text-xl font-bold mb-4 flex items-center"><span class="badge badge-blue mr-3">A级 复合碳水 (Carbs)</span> <span class="text-gray-600 text-sm font-normal">肌糖原的主要来源</span></h2>
                 <div class="overflow-x-auto">
                     <table class="data-table mt-0">
-                        <thead><tr><th>食材名称 (状态)</th><th>热量(kcal)</th><th>碳水(g)</th><th>蛋白(g)</th><th>脂肪(g)</th><th>小凡硬核避坑指南</th></tr></thead>
+                        <thead><tr><th>食材名称 (状态)</th><th>碳水率</th><th>GI指数</th><th>小凡硬核避坑指南 (结合生熟转化)</th></tr></thead>
                         <tbody>
-                            <tr><td>生大米 / 糙米 / 小米</td><td>346</td><td class="font-bold text-blue-600">75</td><td>8</td><td>1</td><td class="text-left text-xs">所有生米碳水率均为75%左右。100g生米煮熟约等于280g熟米饭。</td></tr>
-                            <tr><td>熟米饭 (常规)</td><td>116</td><td class="font-bold text-blue-600">26</td><td>2.6</td><td>0.3</td><td class="text-left text-xs">普通快餐外卖的一盒标准长方形压实米饭，约含100g纯碳水。</td></tr>
-                            <tr><td>生燕麦片 (纯燕麦)</td><td>377</td><td class="font-bold text-blue-600">67</td><td>15</td><td>6</td><td class="text-left text-xs">注意：避开配料表带“植脂末、白砂糖、水果干”的混合麦片，只买配料只有“燕麦”的。</td></tr>
-                            <tr><td>红薯 / 紫薯 / 土豆 (熟)</td><td>86</td><td class="font-bold text-blue-600">20</td><td>1.5</td><td>0.2</td><td class="text-left text-xs">体积大、热量极低。吃200g红薯的碳水才顶得上100g熟米饭。</td></tr>
-                            <tr><td>全麦面包 / 贝果 (成品)</td><td>250</td><td class="font-bold text-blue-600">45</td><td>10</td><td>3</td><td class="text-left text-xs">配料表第一位必须是全麦粉。贝果密度极大，1个贝果往往含50g以上碳水，适合练前。</td></tr>
-                            <tr><td>意面 / 荞麦面 (生干面)</td><td>350</td><td class="font-bold text-blue-600">73</td><td>12</td><td>1.5</td><td class="text-left text-xs">荞麦面造假重灾区：如果配料表第一位是小麦粉，那就是染色的白面条，升糖极快。</td></tr>
-                            <tr><td>甜玉米 (带棒子称)</td><td>112</td><td class="font-bold text-blue-600">22</td><td>4</td><td>1</td><td class="text-left text-xs">一根中等大小的带芯玉米（约300g），吃下去的净碳水约为30g左右。</td></tr>
+                            <tr><td>生米类 (大米/糙米/小米)</td><td class="font-bold text-blue-600">75%</td><td>高/中</td><td class="text-left text-xs">大米、糙米、小米等所有生米碳水率基本都在75%左右。除了黑米外，糙米等并不属于低GI。</td></tr>
+                            <tr><td>熟米饭 (常规)</td><td class="font-bold text-blue-600">25%</td><td>高</td><td class="text-left text-xs">米饭煮熟后吸水，碳水率降至25%。<strong>【外卖刺客】</strong>普通长方形外卖盒一盒压实的饭，往往含100-120g纯碳水。</td></tr>
+                            <tr><td>生麦片 (纯燕麦)</td><td class="font-bold text-blue-600">60%</td><td>低</td><td class="text-left text-xs">燕麦饱腹感强，升糖慢。<strong>【警惕】</strong>避开配料表带“植脂末、白砂糖、水果干”的花式燕麦，只买纯燕麦片。</td></tr>
+                            <tr><td>生面条 / 意面</td><td class="font-bold text-blue-600">75%</td><td>高/中</td><td class="text-left text-xs">意面/荞麦面/挂面生重碳水率极高，意面煮熟后吸水率较低，熟重含碳量高于普通面条。</td></tr>
+                            <tr><td>熟面条 (汤面/拌面)</td><td class="font-bold text-blue-600">30%</td><td>高</td><td class="text-left text-xs"><strong>【外卖刺客】</strong>外卖一碗面条由于分量大，纯碳水极少低于100g，减脂期慎点。</td></tr>
+                            <tr><td>红薯 / 芋头 / 山药 (生/熟)</td><td class="font-bold text-blue-600">18-25%</td><td>中/低</td><td class="text-left text-xs">根茎类体积大、含水量高，饱腹感极强。吃200g红薯的碳水才顶得上100g熟米饭。是减脂期的神仙主食。</td></tr>
+                            <tr><td>甜玉米 (带棒)</td><td class="font-bold text-blue-600">~20%</td><td>中</td><td class="text-left text-xs">玉米主要吃的是中间的籽。一根中等大小的带芯玉米（约300g），吃下去的净碳水约为30g左右。</td></tr>
+                            <tr><td>全麦面包 / 贝果 (成品)</td><td class="font-bold text-blue-600">45-50%</td><td>中</td><td class="text-left text-xs">市面常见的全麦面包碳水率约50%，若是加糖或果干的花式面包，碳水飙升且升糖极快。贝果密度大，适合练前充碳。</td></tr>
+                            <tr><td>水果类 (草莓/柚子/苹果等)</td><td class="font-bold text-blue-600">8-15%</td><td>低/中</td><td class="text-left text-xs"><strong>【果糖陷阱】</strong>果糖走肝脏代谢，极易合成脂肪。水果只能吃完整的（补充维C增加饱腹），<strong>坚决不能榨汁！</strong>榨汁等于喝纯糖水，丢失全部膳食纤维。</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -161,16 +253,16 @@
                 <h2 class="text-xl font-bold mb-4 flex items-center"><span class="badge badge-green mr-3">S级 核心蛋白 (Protein)</span> <span class="text-gray-600 text-sm font-normal">修复肌纤维的唯一基石</span></h2>
                 <div class="overflow-x-auto">
                     <table class="data-table mt-0">
-                        <thead><tr><th>食材名称 (状态)</th><th>热量(kcal)</th><th>碳水(g)</th><th>蛋白(g)</th><th>脂肪(g)</th><th>小凡硬核避坑指南</th></tr></thead>
+                        <thead><tr><th>食材名称 (状态)</th><th>蛋白率</th><th>脂肪/碳水</th><th>小凡硬核避坑指南 (生熟水化与隐形脂肪)</th></tr></thead>
                         <tbody>
-                            <tr><td>生鸡胸肉 (去皮)</td><td>118</td><td>0</td><td class="font-bold text-green-600">24</td><td>2</td><td class="text-left text-xs">性价比天花板。0碳低脂。如果不去皮，脂肪含量直接飙升5倍。</td></tr>
-                            <tr><td>生牛腱 / 猪里脊</td><td>110</td><td>0</td><td class="font-bold text-green-600">22</td><td>2</td><td class="text-left text-xs">很多人不知道纯猪里脊也是极佳的瘦肉。切忌买肥牛卷、五花肉（脂肪往往超过30%）。</td></tr>
-                            <tr><td>活虾 / 纯虾仁 (生)</td><td>85</td><td>0</td><td class="font-bold text-green-600">18</td><td>1</td><td class="text-left text-xs">几乎纯粹的蛋白质。如果是冷冻虾仁，解冻化水后的重量会缩水20%-30%。</td></tr>
-                            <tr><td>巴沙鱼 / 龙利鱼 (生)</td><td>82</td><td>0</td><td class="font-bold text-green-600">14</td><td>2.5</td><td class="text-left text-xs">减脂期首选。无刺好处理。</td></tr>
-                            <tr><td>全蛋 (带壳约50g/个)</td><td>71(每)</td><td>1</td><td class="font-bold text-green-600">6(每)</td><td>5(每)</td><td class="text-left text-xs">最完美的氨基酸谱系。减脂期怕脂肪超标？最廉价的吃法：1个全蛋+3个纯蛋清。</td></tr>
-                            <tr><td>希腊酸奶 (无糖全脂)</td><td>97</td><td>4</td><td class="font-bold text-green-600">10</td><td>5</td><td class="text-left text-xs">富含酪蛋白，消化缓慢，极适合作为睡前加餐，防止夜间肌肉分解。</td></tr>
-                            <tr><td>北豆腐 / 老豆腐</td><td>116</td><td>3</td><td class="font-bold text-green-600">12</td><td>8</td><td class="text-left text-xs">素食者极佳蛋白来源。注意不要买内酯豆腐（水分太大，蛋白只有5g）和油泡豆腐。</td></tr>
-                            <tr><td>乳清蛋白粉 (30g/勺)</td><td>120(每)</td><td>2</td><td class="font-bold text-green-600">24(每)</td><td>1.5</td><td class="text-left text-xs">没必要买水解分离乳清，最基础的WPC（浓缩乳清）性价比最高。</td></tr>
+                            <tr><td>生瘦肉 (鸡胸/瘦牛/猪里脊)</td><td class="font-bold text-green-600">20%</td><td>极低脂肪</td><td class="text-left text-xs">绝大多数陆地纯瘦肉的生重蛋白率都在20%左右。性价比天花板，猪里脊也是极佳的瘦肉来源。</td></tr>
+                            <tr><td>生海鲜 (鱼类/鲜虾仁)</td><td class="font-bold text-green-600">15-18%</td><td>极低脂肪</td><td class="text-left text-xs">鱼虾水分更大，生重蛋白率略低(15%左右)。<strong>【注】</strong>如果是冷冻虾仁/鱼柳，解冻化水后重量会大幅缩水，需按解冻后净重计算。</td></tr>
+                            <tr><td>熟瘦肉 (煎烤/水煮)</td><td class="font-bold text-green-600">30-40%</td><td>看烹饪方式</td><td class="text-left text-xs">肉类做熟后由于水分大幅流失，重量减轻，<strong>熟肉的蛋白率会飙升至30%甚至40%以上</strong>（越干蛋白率越高）。</td></tr>
+                            <tr><td>全蛋 (带壳)</td><td class="font-bold text-green-600">12%</td><td>1个含5g脂</td><td class="text-left text-xs">自然界最完美的氨基酸谱系。1个标准全蛋约含 6g蛋白 + 5g脂肪。</td></tr>
+                            <tr><td>纯蛋清</td><td class="font-bold text-green-600">11%</td><td>0脂肪</td><td class="text-left text-xs">1个鸡蛋的纯蛋清约含 3g蛋白 + 0脂肪。减脂期怕脂肪超标，最廉价且高效的吃法：1个全蛋配3个纯蛋清。</td></tr>
+                            <tr><td>乳清蛋白粉</td><td class="font-bold text-green-600">70-80%</td><td>微量</td><td class="text-left text-xs">最廉价纯粹、吸收最快的蛋白来源，极适合练后饮用。素食者可买大豆分离蛋白粉（氨基酸比例略逊，但蛋白极高）。</td></tr>
+                            <tr><td>豆腐 (老豆腐/北豆腐)</td><td class="font-bold text-green-600">12%</td><td>适中</td><td class="text-left text-xs">植物蛋白佳品。<strong>【警惕】</strong>内酯豆腐水分太大（蛋白仅5%），油豆腐吸满油脂，坚决避开。</td></tr>
+                            <tr class="bg-red-50"><td>🚫 伪蛋白 (脂肪陷阱肉类)</td><td class="font-bold text-red-600">极低</td><td>脂肪爆表</td><td class="text-left text-xs"><strong>【警惕隐形脂肪】：五花肉、猪排骨、肥牛卷、午餐肉、热狗肠、各类肉丸。</strong>这些在营养学上属于“脂肪/碳水混合物”，吃它们长的是纯肥肉，不能算作干净蛋白质！</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -178,14 +270,15 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div class="card shadow-sm border border-gray-100">
-                    <h2 class="text-xl font-bold mb-4"><span class="badge badge-yellow">B级 优质脂肪</span><br><span class="text-xs text-gray-500">合成睾酮素的必需品，切忌零脂肪饮食</span></h2>
+                    <h2 class="text-xl font-bold mb-4"><span class="badge badge-yellow">B级 优质脂肪</span><br><span class="text-xs text-gray-500">合成睾酮素的必需品，切忌零脂</span></h2>
                     <table class="data-table mt-0">
-                        <thead><tr><th>食材 (每100g)</th><th>热量</th><th>脂肪</th><th>注意</th></tr></thead>
+                        <thead><tr><th>食材/类别</th><th>脂肪率</th><th>小凡避坑指南</th></tr></thead>
                         <tbody>
-                            <tr><td>杏仁 / 核桃</td><td>600</td><td class="font-bold text-yellow-600">50g</td><td class="text-xs text-left">热量炸弹。一天最多一小把(20g)。</td></tr>
-                            <tr><td>纯花生酱 (无糖)</td><td>580</td><td class="font-bold text-yellow-600">52g</td><td class="text-xs text-left">增肌期绝佳热量来源。看配料表不能有白砂糖。</td></tr>
-                            <tr><td>牛油果</td><td>160</td><td class="font-bold text-yellow-600">15g</td><td class="text-xs text-left">单不饱和脂肪，对心血管极佳。</td></tr>
-                            <tr><td>橄榄油 / 亚麻籽油</td><td>899</td><td class="font-bold text-yellow-600">99g</td><td class="text-xs text-left">所有液态油都是100%纯脂肪。一汤匙约15g脂肪。</td></tr>
+                            <tr><td>坚果 (核桃/巴旦木)</td><td class="font-bold text-yellow-600">50%以上</td><td class="text-xs text-left">热量炸弹。虽然健康，但一天最多只能吃一小把(20g左右)，多吃必胖。</td></tr>
+                            <tr><td>纯花生酱 (无糖无油)</td><td class="font-bold text-yellow-600">50%以上</td><td class="text-xs text-left">增肌期绝佳的干净热量来源。购买时务必看配料表，配料只能有花生，不能有白砂糖和植物油。</td></tr>
+                            <tr><td>液态油 (橄榄油/亚麻籽油)</td><td class="font-bold text-yellow-600">99%</td><td class="text-xs text-left">所有液态油几乎都是100%纯脂肪，一汤匙约15g纯脂肪（135大卡），炒菜必须严格控量。</td></tr>
+                            <tr><td>牛油果</td><td class="font-bold text-yellow-600">15%</td><td class="text-xs text-left">富含单不饱和脂肪，对心血管极佳，但本质还是脂肪，不可毫无节制。</td></tr>
+                            <tr class="bg-red-50"><td>🚫 浓汤/骨头汤</td><td class="font-bold text-red-600">极高</td><td class="text-xs text-left"><strong>绝对的脂肪刺客！</strong>奶白色的浓汤全是骨髓中的脂肪在沸水中乳化后的产物，外加高嘌呤，毫无补钙价值。</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -195,10 +288,10 @@
                     <table class="data-table mt-0">
                         <thead><tr><th>类别</th><th>推荐平替方案</th><th>减掉的隐形热量</th></tr></thead>
                         <tbody>
-                            <tr><td><strong>面条类</strong></td><td class="text-left text-xs">魔芋丝 / 结 (几乎0卡)</td><td class="text-xs text-red-500">省下250大卡碳水</td></tr>
-                            <tr><td><strong>沙拉酱</strong></td><td class="text-left text-xs">油醋汁 / 0卡黄芥末酱</td><td class="text-xs text-red-500">省下150大卡纯脂肪</td></tr>
-                            <tr><td><strong>炒菜油</strong></td><td class="text-left text-xs">零卡喷雾油 (控制用量)</td><td class="text-xs text-red-500">省下100大卡脂肪</td></tr>
-                            <tr><td><strong>饮料</strong></td><td class="text-left text-xs">零度可乐 / 气泡水 / 黑咖</td><td class="text-xs text-red-500">省下200大卡游离糖</td></tr>
+                            <tr><td><strong>面条类</strong></td><td class="text-left text-xs">魔芋丝 / 魔芋结 (几乎0卡)</td><td class="text-xs text-red-500">省下250大卡纯碳水</td></tr>
+                            <tr><td><strong>沙拉酱</strong></td><td class="text-left text-xs">油醋汁 / 零卡黄芥末 / 柠檬汁</td><td class="text-xs text-red-500">省下150大卡纯脂肪 (传统沙拉酱本质就是喝油)</td></tr>
+                            <tr><td><strong>炒菜油</strong></td><td class="text-left text-xs">零卡喷雾油 (极易控制用量)</td><td class="text-xs text-red-500">省下100-150大卡脂肪</td></tr>
+                            <tr><td><strong>饮料类</strong></td><td class="text-left text-xs">零度可乐 / 无糖气泡水 / 黑咖 / 纯茶</td><td class="text-xs text-red-500">省下200大卡游离果糖/白砂糖</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -238,15 +331,170 @@
     <script>
         // ================= 1. 导航栏切换引擎 =================
         function switchTab(tabId) {
-            ['planner', 'food', 'learn'].forEach(id => {
+            ['planner', 'training', 'food', 'learn'].forEach(id => {
                 document.getElementById('sec-' + id).classList.add('hidden');
                 document.getElementById('tab-' + id).classList.remove('nav-active');
             });
             document.getElementById('sec-' + tabId).classList.remove('hidden');
             document.getElementById('tab-' + tabId).classList.add('nav-active');
+            
+            if(tabId === 'training') updateTrainDays();
         }
 
-        // ================= 2. 智库文章数据库与渲染引擎 =================
+        // ================= 2. 智能训练引擎 =================
+        function updateTrainDays() {
+            const split = document.getElementById('trainSplit').value;
+            const daySelect = document.getElementById('trainDay');
+            
+            let optionsHtml = '';
+            if (split === '3day') {
+                optionsHtml += `<option value="day1">Day 1: 背 + 肩后束 + 肱二头</option>`;
+                optionsHtml += `<option value="day2">Day 2: 胸 + 肩前中束 + 肱三头</option>`;
+                optionsHtml += `<option value="day3">Day 3: 腿臀 + 腹部</option>`;
+            } else {
+                optionsHtml += `<option value="day1">Day 1: 背部 + 肱二头 (拉)</option>`;
+                optionsHtml += `<option value="day2">Day 2: 胸部 + 肱三头 (推)</option>`;
+                optionsHtml += `<option value="day3">Day 3: 腿臀 + 腹部 (下肢)</option>`;
+                optionsHtml += `<option value="day4">Day 4: 肩部整体轰炸 (前中后束)</option>`;
+            }
+            daySelect.innerHTML = optionsHtml;
+        }
+
+        function generateTraining() {
+            const split = document.getElementById('trainSplit').value;
+            const day = document.getElementById('trainDay').value;
+            const goal = document.getElementById('trainGoal').value;
+            const target = document.getElementById('targetMuscle').value;
+
+            // 确定强度锚点
+            const repsStr = goal === 'bulk' ? '10-15次 (保留1-2次余力)' : '12-20次 (高次数力竭)';
+            const restStr = goal === 'bulk' ? '2-3分钟 (充分恢复神经)' : '1-1.5分钟 (维持高心率代谢)';
+            
+            document.getElementById('train-reps-display').innerText = repsStr;
+            document.getElementById('train-rest-display').innerText = restStr;
+
+            let plan = [];
+            let title = '';
+            let explanation = '';
+
+            // --- 构建基础课表 ---
+            if (split === '3day') {
+                if (day === 'day1') {
+                    title = "三分化 Day 1: 核心拉力链 (背+肩后束+二头)";
+                    plan.push({ part: '背部 (垂直拉)', name: '引体向上 / 高位下拉 / 龙门架直臂下压', sets: '3-4组' });
+                    plan.push({ part: '背部 (水平拉)', name: '杠铃俯身划船 / 坐姿器械划船', sets: '3-4组' });
+                    plan.push({ part: '肩后束', name: '蝴蝶机反向飞鸟 / 哑铃俯身飞鸟', sets: '3-4组' });
+                    plan.push({ part: '肱二头肌', name: '哑铃交替弯举 / 牧师椅弯举', sets: '3-4组' });
+                    
+                    explanation = `<p><strong>• 为什么背、后束、二头要在同一天？</strong>在解剖学中，任何“拉”的动作（如划船、下拉）都必然伴随肩关节的伸展（背部发力）、肩水平外展（后束协同）以及肘关节的屈曲（肱二头肌发力）。</p>
+                                   <p><strong>• 协同榨干法：</strong>如果背和二头分开练，二头永远得不到充足的休息。练完背部大肌群后，你的二头和后束已经预先疲劳，此时只需 3-4 组孤立动作（弯举/反向飞鸟）就能彻底榨干它们，效率极高。</p>`;
+                    
+                    if(target === 'back') plan.splice(1, 0, { part: '🔥 背部 (强化宽度)', name: '宽距高位下拉 (全程控制拉伸)', sets: '+ 3组' });
+
+                } else if (day === 'day2') {
+                    title = "三分化 Day 2: 核心推力链 (胸+肩前中束+三头)";
+                    plan.push({ part: '胸部 (中胸)', name: '平板杠铃卧推 / 哑铃卧推', sets: '4-5组' });
+                    plan.push({ part: '胸部 (上/下胸)', name: '上斜卧推 / 蝴蝶机夹胸', sets: '3-4组' });
+                    plan.push({ part: '肩前中束', name: '哑铃推举 / 哑铃侧平举', sets: '4-5组' });
+                    plan.push({ part: '肱三头肌', name: '龙门架绳索下压 / 哑铃颈后臂屈伸', sets: '3-4组' });
+                    
+                    explanation = `<p><strong>• 为什么胸、前中束、三头要在同一天？</strong>所有的“推”类动作（如卧推、推举）都必然伴随肘关节的伸展。当你推起大重量时，肱三头肌和三角肌前束是不可避免的第一辅助发力点。</p>
+                                   <p><strong>• 避免关节过度磨损：</strong>许多人将胸和肩分在相邻的两天练，导致肩关节囊连续两天承受极大压力，极易引发肩峰撞击。将推力链合并，不仅泵感炸裂，还能留出完整的休息日让关节修复。</p>`;
+                                   
+                    if(target === 'chest') plan.splice(2, 0, { part: '🔥 胸部 (强化厚度)', name: '双杠臂屈伸 / 龙门架高位夹胸', sets: '+ 3组' });
+                    if(target === 'shoulder') plan.push({ part: '🔥 肩部 (强化饱满度)', name: '单臂绳索侧平举 (恒定张力)', sets: '+ 3组' });
+
+                } else if (day === 'day3') {
+                    title = "三分化 Day 3: 下肢与核心桩功 (腿臀+腹部)";
+                    plan.push({ part: '大腿前侧 (股四)', name: '杠铃深蹲 / 倒蹬机 (腿举)', sets: '4-5组' });
+                    plan.push({ part: '大腿后侧 (腘绳)', name: '罗马尼亚硬拉 / 俯卧腿弯举', sets: '3-4组' });
+                    plan.push({ part: '臀部 (臀大肌)', name: '杠铃臀推 / 史密斯臀冲', sets: '3-4组' });
+                    plan.push({ part: '核心腹部', name: '卷腹 / 悬垂举腿 / 平板支撑', sets: '3-4组' });
+                    
+                    explanation = `<p><strong>• 腿部训练的残酷性：</strong>腿部包含了人体最大的肌肉群。深蹲不仅练腿，更能极其强烈地刺激中枢神经系统，促使身体分泌大量天然睾酮和生长激素，反哺上半身的肌肉生长。</p>
+                                   <p><strong>• 为什么硬拉必须练？</strong>罗马尼亚硬拉主导髋关节铰链，是强化大腿后侧（腘绳肌）和下背部竖脊肌的王牌动作，能极大改善久坐人群的骨盆前倾问题。</p>`;
+                                   
+                    if(target === 'legs') plan.splice(2, 0, { part: '🔥 腿臀 (强化下肢)', name: '保加利亚单腿分腿蹲', sets: '+ 3组' });
+                }
+            } else { // 4day
+                if (day === 'day1') {
+                    title = "四分化 Day 1: 纯粹拉力 (背+二头)";
+                    plan.push({ part: '背部 (垂直拉)', name: '引体向上 / 宽距高位下拉', sets: '4-5组' });
+                    plan.push({ part: '背部 (水平拉)', name: '杠铃划船 / T杠划船 / 坐姿划船', sets: '4-5组' });
+                    plan.push({ part: '背部 (孤立)', name: '直臂下压 (预热或收尾)', sets: '3组' });
+                    plan.push({ part: '肱二头肌', name: '杠铃弯举 / 哑铃锤式弯举', sets: '4-5组' });
+                    
+                    explanation = `<p><strong>• 四分化的优势：</strong>相较于三分化，四分化将肩部完全剥离出去，使得背部和胸部在训练日能获得极大的“训练容量（Volume）”。</p>
+                                   <p><strong>• 背部发力诀窍：</strong>背部是新手最难找到发力感的部位。核心口诀是：“以肘带手”。想象你的手只是两个挂钩，发力的起点在于把手肘往腰部后方狠狠地砸下去。</p>`;
+                                   
+                    if(target === 'back') plan.splice(2, 0, { part: '🔥 背部 (强化宽度)', name: '单臂哑铃划船 (大重量拉伸)', sets: '+ 3-4组' });
+
+                } else if (day === 'day2') {
+                    title = "四分化 Day 2: 纯粹推力 (胸+三头)";
+                    plan.push({ part: '胸部 (中胸厚度)', name: '平板杠铃卧推 / 平板哑铃卧推', sets: '4-5组' });
+                    plan.push({ part: '胸部 (上胸饱满)', name: '上斜哑铃卧推 / 史密斯上斜', sets: '4-5组' });
+                    plan.push({ part: '胸部 (中缝拉伸)', name: '蝴蝶机夹胸 / 龙门架绳索夹胸', sets: '3-4组' });
+                    plan.push({ part: '肱三头肌', name: '绳索直杆下压 / 仰卧臂屈伸', sets: '4-5组' });
+                    
+                    explanation = `<p><strong>• 卧推的核心结构：</strong>不要平躺着推！卧推是一个全身协同的结构动作。你必须沉肩坠肘（收紧肩胛骨），双脚踩实地面，胸部挺起迎接杠铃，这样才能最大化胸大肌张力，并保护肩关节不被撕裂。</p>`;
+                    
+                    if(target === 'chest') plan.splice(2, 0, { part: '🔥 胸部 (强化下沿)', name: '双杠臂屈伸 (身体前倾)', sets: '+ 3-4组' });
+
+                } else if (day === 'day3') {
+                    title = "四分化 Day 3: 下肢系统 (腿臀+腹)";
+                    plan.push({ part: '大腿前侧 (股四)', name: '杠铃深蹲 / 哈克深蹲机', sets: '5-6组' });
+                    plan.push({ part: '大腿后侧 (腘绳)', name: '罗马尼亚硬拉 / 坐姿腿弯举', sets: '4-5组' });
+                    plan.push({ part: '臀部 (臀大肌)', name: '杠铃臀推 / 箭步蹲', sets: '4-5组' });
+                    plan.push({ part: '核心腹部', name: '负重卷腹 / 悬垂举腿', sets: '4组' });
+                    
+                    explanation = `<p><strong>• 为什么把腿独立出来？</strong>腿部训练消耗极大，几乎榨干你当天的所有中枢神经能量。切忌在练腿日安排上半身大肌群的训练。</p>
+                                   <p><strong>• 结构力学警告：</strong>深蹲起立时，绝对不能出现“骨盆眨眼”或“先抬屁股”的情况，这会将庞大的剪切力直接施加在脆弱的腰椎上。全程保持核心收紧，如同肚子被揍了一拳的状态。</p>`;
+                                   
+                    if(target === 'legs') plan.splice(2, 0, { part: '🔥 腿臀 (强化线条)', name: '保加利亚分腿蹲', sets: '+ 3-4组' });
+
+                } else if (day === 'day4') {
+                    title = "四分化 Day 4: 肩部3D轰炸 (前中后束)";
+                    plan.push({ part: '肩前束 (推举)', name: '哑铃肩推 / 史密斯坐姿推举', sets: '4-5组' });
+                    plan.push({ part: '肩中束 (外展)', name: '哑铃侧平举 / 龙门架单臂侧平举', sets: '5-6组' });
+                    plan.push({ part: '肩后束 (后伸)', name: '反向蝴蝶机 / 绳索面拉 (Face Pull)', sets: '4-5组' });
+                    plan.push({ part: '斜方肌 (可选)', name: '哑铃耸肩', sets: '3组' });
+                    
+                    explanation = `<p><strong>• 为什么肩要独立成天？</strong>这是四分化的精髓。拥有“球形肩”是穿衣好看的核心（衣架子原理）。肩部分为前、中、后三束，前束在练胸时已被过度使用，中束决定了你的肩宽（横向视觉），后束决定了侧面体态（改善圆肩）。</p>
+                                   <p><strong>• 侧平举避坑：</strong>侧平举绝对不要用大重量借力甩！换用轻重量（单边 5-7.5kg），手肘微屈，想象你在往两边“倒水”，感受侧肩撕裂的泵感。</p>`;
+                                   
+                    if(target === 'shoulder') plan.splice(2, 0, { part: '🔥 肩部 (强化宽度)', name: '绳索Y字平举 / 倾斜单臂平举', sets: '+ 3-4组' });
+                }
+            }
+
+            explanation += `<hr class="my-3 border-gray-300">`;
+            if(goal === 'bulk') {
+                explanation += `<p class="text-blue-700 font-bold">💡 增肌模式解读：我们为你锁定了较长的组间休息(2-3分钟)。不要觉得休息浪费时间！肌原纤维的粗大依赖于“机械张力”，也就是大重量的对抗。充分的休息能让ATP(能量)恢复，确保你下一组依然能推起相同的重量，而不是因为体力不支而被迫降重。</p>`;
+            } else {
+                explanation += `<p class="text-red-700 font-bold">💡 塑形模式解读：组间休息被严苛压缩至1-1.5分钟以内。目的不是让你举起多大的重量，而是制造极大的“代谢压力（乳酸堆积的酸痛感）”，保持极高的心率区间。这能在抗阻力训练的同时，达到类似于HIIT（高强度间歇）的燃脂效果，极速刻画肌肉线条。</p>`;
+            }
+
+            document.getElementById('train-title-display').innerText = title;
+            document.getElementById('training-explanation').innerHTML = explanation;
+
+            const tbody = document.getElementById('training-plan-body');
+            tbody.innerHTML = '';
+            plan.forEach(item => {
+                const tr = document.createElement('tr');
+                let isTarget = item.part.includes('🔥');
+                tr.innerHTML = `
+                    <td class="font-bold ${isTarget ? 'text-red-600' : 'text-gray-800'}">${item.part}</td>
+                    <td class="${isTarget ? 'font-medium text-gray-900' : 'text-gray-700'}">${item.name}</td>
+                    <td class="text-blue-600 font-bold text-center">${item.sets}</td>
+                    <td class="text-gray-500 text-xs text-center">同上</td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            document.getElementById('training-result-section').classList.remove('hidden');
+            document.getElementById('training-result-section').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // ================= 3. 智库文章数据库与渲染引擎 =================
         const articles = [
             {
                 id: 'm1_1',
@@ -343,7 +591,6 @@
             }
         ];
 
-        // 渲染左侧菜单
         function renderMenu() {
             const navContainer = document.getElementById('article-nav-container');
             let currentModule = '';
@@ -359,17 +606,13 @@
             navContainer.innerHTML = menuHtml;
         }
 
-        // 渲染右侧文章
         function loadArticle(id) {
-            // 更新左侧高亮
             document.querySelectorAll('.article-btn').forEach(btn => btn.classList.remove('article-active'));
             document.getElementById('btn-' + id).classList.add('article-active');
 
-            // 提取数据
             const article = articles.find(a => a.id === id);
             const contentContainer = document.getElementById('article-content-container');
 
-            // 生成HTML
             contentContainer.innerHTML = `
                 <div class="mb-6 flex items-center justify-between border-b pb-4">
                     <div>
@@ -384,12 +627,7 @@
             `;
         }
 
-        // 初始化智库引擎
-        renderMenu();
-        loadArticle(articles[0].id);
-
-
-        // ================= 3. 动态排餐计算引擎 =================
+        // ================= 4. 动态排餐计算引擎 =================
         function generatePlan() {
             const goal = document.getElementById('goal').value;
             const weight = parseFloat(document.getElementById('weight').value);
@@ -399,7 +637,6 @@
             const activity = parseFloat(document.getElementById('activity').value);
             const workoutTime = document.getElementById('workoutTime').value;
 
-            // BMR
             let bmr = (gender === 'male') 
                 ? (10 * weight) + (6.25 * height) - (5 * age) + 5 
                 : (10 * weight) + (6.25 * height) - (5 * age) - 161;
@@ -407,16 +644,20 @@
             let tdee = bmr * activity;
             let targetCal, protein, fat, carbs;
 
-            // Macros逻辑
             if (goal === 'cut') {
-                targetCal = tdee - 500;
+                targetCal = tdee - 500; 
                 protein = weight * 2.2; 
                 fat = weight * 0.8;
+            } else if (goal === 'recomp') {
+                targetCal = tdee - 300; 
+                protein = weight * 2.0; 
+                fat = weight * 0.9;
             } else { 
-                targetCal = tdee + 300;
-                protein = weight * 1.8;
+                targetCal = tdee + 300; 
+                protein = weight * 1.8; 
                 fat = weight * 1.0;
             }
+            
             carbs = (targetCal - (protein * 4) - (fat * 9)) / 4;
             if(carbs < 50) carbs = 50; 
 
@@ -425,31 +666,55 @@
             document.getElementById('res-fat').innerText = Math.round(fat);
             document.getElementById('res-carb').innerText = Math.round(carbs);
 
-            // 餐序分配逻辑 (Nutrient Timing)
             let meals = [];
-            if (workoutTime === 'rest') {
+            
+            if (workoutTime === 'morning') {
                 meals = [
-                    { name: '早饭 (常规)', r: [0.3, 0.3, 0.35] },
-                    { name: '午饭 (常规)', r: [0.4, 0.4, 0.35] },
-                    { name: '晚饭 (减碳水)', r: [0.3, 0.3, 0.30] }
+                    { name: '🔥 早饭 (练前餐)', r: [0.3, 0.2, 0.3] },
+                    { name: '🔥 练后加餐', r: [0.15, 0.2, 0] },
+                    { name: '午饭', r: [0.35, 0.3, 0.35] },
+                    { name: '晚饭', r: [0.2, 0.3, 0.35] }
                 ];
-            } else if (workoutTime === 'evening') {
+            } else if (workoutTime === 'noon_before') {
                 meals = [
-                    { name: '早/午饭 (日常主食)', r: [0.3, 0.3, 0.5] },
-                    { name: '🔥 练前加餐 (前1.5h提供糖原)', r: [0.25, 0.15, 0.1] }, 
-                    { name: '🔥 练后正餐 (后1h内避开脂肪)', r: [0.45, 0.55, 0.4] } 
+                    { name: '早饭', r: [0.25, 0.3, 0.35] },
+                    { name: '🔥 午饭 (练前餐)', r: [0.25, 0.2, 0.25] },
+                    { name: '🔥 练后加餐/午加', r: [0.15, 0.2, 0] },
+                    { name: '晚饭', r: [0.35, 0.3, 0.4] }
                 ];
-            } else if (workoutTime === 'morning') {
+            } else if (workoutTime === 'noon_after') {
                 meals = [
-                    { name: '🔥 练前速充 (如香蕉/咖啡)', r: [0.2, 0.1, 0] }, 
-                    { name: '🔥 练后早餐 (补充肌蛋白)', r: [0.4, 0.5, 0.2] }, 
-                    { name: '午饭与晚饭 (常规)', r: [0.4, 0.4, 0.8] }
+                    { name: '早饭', r: [0.25, 0.25, 0.35] },
+                    { name: '🔥 午饭 (练前充碳)', r: [0.3, 0.2, 0.25] },
+                    { name: '🔥 练后正餐 (下午)', r: [0.3, 0.3, 0.1] },
+                    { name: '晚饭', r: [0.15, 0.25, 0.3] }
                 ];
-            } else {
+            } else if (workoutTime === 'evening_before') {
                 meals = [
-                    { name: '🔥 练前餐', r: [0.3, 0.2, 0.3] },
-                    { name: '🔥 练后正餐', r: [0.4, 0.4, 0.2] },
-                    { name: '其余日常进食', r: [0.3, 0.4, 0.5] }
+                    { name: '早饭', r: [0.25, 0.25, 0.35] },
+                    { name: '午饭', r: [0.3, 0.25, 0.35] },
+                    { name: '🔥 练前加餐', r: [0.15, 0.1, 0] },
+                    { name: '🔥 晚饭 (练后正餐)', r: [0.3, 0.4, 0.3] }
+                ];
+            } else if (workoutTime === 'evening_after') {
+                meals = [
+                    { name: '早饭', r: [0.25, 0.25, 0.33] },
+                    { name: '午饭', r: [0.35, 0.3, 0.33] },
+                    { name: '🔥 晚饭 (练前餐)', r: [0.25, 0.25, 0.34] },
+                    { name: '🔥 练后加餐', r: [0.15, 0.2, 0] }
+                ];
+            } else if (workoutTime === 'night') {
+                meals = [
+                    { name: '早饭', r: [0.25, 0.25, 0.33] },
+                    { name: '午饭', r: [0.3, 0.3, 0.33] },
+                    { name: '🔥 晚饭 (练前储备)', r: [0.35, 0.25, 0.34] },
+                    { name: '🔥 练后夜宵 (避开脂肪)', r: [0.1, 0.2, 0] }
+                ];
+            } else { 
+                meals = [
+                    { name: '早饭 (常规)', r: [0.3, 0.3, 0.33] },
+                    { name: '午饭 (常规)', r: [0.4, 0.4, 0.33] },
+                    { name: '晚饭 (常规)', r: [0.3, 0.3, 0.34] }
                 ];
             }
 
@@ -459,9 +724,9 @@
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td class="font-bold text-gray-800">${meal.name}</td>
-                    <td class="text-blue-600 font-semibold">${Math.round(carbs * meal.r[0])}</td>
-                    <td class="text-green-600 font-semibold">${Math.round(protein * meal.r[1])}</td>
-                    <td class="text-yellow-600 font-semibold">${Math.round(fat * meal.r[2])}</td>
+                    <td class="text-blue-600 font-semibold text-center">${Math.round(carbs * meal.r[0])}</td>
+                    <td class="text-green-600 font-semibold text-center">${Math.round(protein * meal.r[1])}</td>
+                    <td class="text-yellow-600 font-semibold text-center">${Math.round(fat * meal.r[2])}</td>
                 `;
                 tbody.appendChild(tr);
             });
@@ -469,6 +734,13 @@
             document.getElementById('result-section').classList.remove('hidden');
             document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
         }
+
+        // ================= 5. 初始化 =================
+        document.addEventListener('DOMContentLoaded', function() {
+            renderMenu();
+            loadArticle(articles[0].id);
+            updateTrainDays();
+        });
     </script>
 </body>
 </html>
