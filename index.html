@@ -60,14 +60,8 @@
         .data-matrix-value { font-size: 1.875rem; font-weight: 900; color: #0f172a; line-height: 1;}
         .data-matrix-unit { font-size: 0.875rem; font-weight: 500; color: #94a3b8; margin-left: 0.2rem;}
 
-        .fade-enter { opacity: 0; transform: translateY(10px); }
-        .fade-enter-active { opacity: 1; transform: translateY(0); transition: opacity 0.4s ease, transform 0.4s ease; }
-        .fade-exit { opacity: 1; }
-        .fade-exit-active { opacity: 0; transition: opacity 0.3s ease; }
-
         .executor-container { display: flex; flex-direction: column; align-items: center; min-height: 500px; }
 
-        /* 全新执行器样式 */
         .exec-timer-display { font-size: 4rem; font-weight: 900; color: #0f172a; font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: -0.02em; }
         .rest-timer-display { font-size: 2.5rem; font-weight: 900; color: #f59e0b; font-variant-numeric: tabular-nums; line-height: 1; }
         .exec-btn { padding: 1rem 2rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; transition: all 0.2s; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; }
@@ -91,22 +85,12 @@
         .progress-bar-fill { height: 100%; background-color: #2563eb; width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
         .record-card { margin-top: 2rem; animation: fadeIn 0.5s ease; }
-        .history-record { padding: 1rem; border-bottom: 1px solid #f1f5f9; display: flex; justify-content: space-between; align-items: center; }
-        .history-record:last-child { border-bottom: none; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .delete-btn { padding: 0.25rem 0.5rem; border-radius: 0.375rem; background-color: #fef2f2; color: #b91c1c; border: none; font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
-        .delete-btn:hover { background-color: #fecaca; }
-        .clear-btn { margin-top: 1rem; width: 100%; padding: 0.5rem; border-radius: 0.5rem; background-color: #f1f5f9; color: #475569; border: none; cursor: pointer; font-size: 0.875rem; }
-        .clear-btn:hover { background-color: #e2e8f0; }
-
-        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 0.75rem; margin-bottom: 1.5rem; }
-        .stat-card { background-color: #f8fafc; border-radius: 0.75rem; padding: 1rem; border: 1px solid #e2e8f0; text-align: center; }
-        .stat-title { font-size: 0.75rem; color: #64748b; font-weight: 700; margin-bottom: 0.25rem; }
-        .stat-current { font-size: 1.5rem; font-weight: 900; color: #2563eb; }
-        .stat-recommend { font-size: 0.75rem; color: #94a3b8; margin-top: 0.25rem; }
-        .stat-badge { font-size: 0.65rem; padding: 0.15rem 0.4rem; border-radius: 999px; margin-top: 0.4rem; display: inline-block; }
-
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
@@ -122,6 +106,7 @@
                     <button onclick="switchTab('training')" id="tab-training" class="nav-btn whitespace-nowrap">智能训练引擎</button>
                     <button onclick="switchTab('food')" id="tab-food" class="nav-btn whitespace-nowrap">终极食物库</button>
                     <button onclick="switchTab('learn')" id="tab-learn" class="nav-btn whitespace-nowrap">高阶智库</button>
+                    <button onclick="switchTab('about')" id="tab-about" class="nav-btn whitespace-nowrap">关于我</button>
                 </div>
             </div>
         </div>
@@ -129,7 +114,6 @@
 
     <main class="max-w-6xl mx-auto p-4 md:p-8 flex-grow w-full">
         
-        <!-- 🔹 全新 排餐系统 -->
         <section id="sec-planner" class="space-y-6 transition-opacity duration-300">
             <div class="text-center pb-6">
                 <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">动态自适应排餐系统</h1>
@@ -238,10 +222,77 @@
                         <p><strong class="text-gray-800">动态营养时机：</strong>基于“训练时机”打乱分配。核心是：练前储备糖原；在练后的“合成代谢视窗期”倾注最大比例的碳水与蛋白，并严格避开脂肪（防止减缓吸收）。</p>
                     </div>
                 </div>
+
+                <div id="canteen-buttons-container" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
+                    <button onclick="showCustomTracker()" class="bg-brand font-bold py-3 rounded-lg transition duration-200 text-white text-base tracking-wide flex items-center justify-center">
+                        📋 自定义三大营养素饮食打卡表
+                    </button>
+                    <button onclick="generateCanteenMeal()" class="bg-brand font-bold py-3 rounded-lg transition duration-200 text-white text-base tracking-wide flex items-center justify-center">
+                        🍚 一键生成适配食堂餐单
+                    </button>
+                </div>
+
+                <div id="custom-tracker-container" class="hidden card space-y-4 mt-6">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-4">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                            📋 自定义三大营养素饮食打卡表
+                        </h3>
+                        <div class="flex gap-2">
+                            <button onclick="addSnackRow()" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg font-medium text-gray-700 transition">
+                                ➕ 新增加餐
+                            </button>
+                            <button onclick="clearTracker()" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg font-medium text-gray-700 transition">
+                                🗑️ 清空打卡
+                            </button>
+                            <button onclick="saveTracker()" class="text-sm bg-brand hover:bg-blue-700 px-3 py-1.5 rounded-lg font-medium text-white transition">
+                                💾 保存今日打卡
+                            </button>
+                        </div>
+                    </div>
+                    <div class="overflow-x-auto rounded-xl border border-gray-200">
+                        <table class="data-table mt-0" id="tracker-table">
+                            <thead>
+                                <tr>
+                                    <th>餐次名称</th>
+                                    <th>碳水目标 (g)</th>
+                                    <th>实际摄入 (g)</th>
+                                    <th>蛋白目标 (g)</th>
+                                    <th>实际摄入 (g)</th>
+                                    <th>脂肪目标 (g)</th>
+                                    <th>实际摄入 (g)</th>
+                                    <th>热量差值 (kcal)</th>
+                                    <th>完成状态</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tracker-tbody"></tbody>
+                            <tfoot id="tracker-tfoot"></tfoot>
+                        </table>
+                    </div>
+                </div>
+
+                <div id="canteen-meal-container" class="hidden card space-y-4 mt-6">
+                    <div class="flex justify-between items-center border-b border-gray-100 pb-4">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center">
+                            🍚 一键生成适配食堂餐单
+                        </h3>
+                        <button onclick="regenerateCanteenMeal()" class="bg-brand font-bold py-2 px-4 rounded-lg transition duration-200 text-white text-sm tracking-wide flex items-center">
+                            🔄 全部换一换
+                        </button>
+                    </div>
+                    <div id="canteen-meal-summary" class="bg-gray-50 rounded-xl p-4 border border-gray-200"></div>
+                    <div id="canteen-meal-list" class="space-y-4"></div>
+                    <div class="bg-yellow-50 rounded-xl p-4 border border-yellow-200 text-sm text-yellow-800 mt-4">
+                        <strong class="block mb-1">💡 食堂打餐避坑提示：</strong>
+                        <ul class="list-disc pl-5 space-y-1">
+                            <li>减脂期请要求阿姨少油少酱，尽量选择清蒸、白煮、清炒菜品</li>
+                            <li>汤汁含大量油脂，尽量不喝，菜可以过一遍水再吃</li>
+                            <li>粗粮优于精细米面，增肌期可以多打一份荤菜，保证蛋白质摄入充足</li>
+                        </ul>
+                    </div>
+                </div>
             </div>
         </section>
 
-        <!-- 🔹 完全保留 智能训练引擎 -->
         <section id="sec-training" class="space-y-6 transition-opacity duration-300 hidden">
             <div class="text-center pb-6">
                 <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">小凡解剖学训练引擎</h1>
@@ -311,19 +362,22 @@
                         </button>
                     </div>
 
-                    <div id="history-section" class="card record-card hidden">
-                        <h3 class="text-lg font-bold text-gray-900 mb-4">📋 历史训练记录 & 月度组数统计</h3>
-                        <div id="monthly-stats" class="mb-4"></div>
-                        <div id="history-list" class="space-y-2 max-h-60 overflow-y-auto"></div>
-                        <button onclick="clearAllHistory()" class="clear-btn">🗑️ 清空所有历史记录</button>
+                    <div id="history-section" class="card record-card hidden mt-8 border-t-4 border-gray-800">
+                        <div class="flex justify-between items-center mb-6">
+                            <h3 class="text-xl font-black text-gray-900 tracking-tight">训练数据分析中枢</h3>
+                        </div>
+                        <div id="monthly-stats"></div>
+                        <div id="history-list"></div>
+                        <button onclick="clearAllHistory()" class="mt-6 w-full py-3 rounded-xl border border-dashed border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300 font-bold text-sm transition-all flex justify-center items-center">
+                            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+                            清空所有历史数据
+                        </button>
                     </div>
                 </div>
             </div>
 
-            <!-- 🔹 重构后的执行器区域 -->
             <div id="executor-area" class="hidden">
                 <div class="card executor-container" id="executor-card">
-                    <!-- 顶部进度条 -->
                     <div class="w-full mb-8">
                         <div class="flex justify-between text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">
                             <span id="exec-progress-text">准备开始</span>
@@ -335,19 +389,16 @@
                     </div>
 
                     <div id="exec-workout-state" class="w-full flex flex-col items-center">
-                        <!-- 大计时器 -->
                         <div class="mb-8 text-center">
                             <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">训练时长</p>
                             <div class="exec-timer-display" id="timer-display">00:00</div>
                         </div>
 
-                        <!-- 休息倒计时 -->
                         <div class="mb-8 text-center hidden" id="rest-timer-box">
                             <p class="text-sm font-bold text-orange-400 uppercase tracking-widest mb-2">组间休息</p>
                             <div class="rest-timer-display" id="rest-display">00:00</div>
                         </div>
 
-                        <!-- 当前动作与重量 + 休息时间 -->
                         <div class="w-full max-w-md mb-8">
                             <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 text-center">当前动作</p>
                             <input type="text" id="exec-current-exercise" class="exec-input w-full text-center text-2xl font-black text-gray-900" value="动作名称" readonly />
@@ -361,17 +412,13 @@
                             </div>
                         </div>
 
-                        <!-- 动作列表 (打钩模式) -->
                         <div class="w-full max-w-2xl bg-gray-50 rounded-xl border border-gray-200 overflow-hidden mb-8">
                             <div class="p-4 border-b border-gray-200 bg-white">
                                 <h3 class="font-bold text-gray-900">今日组次清单</h3>
                             </div>
-                            <div id="set-list-container" class="max-h-64 overflow-y-auto">
-                                <!-- JS 动态生成 -->
-                            </div>
+                            <div id="set-list-container" class="max-h-64 overflow-y-auto custom-scrollbar"></div>
                         </div>
 
-                        <!-- 操作按钮 -->
                         <div class="flex gap-4 w-full justify-center max-w-md">
                             <button onclick="exitExecution()" class="exec-btn bg-gray-100 text-gray-600 hover:bg-gray-200">
                                退出
@@ -383,7 +430,6 @@
                         </div>
                     </div>
 
-                    <!-- 完成记录卡片 -->
                     <div id="workout-record" class="w-full mt-8 hidden record-card">
                         <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">✅ 训后完成记录表</h3>
                         <div id="record-content" class="space-y-4"></div>
@@ -395,7 +441,6 @@
             </div>
         </section>
 
-        <!-- 🔹 全新 终极食物库 -->
         <section id="sec-food" class="space-y-6 hidden transition-opacity duration-300">
             <div class="text-center pb-6">
                 <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">终极食物成分字典</h1>
@@ -471,15 +516,20 @@
                     </div>
                 </div>
             </div>
+
+            <div class="card mt-6 border-t-4 border-brand">
+                <h2 class="text-lg font-bold mb-6 flex items-center text-gray-900 border-b border-gray-100 pb-4">
+                    <span class="text-2xl mr-3">🍱</span> 常见外卖/食堂菜品宏量图鉴 (Visual DB)
+                </h2>
+                <div id="visual-db-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+            </div>
         </section>
 
-        <!-- 🔹 全新 高阶智库 -->
         <section id="sec-learn" class="hidden transition-opacity duration-300">
             <div class="text-center pb-6 mt-4">
                 <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">小凡高阶健身智库 <span class="brand-color text-xl align-top block sm:inline mt-2 sm:mt-0">PRO</span></h1>
                 <p class="text-gray-500 mt-3 text-sm md:text-base max-w-2xl mx-auto">粉碎业界伪科学，从底层逻辑重塑减脂、增肌与结构力学。</p>
             </div>
-
             <div class="flex flex-col md:flex-row gap-6">
                 <div class="w-full md:w-1/3">
                     <div class="card p-4 h-full">
@@ -495,9 +545,64 @@
                 </div>
             </div>
         </section>
+
+        <section id="sec-about" class="hidden transition-opacity duration-300">
+            <div class="text-center pb-6 mt-4">
+                <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">关于作者</h1>
+            </div>
+            <div class="card max-w-3xl mx-auto">
+                <div class="content-box">
+                    <p class="font-bold text-lg text-gray-900 border-b border-gray-100 pb-4 mb-6">
+                        大家好，我是小凡，一个研二在读土木的普通健身爱好者。
+                    </p>
+                    <p>最开始只是想把自己一年多踩坑攒的健身知识做成表格，当个兼职资料卖。但做着做着就总想把它做得更完善——专门给学生党、健身基础差、又不想花大把时间啃复杂理论的人用。对大多数人来说，不用自己研究，直接拿到一个科学、适合自己的方案，才是最省心的。</p>
+                    <p>为了做这个“不用动脑的自动化工具”，我试着用AI一点点搭程序。过程就像补一个漏风的棚子，一砖一瓦搬，一面一面修，不断试错、不断“驯服”人工智能。说来也感慨，现在的技术，居然能让一个学土木的人，做出属于自己的互联网产品。</p>
+                    <p>这个程序里的所有内容，完完全全足以支撑你建立健身和营养的基础认知。我没办法保证每一个字都绝对正确，但90%以上的内容、计算逻辑和避坑指南，都是我自己验证过、接近行业共识的真相。<span class="font-bold text-blue-600">没有广告，没有套路，没有隐形消费</span>，就是我自己用着好用，做出来分享给同样需要的人。</p>
+                    
+                    <div class="mt-10 mb-8">
+                        <h3 class="text-xl font-black text-gray-900 mb-4 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-brand" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                            程序解构：
+                        </h3>
+                        <p class="text-sm text-gray-600 mb-4">既然是自己敲出来的工具，干脆把底层的判定逻辑敞开给大家看。</p>
+                        
+                        <div class="space-y-4">
+                            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                                <h4 class="font-bold text-gray-900 mb-2 flex items-center"><span class="w-2 h-2 rounded-full bg-blue-500 mr-2"></span> 1. 宏量素的“承重分配”</h4>
+                                <p class="text-sm text-gray-600 leading-relaxed">系统首先通过 Mifflin-St Jeor 公式精确测算你的基础代谢与 TDEE。重点在于<strong class="text-blue-600">蛋白质系数的动态保护机制</strong>：在减脂期（热量亏空），系统会强制为你套上 2.0g/kg 的高蛋白“铠甲”，死保肌肉不流失；而在增肌期（热量盈余），反而会把蛋白系数下调到 1.6g/kg，把宝贵的热量额度让位给碳水，为你提供最猛的机械张力燃料。</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                                <h4 class="font-bold text-gray-900 mb-2 flex items-center"><span class="w-2 h-2 rounded-full bg-green-500 mr-2"></span> 2. 营养时机的“应力调节”</h4>
+                                <p class="text-sm text-gray-600 leading-relaxed">传统的死板食谱是把食物平分到三餐，但这个程序会根据你选择的“训练时机”进行打乱重组。它会将你全天最大比例的碳水和蛋白质，精准锁定在<strong class="text-green-600">练前储备和练后的“合成代谢视窗期”</strong>，让你练得动，同时最大限度避开脂肪囤积。</p>
+                            </div>
+                            
+                            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                                <h4 class="font-bold text-gray-900 mb-2 flex items-center"><span class="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span> 3. 关于食堂的菜单</h4>
+                                <p class="text-sm text-gray-600 leading-relaxed">一键生成的食堂餐单绝对不是预设好的“死菜单”，是我根据deep research这个功能推断出大概食堂阿姨或外卖一份的量，当然这个肯定是有出入的，但对于那些对自己饮食要求没那么严格的人来说这个是足够的，如果你对自己的饮食想严格一点，<strong class="text-green-600">强烈建议大家买个克重称</strong>，平时遇到什么东西都称一下，让自己对克数有个大概的概念。</p>
+                            </div>
+
+                            <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
+                                <h4 class="font-bold text-gray-900 mb-2 flex items-center"><span class="w-2 h-2 rounded-full bg-purple-500 mr-2"></span> 4. 智能训练引擎的“受力模型”</h4>
+                                <p class="text-sm text-gray-600 leading-relaxed">智能训练引擎的底层其实是一个“基础解剖学模板+动态动作注入+数据展平状态机”的模型，程序会先加载严谨的关节发力链（比如三分化的核心逻辑是3次练完全身，而非死板的一周练三次），再通过代码动态外挂你选择的局部强化动作，最后把多组计划降维展平成一维的逐组打卡列表。之所以这么设计，是因为这套系统主要针对新手，把枯燥的理论变成“傻瓜式”的指令——比如你选整体增肌围度，系统就会强制定制10-15次的中高强度大重量拉伸，并匹配2-3分钟的组间休息；若选减脂塑形，则立刻切换到12-20次的代谢压力消耗，把休息缩短至1-1.5分钟。这种像画工程图纸一样充满结构感的设计，能彻底剥离初学者的决策成本，用最底层的代码逻辑强制帮你规避“垃圾容量”和无效耗时，让你什么都不用算、什么都不用想，跟着无脑执行就能拿到相对高效、防错的科学成果。</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <p>我相信这个“土法杂交”出来的实用工具，会有它的价值。未来这个市场里，一定会有更多像它一样，简单、靠谱、不割韭菜的产品出现。</p>
+                    
+                    <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 mt-8">
+                        <p class="text-gray-800 font-medium mb-3">目前我一个人的能力有限，还有很多想法没能实现。如果你懂营销、懂程序开发或者懂健身，也恰好看好这个方向，欢迎联系我交流合作：</p>
+                        <div class="flex items-center text-lg font-black brand-color">
+                            <span class="mr-2">📧</span> 邮箱：2462795033@qq.com
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
-    <!-- 🔹 全新 页脚 -->
     <footer class="text-center py-8 mt-12 bg-white border-t border-gray-200">
         <p class="font-bold text-gray-800 mb-1 tracking-wider">小凡健身 PRO</p>
         <p class="text-xs text-gray-400">严谨 · 数据 · 底层逻辑</p>
@@ -505,11 +610,41 @@
     </footer>
 
     <script>
-        // ================= 完全保留 智能训练引擎核心变量 =================
+        const CANTEEN_DATABASE = [
+            { category: '大荤硬菜类', name: '红烧肉', weight: 120, calories: 480, carbs: 2, protein: 12, fat: 45, goals: ['bulk'], tips: '脂肪含量极高，减脂期慎选' },
+            { category: '大荤硬菜类', name: '红烧排骨', weight: 150, calories: 410, carbs: 8, protein: 25, fat: 28, goals: ['recomp', 'bulk'], tips: '骨头占重，实际肉量较少' },
+            { category: '大荤硬菜类', name: '糖醋里脊', weight: 150, calories: 450, carbs: 35, protein: 18, fat: 22, goals: ['bulk'], tips: '含糖量高，减脂期禁用' },
+            { category: '大荤硬菜类', name: '清蒸鱼', weight: 150, calories: 180, carbs: 0, protein: 35, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '高蛋白低脂肪，减脂期首选' },
+            
+            { category: '荤素搭配类', name: '宫保鸡丁', weight: 180, calories: 310, carbs: 12, protein: 22, fat: 18, goals: ['cut', 'recomp', 'bulk'], tips: '花生多，注意脂肪量' },
+            { category: '荤素搭配类', name: '番茄炒蛋', weight: 180, calories: 220, carbs: 8, protein: 10, fat: 15, goals: ['cut', 'recomp', 'bulk'], tips: '经典下饭菜，控制量' },
+            { category: '荤素搭配类', name: '木须肉', weight: 200, calories: 280, carbs: 15, protein: 20, fat: 14, goals: ['cut', 'recomp', 'bulk'], tips: '营养均衡' },
+            
+            { category: '素菜国民类', name: '蒜蓉西兰花', weight: 200, calories: 120, carbs: 10, protein: 6, fat: 7, goals: ['cut', 'recomp', 'bulk'], tips: '高纤维，饱腹感强' },
+            { category: '素菜国民类', name: '红烧豆腐', weight: 200, calories: 180, carbs: 8, protein: 15, fat: 10, goals: ['cut', 'recomp', 'bulk'], tips: '植物蛋白好来源' },
+            { category: '素菜国民类', name: '凉拌黄瓜', weight: 150, calories: 50, carbs: 5, protein: 2, fat: 3, goals: ['cut', 'recomp'], tips: '低卡解腻' },
+            
+            { category: '特色档口类', name: '韩式拌饭', weight: 350, calories: 520, carbs: 70, protein: 20, fat: 18, goals: ['bulk'], tips: '热量高，增肌好选择' },
+            { category: '特色档口类', name: '黄焖鸡米饭', weight: 400, calories: 580, carbs: 65, protein: 30, fat: 18, goals: ['bulk'], tips: '酱汁多，别泡饭' },
+            
+            { category: '主食类', name: '白米饭', weight: 100, calories: 116, carbs: 25, protein: 2.6, fat: 0.3, goals: ['cut', 'recomp', 'bulk'], tips: '常规分量，消化快' },
+            { category: '主食类', name: '糙米/杂粮饭', weight: 100, calories: 120, carbs: 26, protein: 3, fat: 1, goals: ['cut', 'recomp'], tips: '低GI，饱腹感极强' },
+            { category: '主食类', name: '蒸红薯/紫薯', weight: 100, calories: 86, carbs: 20, protein: 1.6, fat: 0.2, goals: ['cut', 'recomp'], tips: '优质粗粮，减脂期神仙主食' },
+            { category: '主食类', name: '荞麦面(熟)', weight: 100, calories: 130, carbs: 28, protein: 5, fat: 0.5, goals: ['cut', 'recomp', 'bulk'], tips: '控糖期优选面食' },
+            { category: '主食类', name: '馒头', weight: 100, calories: 221, carbs: 47, protein: 7, fat: 1.1, goals: ['recomp', 'bulk'], tips: '碳水密度大，管饱' },
+            { category: '主食类', name: '全麦面包', weight: 60, calories: 150, carbs: 25, protein: 6, fat: 3, goals: ['cut', 'recomp'], tips: '看配料表，选真全麦' },
+            
+            { category: '高蛋白小食', name: '水煮蛋', weight: 50, calories: 70, carbs: 0.6, protein: 6, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '完美蛋白来源' },
+            { category: '高蛋白小食', name: '无糖豆浆', weight: 250, calories: 80, carbs: 6, protein: 8, fat: 3, goals: ['cut', 'recomp', 'bulk'], tips: '别加糖' },
+            { category: '高蛋白小食', name: '牛奶(全脂)', weight: 250, calories: 150, carbs: 12, protein: 8, fat: 8, goals: ['recomp', 'bulk'], tips: '减脂期选脱脂' }
+        ];
+
+        let currentMealPlan = [];
+        let trackerData = [];
+        let currentCanteenMeal = [];
         let currentTrainingPlan = []; 
         let workoutRecordData = [];
         
-        // 重构后的执行器状态 + 休息逻辑
         let execState = {
             isActive: false,
             currentGlobalSetIndex: 0,
@@ -517,7 +652,6 @@
             timer: null,
             elapsedSeconds: 0,
             flatSetList: [],
-            // 新增休息状态
             restSeconds: 60,
             restTimer: null,
             isResting: false,
@@ -525,17 +659,24 @@
         };
 
         const MUSCLE_STATS = {
-            '背部': { min: 70, max: 95, color: 'badge-blue' },
-            '胸部': { min: 50, max: 75, color: 'badge-red' },
-            '肩部': { min: 50, max: 75, color: 'badge-purple' },
-            '腿部/臀': { min: 70, max: 105, color: 'badge-green' },
-            '手臂': { min: 45, max: 70, color: 'badge-yellow' },
-            '核心': { min: 35, max: 50, color: 'badge-gray' }
+            '背部': { min: 70, max: 95 },
+            '胸部': { min: 50, max: 75 },
+            '肩部': { min: 50, max: 75 },
+            '腿部/臀': { min: 70, max: 105 },
+            '手臂': { min: 45, max: 70 },
+            '核心': { min: 35, max: 50 }
         };
 
-        // ================= 导航切换（兼容所有模块） =================
+        const articles = [
+            { id: 'm1_1', module: '减脂底层逻辑', badge: 'badge-red', title: '体重停滞的假象：皮质醇与“水肿欺骗”', readTime: '5分钟', content: `<p>很多小白减脂，每天少吃多动，前几天掉秤很快，到了第二周体重却一动不动，甚至喝口水都能涨半斤。这时候80%的人会崩溃，选择暴饮暴食放弃。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">皮质醇 (Cortisol) 的锁水效应</h3><p>当你长时间制造极大的热量缺口，或者每天疯狂做有氧时，身体会认为你处于“逃生/生存危机”状态。此时，肾上腺会分泌大量的压力激素——<strong>皮质醇</strong>。</p><p>皮质醇不仅会分解你的肌肉，还会导致一种极端的生理现象：<strong>水钠潴留（Water Retention）</strong>。皮下细胞会像海绵一样死死锁住水分。事实上，你每天制造的缺口已经在燃烧脂肪了，脂肪细胞变空了，但立刻被水分填满撑起，所以在体重秤上，你的数字纹丝不动。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡硬核破局法 (The Whoosh Effect)：</strong>当遇到储水期，你需要立刻停止节食，吃一顿富含碳水化合物的高热量大餐（欺骗餐），并好好睡一觉。大量的碳水和放松的心情会瞬间压制皮质醇水平。第二天，你的身体会排出滞留的水分（医学上称为 Whoosh 效应），你会发现体重直接“尿崩”式下降 1-2 公斤。记住：看镜子里的维度，永远比看体重秤更准确。</div>` },
+            { id: 'm1_2', module: '减脂底层逻辑', badge: 'badge-red', title: '局部减脂谎言与“顽固脂肪”受体学说', readTime: '6分钟', content: `<p>“教练，我怎么才能只减肚子上的肉？” 这是健身界最大的谎言。你每天做100个卷腹，最后只会让腰椎间盘突出，肚子外面的肥肉依然存在。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">细胞学真相：α受体与β受体</h3><p>脂肪细胞内有两种受体决定了脂肪分解的难度：</p><ul><li><strong>β-2 受体：</strong> 促进脂肪分解的“加速器”。</li><li><strong>α-2 受体：</strong> 抑制脂肪分解的“刹车片”。</li></ul><p>由于人类基因的设定，我们的面部、手臂和胸部布满了 β-2 受体，所以只要一节食，脸和胸最先瘦；而腹部、腰间（Love Handles）以及女性的大腿根部，密密麻麻地长满了 α-2 受体，血液循环极差。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡实战指南：</strong>不要再花钱买什么“暴汗服”和“腹部按摩仪”了，那排出的只是水分。想要减掉腹部的顽固脂肪，没有任何捷径。你必须依靠<strong>持续、系统性的热量缺口</strong>。当你的脸和四肢脂肪被榨干后，身体为了生存，才会迫不得已去调动腹部那些被 α-2 受体锁死的“顽固脂肪”。</div>` },
+            { id: 'm2_1', module: '增肌核心理论', badge: 'badge-green', title: '拒绝脏增肌：P-Ratio 分配率与体脂红线', readTime: '7分钟', content: `<p>很多人以为增肌期就是“放开吃”，汉堡炸鸡来者不拒，美其名曰“Dirty Bulk（脏增肌）”。结果练了半年，肌肉长了 1 斤，纯脂肪长了 10 斤。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">胰岛素敏感度与 P-Ratio</h3><p>运动营养学中有一个核心概念叫 <strong>P-Ratio (营养分配率)</strong>。当你吃下 500 大卡的盈余热量时，这 500 大卡有多少拿去合成肌肉，有多少变成脂肪储存起来，完全取决于你的 <strong>体脂率和胰岛素敏感度</strong>。</p><ul><li><strong>体脂越低（男<12%）：</strong> 你的肌肉细胞对胰岛素极度渴望。吃下去的碳水和蛋白，会优先被强行压进肌纤维里，肌肉合成率极高。</li><li><strong>体脂偏高（男>18%）：</strong> 身体处于轻度胰岛素抵抗状态。肌肉细胞对营养“关门拒客”，你吃下去的多余热量，只能被迫转化为脂肪堆积在肚子里。</li></ul><div class="highlight-box"><strong class="block mb-2 text-blue-700">体脂红线警告：</strong>如果你男性的体脂率超过 15%-18%（女性超过 25%-28%），<strong>绝对不要进行热量盈余的增肌！</strong> 你必须先通过减脂，把体脂率降到能隐约看到腹肌的健康水平（胰岛素敏感度恢复），然后再制造每天 300 大卡的小缺口进行“干净增肌（Clean Bulk）”。</div>` },
+            { id: 'm2_2', module: '增肌核心理论', badge: 'badge-green', title: '垃圾容量陷阱：为什么练了3小时却不长肉？', readTime: '6分钟', content: `<p>很多新手喜欢在健身房泡两三个小时，用极轻的重量做几十上百次，追求那种“肌肉酸痛灼烧”的感觉。但其实，这除了消耗体力，对肌肉生长毫无帮助。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">机械张力 (Mechanical Tension) 才是王道</h3><p>肌纤维变粗的唯一核心驱动力是“机械张力”，即肌肉在对抗大重量拉伸时产生的微小撕裂。而轻重量带来的酸痛，只是乳酸堆积造成的“代谢压力（Metabolic Stress）”。</p><p>什么是<strong>有效组（Effective Reps）</strong>？研究表明，只有当你做到离力竭还剩最后 3-4 个的时候（RIR 1-3），高门槛的运动单位才会被全面募集，那些粗大的肌纤维才会被真正刺激到。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡训练除垢法：</strong>如果你用 10kg 的哑铃能轻松做 20 个，那你前面做的 15 个全都是无效的“垃圾容量”，纯粹是在浪费中枢神经能量。立刻增加重量，把每组次数控制在 8-12 次，并且确保在做最后两三个的时候，你的脸部已经扭曲，动作极其吃力（但依然保持标准变形）。每天只需高质量的 45 分钟，肌肉生长效果秒杀在健身房瞎晃 3 小时。</div>` },
+            { id: 'm3_1', module: '结构力学与数据', badge: 'badge-purple', title: '深蹲剪切力与动作轨迹的 CV 视觉测算', readTime: '8分钟', content: `<p>在高阶力量领域，我们需要把人体看作一个<strong>精密的桁架结构</strong>：骨骼是承重构件，肌肉和肌腱是提供预应力的拉索。很多人深蹲时腰疼，是因为受力结构的失稳。</p><p>标准深蹲的核心是<strong>髋膝同步驱动</strong>。如果你的膝盖先动，重心前移，剪切力会全部压在膝关节上；如果你的髋部先动，身体过度前倾，剪切力会转移到腰椎。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">视觉测算技巧：</strong>侧面观察，杠铃的垂直投影线必须始终穿过你的足中位置。无论蹲起还是下落，保持这条线不动，你的关节受力就是最安全、最标准的。</div>` }
+        ];
+
         function switchTab(tabId) {
-            ['planner', 'training', 'food', 'learn'].forEach(id => {
+            ['planner', 'training', 'food', 'learn', 'about'].forEach(id => {
                 document.getElementById('sec-' + id).classList.add('hidden');
                 document.getElementById('tab-' + id).classList.remove('nav-active');
             });
@@ -543,381 +684,10 @@
             document.getElementById('tab-' + tabId).classList.add('nav-active');
             
             if(tabId === 'training') { updateTrainDays(); loadHistory(); }
+            if(tabId === 'learn') { initArticleNav(); }
+            if(tabId === 'food') { renderVisualFoodDB(); }
         }
 
-        // ================= 训练计划生成函数 (保留) =================
-        function updateTrainDays() {
-            const split = document.getElementById('trainSplit').value;
-            const daySelect = document.getElementById('trainDay');
-            let optionsHtml = '';
-            if (split === '3day') {
-                optionsHtml = `
-                    <option value="day1">Day 1: 背 + 肩后束 + 肱二头</option>
-                    <option value="day2">Day 2: 胸 + 肩前中束 + 肱三头</option>
-                    <option value="day3">Day 3: 腿臀 + 腹部</option>
-                `;
-            } else {
-                optionsHtml = `
-                    <option value="day1">Day 1: 背部 + 肱二头 (拉)</option>
-                    <option value="day2">Day 2: 胸部 + 肱三头 (推)</option>
-                    <option value="day3">Day 3: 腿臀 + 腹部 (下肢)</option>
-                    <option value="day4">Day 4: 肩部整体轰炸 (前中后束)</option>
-                `;
-            }
-            daySelect.innerHTML = optionsHtml;
-        }
-        
-        function syncSets(index, value) {
-            if(!currentTrainingPlan[index]) return;
-            currentTrainingPlan[index].setsNum = Math.max(1, parseInt(value) || 3);
-        }
-
-        function generateTraining() {
-            const split = document.getElementById('trainSplit').value;
-            const day = document.getElementById('trainDay').value;
-            const goal = document.getElementById('trainGoal').value;
-            const target = document.getElementById('targetMuscle').value;
-            const repsStr = goal === 'bulk' ? '10-15次 (保留1-2次余力)' : '12-20次 (高次数力竭)';
-            
-            document.getElementById('train-reps-display').innerText = repsStr;
-            
-            let plan = [], title = '';
-            if (split === '3day') {
-                if(day==='day1'){
-                    title="三分化 Day1:核心拉力链";
-                    plan=[{part:'背部(垂直拉)',name:'引体向上/高位下拉/直臂下压',sets:3},{part:'背部(水平拉)',name:'杠铃俯身划船/坐姿器械划船',sets:3},{part:'肩后束',name:'蝴蝶机反向飞鸟/哑铃俯身飞鸟',sets:3},{part:'肱二头肌',name:'哑铃交替弯举/牧师椅弯举',sets:3}];
-                    if(target==='back') plan.splice(1,0,{part:'🔥背部(强化宽度)',name:'宽距高位下拉',sets:3});
-                }
-                if(day==='day2'){
-                    title="三分化 Day2:核心推力链";
-                    plan=[{part:'胸部(中胸)',name:'平板杠铃卧推/哑铃卧推',sets:3},{part:'胸部(上/下胸)',name:'上斜卧推/蝴蝶机夹胸',sets:3},{part:'肩前中束',name:'哑铃推举/哑铃侧平举',sets:3},{part:'肱三头肌',name:'龙门架绳索下压/颈后臂屈伸',sets:3}];
-                    if(target==='chest') plan.splice(2,0,{part:'🔥胸部(强化厚度)',name:'双杠臂屈伸',sets:3});
-                    if(target==='shoulder') plan.push({part:'🔥肩部(强化饱满度)',name:'单臂绳索侧平举',sets:3});
-                }
-                if(day==='day3'){
-                    title="三分化 Day3:下肢与核心";
-                    plan=[{part:'大腿前侧',name:'杠铃深蹲/倒蹬机',sets:3},{part:'大腿后侧',name:'罗马尼亚硬拉/俯卧腿弯举',sets:3},{part:'臀部',name:'杠铃臀推/史密斯臀冲',sets:3},{part:'核心腹部',name:'卷腹/悬垂举腿',sets:3}];
-                    if(target==='legs') plan.splice(2,0,{part:'🔥腿臀(强化下肢)',name:'保加利亚单腿分腿蹲',sets:3});
-                }
-            } else {
-                if(day==='day1'){
-                    title="四分化 Day1:纯粹拉力";
-                    plan=[{part:'背部(垂直拉)',name:'引体向上/宽距高位下拉',sets:3},{part:'背部(水平拉)',name:'杠铃划船/T杠划船',sets:3},{part:'背部(孤立)',name:'直臂下压',sets:3},{part:'肱二头肌',name:'杠铃弯举/哑铃锤式弯举',sets:3}];
-                    if(target==='back') plan.splice(2,0,{part:'🔥背部(强化宽度)',name:'单臂哑铃划船',sets:3});
-                }
-                if(day==='day2'){
-                    title="四分化 Day2:纯粹推力";
-                    plan=[{part:'胸部(中胸)',name:'平板杠铃卧推',sets:3},{part:'胸部(上胸)',name:'上斜哑铃卧推',sets:3},{part:'胸部(中缝)',name:'蝴蝶机夹胸',sets:3},{part:'肱三头肌',name:'绳索直杆下压',sets:3}];
-                    if(target==='chest') plan.splice(2,0,{part:'🔥胸部(强化下沿)',name:'双杠臂屈伸',sets:3});
-                }
-                if(day==='day3'){
-                    title="四分化 Day3:下肢系统";
-                    plan=[{part:'大腿前侧',name:'杠铃深蹲/哈克深蹲',sets:3},{part:'大腿后侧',name:'罗马尼亚硬拉',sets:3},{part:'臀部',name:'杠铃臀推/箭步蹲',sets:3},{part:'核心腹部',name:'负重卷腹',sets:3}];
-                    if(target==='legs') plan.splice(2,0,{part:'🔥腿臀(强化线条)',name:'保加利亚分腿蹲',sets:3});
-                }
-                if(day==='day4'){
-                    title="四分化 Day4:肩部3D轰炸";
-                    plan=[{part:'肩前束',name:'哑铃肩推/史密斯推举',sets:3},{part:'肩中束',name:'哑铃侧平举/绳索侧平举',sets:3},{part:'肩后束',name:'反向蝴蝶机/绳索面拉',sets:3},{part:'斜方肌',name:'哑铃耸肩',sets:3}];
-                    if(target==='shoulder') plan.splice(2,0,{part:'🔥肩部(强化宽度)',name:'绳索Y字平举',sets:3});
-                }
-            }
-            
-            currentTrainingPlan = plan.map(item => ({...item, setsNum: item.sets}));
-            
-            document.getElementById('train-title-display').innerText = title;
-            const tbody = document.getElementById('training-plan-body');
-            tbody.innerHTML = '';
-            plan.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                const isTarget = item.part.includes('🔥');
-                tr.innerHTML = `<td class="${isTarget ? 'text-red-600' : 'text-gray-800'} font-bold">${item.part}</td><td class="${isTarget ? 'text-gray-900' : 'text-gray-600'}">${item.name}</td><td><input type="number" class="sets-input" value="3" min="1" onchange="syncSets(${index}, this.value)"></td><td class="text-xs text-gray-400">${repsStr}</td>`;
-                tbody.appendChild(tr);
-            });
-            document.getElementById('training-result-section').classList.remove('hidden');
-            document.getElementById('history-section').classList.remove('hidden');
-        }
-
-        // ================= 重构：启动执行器 =================
-        function startExecution() {
-            if(currentTrainingPlan.length === 0) {alert('先生成训练计划！');return;}
-            
-            // 1. 构建扁平化的组列表
-            let flatList = [];
-            currentTrainingPlan.forEach((exercise, exIndex) => {
-                for(let i=1; i<=exercise.setsNum; i++) {
-                    flatList.push({
-                        id: `${exIndex}-${i}`,
-                        exerciseIndex: exIndex,
-                        setNum: i,
-                        name: exercise.name,
-                        part: exercise.part,
-                        isCompleted: false,
-                        weight: 0
-                    });
-                }
-            });
-
-            // 2. 初始化状态
-            execState = {
-                isActive: true,
-                currentGlobalSetIndex: 0,
-                totalSets: flatList.length,
-                timer: null,
-                elapsedSeconds: 0,
-                flatSetList: flatList,
-                // 初始化休息状态
-                restSeconds: 60,
-                restTimer: null,
-                isResting: false,
-                restRemaining: 0
-            };
-
-            // 3. 切换界面
-            document.getElementById('plan-generator-area').classList.add('hidden');
-            document.getElementById('executor-area').classList.remove('hidden');
-            document.getElementById('workout-record').classList.add('hidden');
-            document.getElementById('rest-timer-box').classList.add('hidden');
-
-            // 4. 渲染列表并启动
-            renderSetList();
-            updateExecutorUI();
-            startMainTimer();
-        }
-
-        // 渲染组次列表
-        function renderSetList() {
-            const container = document.getElementById('set-list-container');
-            container.innerHTML = '';
-            
-            let lastPart = '';
-            execState.flatSetList.forEach((item, index) => {
-                // 显示部位分隔
-                const currentPart = currentTrainingPlan[item.exerciseIndex].part;
-                if(currentPart !== lastPart) {
-                    const header = document.createElement('div');
-                    header.className = 'px-4 py-2 bg-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200';
-                    header.innerText = currentPart;
-                    container.appendChild(header);
-                    lastPart = currentPart;
-                }
-
-                const div = document.createElement('div');
-                div.className = `set-item ${item.isCompleted ? 'completed' : ''} ${index === execState.currentGlobalSetIndex && !item.isCompleted && !execState.isResting ? 'active' : ''}`;
-                div.id = `set-item-${index}`;
-                
-                div.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <div class="check-circle">
-                            ${item.isCompleted ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}
-                        </div>
-                        <div>
-                            <p class="font-bold text-gray-900 set-text">${item.name}</p>
-                            <p class="text-xs text-gray-500">第 ${item.setNum} 组</p>
-                        </div>
-                    </div>
-                    ${item.isCompleted && item.weight > 0 ? `<span class="text-sm font-bold text-gray-400">${item.weight}kg</span>` : ''}
-                `;
-                container.appendChild(div);
-            });
-        }
-
-        // 主计时器 (正计时)
-        function startMainTimer() {
-            updateTimerDisplay();
-            execState.timer = setInterval(() => {
-                execState.elapsedSeconds++;
-                updateTimerDisplay();
-            }, 1000);
-        }
-
-        function updateTimerDisplay() {
-            const m = String(Math.floor(execState.elapsedSeconds / 60)).padStart(2, '0');
-            const s = String(execState.elapsedSeconds % 60).padStart(2, '0');
-            document.getElementById('timer-display').innerText = `${m}:${s}`;
-        }
-
-        // 休息倒计时逻辑
-        function startRestTimer() {
-            // 获取自定义休息秒数
-            execState.restSeconds = parseInt(document.getElementById('exec-rest-input').value) || 60;
-            execState.restRemaining = execState.restSeconds;
-            execState.isResting = true;
-            
-            // 显示休息计时器，启用跳过按钮
-            document.getElementById('rest-timer-box').classList.remove('hidden');
-            const btn = document.getElementById('btn-finish-set');
-            btn.className = 'exec-btn exec-btn-rest flex-1 cursor-pointer';
-            btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>跳过休息`;
-            btn.onclick = endRest;
-            
-            updateRestDisplay();
-            execState.restTimer = setInterval(() => {
-                execState.restRemaining--;
-                updateRestDisplay();
-                
-                if(execState.restRemaining <= 0) {
-                    endRest();
-                }
-            }, 1000);
-        }
-
-        function updateRestDisplay() {
-            const m = String(Math.floor(execState.restRemaining / 60)).padStart(2, '0');
-            const s = String(execState.restRemaining % 60).padStart(2, '0');
-            document.getElementById('rest-display').innerText = `${m}:${s}`;
-        }
-
-        function endRest() {
-            clearInterval(execState.restTimer);
-            execState.isResting = false;
-            document.getElementById('rest-timer-box').classList.add('hidden');
-            
-            // 恢复完成按钮
-            const btn = document.getElementById('btn-finish-set');
-            btn.className = 'exec-btn exec-btn-success flex-1';
-            btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
-            btn.onclick = finishCurrentSet;
-        }
-
-        // 更新UI状态
-        function updateExecutorUI() {
-            const currentItem = execState.flatSetList[execState.currentGlobalSetIndex];
-            
-            if (currentItem) {
-                document.getElementById('exec-current-exercise').value = currentItem.name;
-                document.getElementById('exec-progress-text').innerText = `进行中: ${currentItem.part}`;
-            } else {
-                document.getElementById('exec-progress-text').innerText = '全部完成';
-            }
-            
-            document.getElementById('exec-set-counter').innerText = `${execState.currentGlobalSetIndex}/${execState.totalSets}`;
-            
-            const percent = (execState.currentGlobalSetIndex / execState.totalSets) * 100;
-            document.getElementById('exec-progress-bar').style.width = `${Math.min(percent, 100)}%`;
-
-            const btn = document.getElementById('btn-finish-set');
-            if (execState.currentGlobalSetIndex >= execState.totalSets) {
-                btn.innerText = '查看记录';
-            } else if(!execState.isResting) {
-                btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 完成这一组`;
-            }
-        }
-
-        // ================= 核心逻辑：完成一组 =================
-        function finishCurrentSet() {
-            // 休息中禁止操作
-            if(execState.isResting) return;
-            
-            // 1. 如果全部做完了
-            if (execState.currentGlobalSetIndex >= execState.totalSets) {
-                finalizeWorkout();
-                return;
-            }
-
-            // 2. 记录当前这一组
-            const currentItem = execState.flatSetList[execState.currentGlobalSetIndex];
-            const weightInput = document.getElementById('exec-weight-input');
-            const weight = parseFloat(weightInput.value) || 0;
-
-            currentItem.isCompleted = true;
-            currentItem.weight = weight;
-
-            // 保存到历史记录数据
-            workoutRecordData.push({
-                exercise: currentItem.name,
-                part: currentItem.part,
-                weight: weight,
-                set: currentItem.setNum,
-                date: new Date().toLocaleDateString()
-            });
-
-            // 3. 移动指针
-            execState.currentGlobalSetIndex++;
-
-            // 4. 重新渲染列表
-            renderSetList();
-            updateExecutorUI();
-
-            // 5. 自动滚动到当前项
-            const nextEl = document.getElementById(`set-item-${execState.currentGlobalSetIndex}`);
-            if(nextEl) {
-                nextEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            }
-
-            // 6. 启动组间休息
-            if(execState.currentGlobalSetIndex < execState.totalSets) {
-                startRestTimer();
-            }
-
-            // 7. 检查是否全部结束
-            if (execState.currentGlobalSetIndex >= execState.totalSets) {
-                finalizeWorkout();
-            }
-        }
-
-        function exitExecution() {
-            clearInterval(execState.timer);
-            clearInterval(execState.restTimer);
-            document.getElementById('executor-area').classList.add('hidden');
-            document.getElementById('plan-generator-area').classList.remove('hidden');
-        }
-
-        function finalizeWorkout() {
-            clearInterval(execState.timer);
-            clearInterval(execState.restTimer);
-            saveWorkoutRecord();
-            renderWorkoutRecord();
-            document.getElementById('workout-record').classList.remove('hidden');
-            document.getElementById('exec-workout-state').classList.add('hidden');
-        }
-
-        // ================= 历史记录相关 (保留) =================
-        function saveWorkoutRecord() { localStorage.setItem('workoutHistory', JSON.stringify(workoutRecordData)); loadHistory(); }
-        function loadHistory() { const data = localStorage.getItem('workoutHistory'); workoutRecordData = data ? JSON.parse(data) : []; renderHistory(); calculateMonthlyStats(); }
-        function renderHistory() {
-            const container = document.getElementById('history-list'); container.innerHTML = '';
-            const grouped = {}; workoutRecordData.forEach(item => { if(!grouped[item.date]) grouped[item.date] = []; grouped[item.date].push(item); });
-            Object.entries(grouped).forEach(([date, records])=>{
-                const div = document.createElement('div'); div.className = 'history-record';
-                div.innerHTML = `<div><p class="font-bold">${date}</p><p class="text-xs text-gray-500">${records.length}组训练</p></div><button class="delete-btn" onclick="deleteDateRecord('${date}')">删除</button>`;
-                container.appendChild(div);
-            });
-        }
-        function deleteDateRecord(date) { workoutRecordData = workoutRecordData.filter(item => item.date !== date); saveWorkoutRecord(); }
-        function clearAllHistory() { if(!confirm('确定清空所有记录？')) return; workoutRecordData = []; saveWorkoutRecord(); }
-        function calculateMonthlyStats() {
-            const stats = {}; workoutRecordData.forEach(item => { const part = item.part.replace('🔥','').replace(/\(.*\)/,'').trim(); stats[part] = (stats[part] ||0) +1; });
-            const container = document.getElementById('monthly-stats'); container.innerHTML = '<div class="stats-grid">';
-            Object.entries(MUSCLE_STATS).forEach(([part, cfg])=>{
-                const current = stats[part] ||0; const level = current < cfg.min ? '不足' : current > cfg.max ? '过量' : '标准';
-                container.innerHTML += `<div class="stat-card"><p class="stat-title">${part}</p><p class="stat-current">${current}</p><p class="stat-recommend">${cfg.min}-${cfg.max}组/月</p><span class="stat-badge ${cfg.color}">${level}</span></div>`;
-            });
-            container.innerHTML += '</div>';
-        }
-        function renderWorkoutRecord() {
-            const container = document.getElementById('record-content'); container.innerHTML = '';
-            const title = document.getElementById('train-title-display')?.innerText || '训练记录';
-            const duration = document.getElementById('timer-display')?.innerText || '00:00';
-            
-            container.innerHTML = `<p class="text-center font-bold text-lg">${title}</p><p class="text-center text-sm text-gray-500 mb-4">总时长: ${duration}</p>`;
-            
-            const todayRecords = workoutRecordData.filter(item=>item.date === new Date().toLocaleDateString());
-            // 简单聚合显示
-            const displayMap = {};
-            todayRecords.forEach(r => {
-                const key = r.exercise;
-                if(!displayMap[key]) displayMap[key] = { part: r.part, sets: 0, maxW: 0 };
-                displayMap[key].sets++;
-                if(r.weight > displayMap[key].maxW) displayMap[key].maxW = r.weight;
-            });
-
-            for(const [name, data] of Object.entries(displayMap)) {
-                container.innerHTML += `<div class="p-3 bg-gray-50 rounded flex justify-between"><span class="font-medium text-gray-800">${name}</span><span class="text-gray-500 font-bold">${data.sets}组 / 极限 ${data.maxW}kg</span></div>`;
-            }
-        }
-        function copyRecord() { const text = document.getElementById('record-content').innerText; navigator.clipboard.writeText(text).then(()=>alert('复制成功！')); }
-
-        // ================= 全新 排餐系统计算函数 (保留) =================
         function generatePlan() {
             const goal = document.getElementById('goal').value;
             const weight = parseFloat(document.getElementById('weight').value);
@@ -934,19 +704,9 @@
             let tdee = bmr * activity;
             let targetCal, protein, fat, carbs;
 
-            if (goal === 'cut') {
-                targetCal = tdee - 500; 
-                protein = weight * 2.0; 
-                fat = weight * 0.8;
-            } else if (goal === 'recomp') {
-                targetCal = tdee - 300; 
-                protein = weight * 1.8; 
-                fat = weight * 0.9;
-            } else { 
-                targetCal = tdee + 300; 
-                protein = weight * 1.6; 
-                fat = weight * 1.0;
-            }
+            if (goal === 'cut') { targetCal = tdee - 500; protein = weight * 2.0; fat = weight * 0.8; } 
+            else if (goal === 'recomp') { targetCal = tdee - 300; protein = weight * 1.8; fat = weight * 0.9; } 
+            else { targetCal = tdee + 300; protein = weight * 1.6; fat = weight * 1.0; }
             
             carbs = (targetCal - (protein * 4) - (fat * 9)) / 4;
             if(carbs < 50) carbs = 50; 
@@ -957,55 +717,20 @@
             document.getElementById('res-carb').innerText = Math.round(carbs);
 
             let meals = [];
-            
             if (workoutTime === 'morning') {
-                meals = [
-                    { name: '🔥 早饭 (练前餐)', r: [0.3, 0.2, 0.3] },
-                    { name: '🔥 练后加餐', r: [0.15, 0.2, 0] },
-                    { name: '午饭', r: [0.35, 0.3, 0.35] },
-                    { name: '晚饭', r: [0.2, 0.3, 0.35] }
-                ];
+                meals = [ { name: '🔥 早饭 (练前餐)', r: [0.3, 0.2, 0.3] }, { name: '🔥 练后加餐', r: [0.15, 0.2, 0] }, { name: '午饭', r: [0.35, 0.3, 0.35] }, { name: '晚饭', r: [0.2, 0.3, 0.35] } ];
             } else if (workoutTime === 'noon_before') {
-                meals = [
-                    { name: '早饭', r: [0.25, 0.3, 0.35] },
-                    { name: '🔥 午饭 (练前餐)', r: [0.25, 0.2, 0.25] },
-                    { name: '🔥 练后加餐/午加', r: [0.15, 0.2, 0] },
-                    { name: '晚饭', r: [0.35, 0.3, 0.4] }
-                ];
+                meals = [ { name: '早饭', r: [0.25, 0.3, 0.35] }, { name: '🔥 午饭 (练前餐)', r: [0.25, 0.2, 0.25] }, { name: '🔥 练后加餐/午加', r: [0.15, 0.2, 0] }, { name: '晚饭', r: [0.35, 0.3, 0.4] } ];
             } else if (workoutTime === 'noon_after') {
-                meals = [
-                    { name: '早饭', r: [0.25, 0.25, 0.35] },
-                    { name: '🔥 午饭 (练前充碳)', r: [0.3, 0.2, 0.25] },
-                    { name: '🔥 练后正餐 (下午)', r: [0.3, 0.3, 0.1] },
-                    { name: '晚饭', r: [0.15, 0.25, 0.3] }
-                ];
+                meals = [ { name: '早饭', r: [0.25, 0.25, 0.35] }, { name: '🔥 午饭 (练前充碳)', r: [0.3, 0.2, 0.25] }, { name: '🔥 练后正餐 (下午)', r: [0.3, 0.3, 0.1] }, { name: '晚饭', r: [0.15, 0.25, 0.3] } ];
             } else if (workoutTime === 'evening_before') {
-                meals = [
-                    { name: '早饭', r: [0.25, 0.25, 0.35] },
-                    { name: '午饭', r: [0.3, 0.25, 0.35] },
-                    { name: '🔥 练前加餐', r: [0.15, 0.1, 0] },
-                    { name: '🔥 晚饭 (练后餐)', r: [0.3, 0.4, 0.3] }
-                ];
+                meals = [ { name: '早饭', r: [0.25, 0.25, 0.35] }, { name: '午饭', r: [0.3, 0.25, 0.35] }, { name: '🔥 练前加餐', r: [0.15, 0.1, 0] }, { name: '🔥 晚饭 (练后餐)', r: [0.3, 0.4, 0.3] } ];
             } else if (workoutTime === 'evening_after') {
-                meals = [
-                    { name: '早饭', r: [0.25, 0.25, 0.33] },
-                    { name: '午饭', r: [0.35, 0.3, 0.33] },
-                    { name: '🔥 晚饭 (练前餐)', r: [0.25, 0.25, 0.34] },
-                    { name: '🔥 练后加餐', r: [0.15, 0.2, 0] }
-                ];
+                meals = [ { name: '早饭', r: [0.25, 0.25, 0.33] }, { name: '午饭', r: [0.35, 0.3, 0.33] }, { name: '🔥 晚饭 (练前餐)', r: [0.25, 0.25, 0.34] }, { name: '🔥 练后加餐', r: [0.15, 0.2, 0] } ];
             } else if (workoutTime === 'night') {
-                meals = [
-                    { name: '早饭', r: [0.25, 0.25, 0.33] },
-                    { name: '午饭', r: [0.3, 0.3, 0.33] },
-                    { name: '🔥 晚饭 (练前储备)', r: [0.35, 0.25, 0.34] },
-                    { name: '🔥 练后夜宵', r: [0.1, 0.2, 0] }
-                ];
+                meals = [ { name: '早饭', r: [0.25, 0.25, 0.33] }, { name: '午饭', r: [0.3, 0.3, 0.33] }, { name: '🔥 晚饭 (练前储备)', r: [0.35, 0.25, 0.34] }, { name: '🔥 练后夜宵', r: [0.1, 0.2, 0] } ];
             } else { 
-                meals = [
-                    { name: '早饭 (常规)', r: [0.3, 0.3, 0.33] },
-                    { name: '午饭 (常规)', r: [0.4, 0.4, 0.33] },
-                    { name: '晚饭 (常规)', r: [0.3, 0.3, 0.34] }
-                ];
+                meals = [ { name: '早饭 (常规)', r: [0.3, 0.3, 0.33] }, { name: '午饭 (常规)', r: [0.4, 0.4, 0.33] }, { name: '晚饭 (常规)', r: [0.3, 0.3, 0.34] } ];
             }
 
             const tbody = document.getElementById('meal-plan-body');
@@ -1021,61 +746,491 @@
                 tbody.appendChild(tr);
             });
 
+            currentMealPlan = meals.map(meal => ({ name: meal.name, carbs: Math.round(carbs * meal.r[0]), protein: Math.round(protein * meal.r[1]), fat: Math.round(fat * meal.r[2]) }));
+            document.getElementById('canteen-buttons-container').classList.remove('hidden');
+            document.getElementById('custom-tracker-container').classList.add('hidden');
+            document.getElementById('canteen-meal-container').classList.add('hidden');
             document.getElementById('result-section').classList.remove('hidden');
             document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ================= 全新 高阶智库核心 (保留) =================
-        const articles = [
-            {
-                id: 'm1_1', module: '减脂底层逻辑', badge: 'badge-red', title: '体重停滞的假象：皮质醇与“水肿欺骗”', readTime: '5分钟',
-                content: `<p>很多小白减脂，每天少吃多动，前几天掉秤很快，到了第二周体重却一动不动，甚至喝口水都能涨半斤。这时候80%的人会崩溃，选择暴饮暴食放弃。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">皮质醇 (Cortisol) 的锁水效应</h3><p>当你长时间制造极大的热量缺口，或者每天疯狂做有氧时，身体会认为你处于“逃生/生存危机”状态。此时，肾上腺会分泌大量的压力激素——<strong>皮质醇</strong>。</p><p>皮质醇不仅会分解你的肌肉，还会导致一种极端的生理现象：<strong>水钠潴留（Water Retention）</strong>。皮下细胞会像海绵一样死死锁住水分。事实上，你每天制造的缺口已经在燃烧脂肪了，脂肪细胞变空了，但立刻被水分填满撑起，所以在体重秤上，你的数字纹丝不动。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡硬核破局法 (The Whoosh Effect)：</strong>当遇到储水期，你需要立刻停止节食，吃一顿富含碳水化合物的高热量大餐（欺骗餐），并好好睡一觉。大量的碳水和放松的心情会瞬间压制皮质醇水平。第二天，你的身体会排出滞留的水分（医学上称为 Whoosh 效应），你会发现体重直接“尿崩”式下降 1-2 公斤。记住：看镜子里的维度，永远比看体重秤更准确。</div>`
-            },
-            {
-                id: 'm1_2', module: '减脂底层逻辑', badge: 'badge-red', title: '局部减脂谎言与“顽固脂肪”受体学说', readTime: '6分钟',
-                content: `<p>“教练，我怎么才能只减肚子上的肉？” 这是健身界最大的谎言。你每天做100个卷腹，最后只会让腰椎间盘突出，肚子外面的肥肉依然存在。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">细胞学真相：α受体与β受体</h3><p>脂肪细胞内有两种受体决定了脂肪分解的难度：</p><ul><li><strong>β-2 受体：</strong> 促进脂肪分解的“加速器”。</li><li><strong>α-2 受体：</strong> 抑制脂肪分解的“刹车片”。</li></ul><p>由于人类基因的设定，我们的面部、手臂和胸部布满了 β-2 受体，所以只要一节食，脸和胸最先瘦；而腹部、腰间（Love Handles）以及女性的大腿根部，密密麻麻地长满了 α-2 受体，血液循环极差。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡实战指南：</strong>不要再花钱买什么“暴汗服”和“腹部按摩仪”了，那排出的只是水分。想要减掉腹部的顽固脂肪，没有任何捷径。你必须依靠<strong>持续、系统性的热量缺口</strong>。当你的脸和四肢脂肪被榨干后，身体为了生存，才会迫不得已去调动腹部那些被 α-2 受体锁死的“顽固脂肪”。</div>`
-            },
-            {
-                id: 'm2_1', module: '增肌核心理论', badge: 'badge-green', title: '拒绝脏增肌：P-Ratio 分配率与体脂红线', readTime: '7分钟',
-                content: `<p>很多人以为增肌期就是“放开吃”，汉堡炸鸡来者不拒，美其名曰“Dirty Bulk（脏增肌）”。结果练了半年，肌肉长了 1 斤，纯脂肪长了 10 斤。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">胰岛素敏感度与 P-Ratio</h3><p>运动营养学中有一个核心概念叫 <strong>P-Ratio (营养分配率)</strong>。当你吃下 500 大卡的盈余热量时，这 500 大卡有多少拿去合成肌肉，有多少变成脂肪储存起来，完全取决于你的 <strong>体脂率和胰岛素敏感度</strong>。</p><ul><li><strong>体脂越低（男<12%）：</strong> 你的肌肉细胞对胰岛素极度渴望。吃下去的碳水和蛋白，会优先被强行压进肌纤维里，肌肉合成率极高。</li><li><strong>体脂偏高（男>18%）：</strong> 身体处于轻度胰岛素抵抗状态。肌肉细胞对营养“关门拒客”，你吃下去的多余热量，只能被迫转化为脂肪堆积在肚子里。</li></ul><div class="highlight-box"><strong class="block mb-2 text-blue-700">体脂红线警告：</strong>如果你男性的体脂率超过 15%-18%（女性超过 25%-28%），<strong>绝对不要进行热量盈余的增肌！</strong> 你必须先通过减脂，把体脂率降到能隐约看到腹肌的健康水平（胰岛素敏感度恢复），然后再制造每天 300 大卡的小缺口进行“干净增肌（Clean Bulk）”。</div>`
-            },
-            {
-                id: 'm2_2', module: '增肌核心理论', badge: 'badge-green', title: '垃圾容量陷阱：为什么练了3小时却不长肉？', readTime: '6分钟',
-                content: `<p>很多新手喜欢在健身房泡两三个小时，用极轻的重量做几十上百次，追求那种“肌肉酸痛灼烧”的感觉。但其实，这除了消耗体力，对肌肉生长毫无帮助。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">机械张力 (Mechanical Tension) 才是王道</h3><p>肌纤维变粗的唯一核心驱动力是“机械张力”，即肌肉在对抗大重量拉伸时产生的微小撕裂。而轻重量带来的酸痛，只是乳酸堆积造成的“代谢压力（Metabolic Stress）”。</p><p>什么是<strong>有效组（Effective Reps）</strong>？研究表明，只有当你做到离力竭还剩最后 3-4 个的时候（RIR 1-3），高门槛的运动单位才会被全面募集，那些粗大的肌纤维才会被真正刺激到。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡训练除垢法：</strong>如果你用 10kg 的哑铃能轻松做 20 个，那你前面做的 15 个全都是无效的“垃圾容量”，纯粹是在浪费中枢神经能量。立刻增加重量，把每组次数控制在 8-12 次，并且确保在做最后两三个的时候，你的脸部已经扭曲，动作极其吃力（但依然保持标准变形）。每天只需高质量的 45 分钟，肌肉生长效果秒杀在健身房瞎晃 3 小时。</div>`
-            },
-            {
-                id: 'm3_1', module: '结构力学与数据', badge: 'badge-purple', title: '深蹲剪切力与动作轨迹的 CV 视觉测算', readTime: '8分钟',
-                content: `<p>在高阶力量领域，我们需要把人体看作一个<strong>精密的桁架结构</strong>：骨骼是承重构件，肌肉和肌腱是提供预应力的拉索。很多人深蹲时腰疼，是因为受力结构的失稳。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">剪切力 (Shear Force) 的毁灭性打击</h3><p>深蹲起身时，如果臀部先抬起导致躯干前倾，杠铃重力线对你的腰椎（L4/L5）会产生极大的水平力臂。腰椎极其擅长承受垂直的“压缩力”，但面对水平的“剪切力”却极其脆弱。这就是椎间盘突出的力学根源。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">计算机视觉 (CV) 在轨迹监测中的应用</h3><p>一个完美的深蹲，杠铃轨迹（Bar Path）在二维侧面应该是一条绝对的垂直线。如果底部向前偏移了哪怕 3 厘米，膝关节和下背部瞬间会承受数十公斤的额外扭矩。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">像监测桥梁振动一样监测深蹲：</strong>利用计算机视觉（CV）算法追踪杠铃的位移曲线，就像给桥梁做震动监测一样，能精准寻找结构发力过程中的薄弱点。实操建议：拍下自己的侧面视频，用手机划一条垂直线。如果最低点杠铃不在中足正上方，不要加重，优先去纠正你的踝背屈或核心支撑模型。</div>`
-            },
-        ];
-        function renderMenu() {
-            const navContainer = document.getElementById('article-nav-container');
-            let currentModule = '';
-            let menuHtml = '';
-            articles.forEach(article => {
-                if (article.module !== currentModule) {
-                    menuHtml += `<div class="text-xs font-bold text-gray-400 mt-5 mb-2 px-2 uppercase tracking-widest">${article.module}</div>`;
-                    currentModule = article.module;
-                }
-                menuHtml += `<button id="btn-${article.id}" onclick="loadArticle('${article.id}')" class="article-btn">${article.title}</button>`;
-            });
-            navContainer.innerHTML = menuHtml;
-        }
-        function loadArticle(id) {
-            document.querySelectorAll('.article-btn').forEach(btn => btn.classList.remove('article-active'));
-            document.getElementById('btn-' + id).classList.add('article-active');
-            const article = articles.find(a => a.id === id);
-            const contentContainer = document.getElementById('article-content-container');
-            contentContainer.innerHTML = `<div class="mb-8 flex flex-col md:flex-row md:items-center justify-between border-b border-gray-100 pb-5 gap-4"><div><span class="badge ${article.badge} mb-3">${article.module}</span><h2 class="text-2xl font-black text-gray-900">${article.title}</h2></div><span class="text-xs font-bold text-gray-500 bg-gray-50 px-3 py-1.5 rounded-lg whitespace-nowrap border border-gray-200">预计阅读: ${article.readTime}</span></div><div class="content-box text-gray-600">${article.content}</div>`;
+        function showCustomTracker() {
+            document.getElementById('custom-tracker-container').classList.remove('hidden');
+            document.getElementById('canteen-meal-container').classList.add('hidden');
+            initTracker();
+            document.getElementById('custom-tracker-container').scrollIntoView({ behavior: 'smooth' });
         }
 
-        // ================= 页面初始化 =================
-        document.addEventListener('DOMContentLoaded', function() {
-            renderMenu();
-            loadArticle(articles[0].id);
-            updateTrainDays();
-            switchTab('planner');
-        });
+        function initTracker() {
+            const today = new Date().toLocaleDateString();
+            const saved = localStorage.getItem('trackerData');
+            if (saved) {
+                const parsed = JSON.parse(saved);
+                if (parsed.date === today) trackerData = parsed.data;
+                else trackerData = currentMealPlan.map(meal => ({...meal, actualCarbs: 0, actualProtein: 0, actualFat: 0}));
+            } else {
+                trackerData = currentMealPlan.map(meal => ({...meal, actualCarbs: 0, actualProtein: 0, actualFat: 0}));
+            }
+            renderTracker();
+        }
+
+        function renderTracker() {
+            const tbody = document.getElementById('tracker-tbody');
+            const tfoot = document.getElementById('tracker-tfoot');
+            tbody.innerHTML = '';
+            trackerData.forEach((meal, index) => {
+                const tr = document.createElement('tr');
+                const calorieDiff = calculateCalorieDiff(meal);
+                const completionRate = calculateCompletionRate(meal);
+                const status = completionRate >= 0.9 ? '✅ 达标' : completionRate < 0.7 ? '⚠️ 未达标' : '⏳ 进行中';
+                const statusClass = completionRate >= 0.9 ? 'text-green-600 font-bold' : completionRate < 0.7 ? 'text-red-600 font-bold' : 'text-yellow-600 font-bold';
+                
+                tr.innerHTML = `
+                    <td class="font-bold text-gray-800">${meal.name}</td>
+                    <td class="text-center">${meal.carbs}</td>
+                    <td class="text-center"><input type="number" class="sets-input" value="${meal.actualCarbs}" min="0" onchange="updateTrackerData(${index}, 'actualCarbs', this.value)"></td>
+                    <td class="text-center">${meal.protein}</td>
+                    <td class="text-center"><input type="number" class="sets-input" value="${meal.actualProtein}" min="0" onchange="updateTrackerData(${index}, 'actualProtein', this.value)"></td>
+                    <td class="text-center">${meal.fat}</td>
+                    <td class="text-center"><input type="number" class="sets-input" value="${meal.actualFat}" min="0" onchange="updateTrackerData(${index}, 'actualFat', this.value)"></td>
+                    <td class="text-center font-bold ${calorieDiff >= 0 ? 'text-green-600' : 'text-red-600'}">${calorieDiff >= 0 ? '+' : ''}${calorieDiff}</td>
+                    <td class="text-center ${statusClass}">${status}</td>
+                `;
+                tbody.appendChild(tr);
+            });
+            
+            const totals = calculateTotals();
+            tfoot.innerHTML = `
+                <tr class="bg-gray-50 font-bold">
+                    <td class="text-gray-900">当日汇总</td>
+                    <td class="text-center text-blue-600">${totals.targetCarbs}</td>
+                    <td class="text-center text-blue-600">${Math.round(totals.actualCarbs * 10) / 10}</td>
+                    <td class="text-center text-green-600">${totals.targetProtein}</td>
+                    <td class="text-center text-green-600">${Math.round(totals.actualProtein * 10) / 10}</td>
+                    <td class="text-center text-yellow-600">${totals.targetFat}</td>
+                    <td class="text-center text-yellow-600">${Math.round(totals.actualFat * 10) / 10}</td>
+                    <td class="text-center ${totals.totalCalorieDiff >= 0 ? 'text-green-600' : 'text-red-600'}">${totals.totalCalorieDiff >= 0 ? '+' : ''}${totals.totalCalorieDiff}</td>
+                    <td class="text-center text-purple-600">${Math.round(totals.totalCompletionRate * 100)}% 完成率</td>
+                </tr>
+            `;
+        }
+
+        function updateTrackerData(index, field, value) { trackerData[index][field] = parseFloat(value) || 0; renderTracker(); }
+        function calculateCalorieDiff(meal) { return Math.round((meal.actualCarbs * 4 + meal.actualProtein * 4 + meal.actualFat * 9) - (meal.carbs * 4 + meal.protein * 4 + meal.fat * 9)); }
+        function calculateCompletionRate(meal) { const t = meal.carbs + meal.protein + meal.fat; return t === 0 ? 1 : (meal.actualCarbs + meal.actualProtein + meal.actualFat) / t; }
+        
+        function calculateTotals() {
+            let tc = 0, ac = 0, tp = 0, ap = 0, tf = 0, af = 0;
+            trackerData.forEach(m => { tc+=m.carbs; ac+=m.actualCarbs; tp+=m.protein; ap+=m.actualProtein; tf+=m.fat; af+=m.actualFat; });
+            const tdiff = Math.round((ac*4+ap*4+af*9) - (tc*4+tp*4+tf*9));
+            const trate = (tc+tp+tf) === 0 ? 1 : (ac+ap+af)/(tc+tp+tf);
+            return { targetCarbs: tc, actualCarbs: ac, targetProtein: tp, actualProtein: ap, targetFat: tf, actualFat: af, totalCalorieDiff: tdiff, totalCompletionRate: trate };
+        }
+
+        function addSnackRow() { trackerData.push({ name: '🍪 加餐', carbs: 0, protein: 0, fat: 0, actualCarbs: 0, actualProtein: 0, actualFat: 0 }); renderTracker(); }
+        function clearTracker() { if (!confirm('确定要清空今日打卡数据吗？')) return; trackerData = trackerData.map(meal => ({...meal, actualCarbs: 0, actualProtein: 0, actualFat: 0})); renderTracker(); }
+        function saveTracker() { localStorage.setItem('trackerData', JSON.stringify({ date: new Date().toLocaleDateString(), data: trackerData })); alert('💾 今日打卡数据已保存！'); }
+
+        function generateCanteenMeal() {
+            document.getElementById('canteen-meal-container').classList.remove('hidden');
+            document.getElementById('custom-tracker-container').classList.add('hidden');
+            createCanteenMeal();
+            document.getElementById('canteen-meal-container').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function matchMeal(mealTarget, stapleFoods, proteinDishes, vegDishes, goal) {
+            let meal = { name: mealTarget.name, target: mealTarget, dishes: [], actual: { carbs: 0, protein: 0, fat: 0, calories: 0 } };
+            
+            let staple = stapleFoods[Math.floor(Math.random() * stapleFoods.length)];
+            let stapleRatio = Math.max(0.3, Math.min(2.5, mealTarget.carbs / staple.carbs));
+            
+            let adjustedStaple = {
+                ...staple, weight: Math.round(staple.weight * stapleRatio), carbs: Math.round(staple.carbs * stapleRatio),
+                protein: Math.round(staple.protein * stapleRatio * 10) / 10, fat: Math.round(staple.fat * stapleRatio * 10) / 10,
+                calories: Math.round(staple.calories * stapleRatio)
+            };
+            
+            meal.dishes.push(adjustedStaple);
+            meal.actual.carbs += adjustedStaple.carbs; meal.actual.protein += adjustedStaple.protein; meal.actual.fat += adjustedStaple.fat; meal.actual.calories += adjustedStaple.calories;
+            
+            let remainingProtein = mealTarget.protein - meal.actual.protein;
+            let suitableProteins = proteinDishes.filter(d => d.protein >= remainingProtein * 0.3 && d.protein <= remainingProtein * 1.5);
+            if (suitableProteins.length > 0) {
+                let proteinDish = suitableProteins[Math.floor(Math.random() * suitableProteins.length)];
+                meal.dishes.push(proteinDish);
+                meal.actual.carbs += proteinDish.carbs; meal.actual.protein += proteinDish.protein; meal.actual.fat += proteinDish.fat; meal.actual.calories += proteinDish.calories;
+            }
+            
+            if (!mealTarget.name.includes('加餐') && vegDishes.length > 0) {
+                let vegDish = vegDishes[Math.floor(Math.random() * vegDishes.length)];
+                meal.dishes.push(vegDish);
+                meal.actual.carbs += vegDish.carbs; meal.actual.protein += vegDish.protein; meal.actual.fat += vegDish.fat; meal.actual.calories += vegDish.calories;
+            }
+            
+            meal.diff = { calories: Math.round(meal.actual.calories - (mealTarget.carbs * 4 + mealTarget.protein * 4 + mealTarget.fat * 9)) };
+            return meal;
+        }
+
+        function createCanteenMeal() {
+            const goal = document.getElementById('goal').value;
+            let filteredDishes = CANTEEN_DATABASE.filter(dish => {
+                if (goal === 'cut') return dish.fat <= 20 && !dish.tips?.includes('减脂期慎选') && !dish.tips?.includes('减脂期别碰') && !dish.tips?.includes('减脂期禁用');
+                else if (goal === 'recomp') return dish.fat <= 30 && !dish.tips?.includes('减脂期别碰');
+                else return true;
+            });
+            const stapleFoods = filteredDishes.filter(d => d.category === '主食类');
+            const proteinDishes = filteredDishes.filter(d => d.category === '大荤硬菜类' || d.category === '荤素搭配类' || d.category === '高蛋白小食');
+            const vegDishes = filteredDishes.filter(d => d.category === '素菜国民类');
+            currentCanteenMeal = currentMealPlan.map(meal => matchMeal(meal, stapleFoods, proteinDishes, vegDishes, goal));
+            renderCanteenMeal();
+        }
+
+        function regenerateSingleMeal(index) {
+            const goal = document.getElementById('goal').value;
+            let filteredDishes = CANTEEN_DATABASE.filter(dish => {
+                if (goal === 'cut') return dish.fat <= 20 && !dish.tips?.includes('减脂期慎选') && !dish.tips?.includes('减脂期别碰') && !dish.tips?.includes('减脂期禁用');
+                else if (goal === 'recomp') return dish.fat <= 30 && !dish.tips?.includes('减脂期别碰');
+                else return true;
+            });
+            const stapleFoods = filteredDishes.filter(d => d.category === '主食类');
+            const proteinDishes = filteredDishes.filter(d => d.category === '大荤硬菜类' || d.category === '荤素搭配类' || d.category === '高蛋白小食');
+            const vegDishes = filteredDishes.filter(d => d.category === '素菜国民类');
+            currentCanteenMeal[index] = matchMeal(currentMealPlan[index], stapleFoods, proteinDishes, vegDishes, goal);
+            renderCanteenMeal();
+        }
+
+        function renderCanteenMeal() {
+            const summaryContainer = document.getElementById('canteen-meal-summary');
+            const listContainer = document.getElementById('canteen-meal-list');
+            let totalTarget = { carbs: 0, protein: 0, fat: 0, calories: 0 };
+            let totalActual = { carbs: 0, protein: 0, fat: 0, calories: 0 };
+            
+            currentCanteenMeal.forEach(meal => {
+                totalTarget.carbs += meal.target.carbs; totalTarget.protein += meal.target.protein; totalTarget.fat += meal.target.fat;
+                totalTarget.calories += meal.target.carbs * 4 + meal.target.protein * 4 + meal.target.fat * 9;
+                totalActual.carbs += meal.actual.carbs; totalActual.protein += meal.actual.protein; totalActual.fat += meal.actual.fat; totalActual.calories += meal.actual.calories;
+            });
+            
+            const carbRate = 1 - Math.abs(totalActual.carbs - totalTarget.carbs) / Math.max(totalTarget.carbs, 1);
+            const proteinRate = 1 - Math.abs(totalActual.protein - totalTarget.protein) / Math.max(totalTarget.protein, 1);
+            const fatRate = 1 - Math.abs(totalActual.fat - totalTarget.fat) / Math.max(totalTarget.fat, 1);
+            const totalRate = Math.round((carbRate + proteinRate + fatRate) / 3 * 100);
+            const goalNameMap = { 'cut': '严格减脂', 'recomp': '塑形线条', 'bulk': '干净增肌' };
+            const goal = document.getElementById('goal').value;
+
+            summaryContainer.innerHTML = `
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                    <div>
+                        <span class="badge ${goal === 'cut' ? 'badge-red' : goal === 'recomp' ? 'badge-purple' : 'badge-green'} mb-2">适配目标：${goalNameMap[goal]}</span>
+                        <h4 class="text-lg font-bold text-gray-900">今日食堂餐单总览</h4>
+                    </div>
+                    <div class="text-right">
+                        <p class="text-sm text-gray-500">总宏量达标率</p>
+                        <p class="text-3xl font-black ${totalRate >= 85 ? 'text-green-600' : totalRate >= 70 ? 'text-yellow-600' : 'text-red-600'}">${totalRate}%</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-gray-200">
+                    <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">总热量</p><p class="text-lg font-bold text-gray-900">${Math.round(totalActual.calories)} <span class="text-xs text-gray-400">/ ${totalTarget.calories} kcal</span></p></div>
+                    <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">碳水</p><p class="text-lg font-bold text-blue-600">${Math.round(totalActual.carbs*10)/10} <span class="text-xs text-gray-400">/ ${totalTarget.carbs} g</span></p></div>
+                    <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">蛋白</p><p class="text-lg font-bold text-green-600">${Math.round(totalActual.protein*10)/10} <span class="text-xs text-gray-400">/ ${totalTarget.protein} g</span></p></div>
+                    <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">脂肪</p><p class="text-lg font-bold text-yellow-600">${Math.round(totalActual.fat*10)/10} <span class="text-xs text-gray-400">/ ${totalTarget.fat} g</span></p></div>
+                </div>
+            `;
+            
+            listContainer.innerHTML = '';
+            currentCanteenMeal.forEach((meal, index) => {
+                const mealCard = document.createElement('div');
+                mealCard.className = 'bg-gray-50 rounded-xl p-4 border border-gray-200';
+                mealCard.innerHTML = `
+                    <div class="flex justify-between items-start mb-3 pb-2 border-b border-gray-200">
+                        <div class="flex items-center">
+                            <h5 class="font-bold text-gray-900 text-lg">${meal.name}</h5>
+                            <button onclick="regenerateSingleMeal(${index})" class="ml-3 bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-1 px-2 rounded transition duration-200 text-xs">🔄 换一换</button>
+                        </div>
+                        <div class="text-right text-xs">
+                            <p class="text-gray-500">目标宏量</p>
+                            <p class="font-medium">碳${meal.target.carbs}g · 蛋${meal.target.protein}g · 脂${meal.target.fat}g</p>
+                        </div>
+                    </div>
+                    <div class="space-y-2">
+                        ${meal.dishes.map(dish => `
+                            <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-gray-100">
+                                <div><p class="font-bold text-gray-800">${dish.name}</p><p class="text-xs text-gray-500">${dish.category} · ${dish.weight}g</p></div>
+                                <div class="text-right text-xs"><p class="text-gray-600">${Math.round(dish.calories)} kcal</p><p class="text-gray-400">碳${Math.round(dish.carbs*10)/10}g · 蛋${Math.round(dish.protein*10)/10}g · 脂${Math.round(dish.fat*10)/10}g</p></div>
+                            </div>
+                        `).join('')}
+                    </div>
+                    <div class="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center text-sm">
+                        <div>
+                            <span class="text-gray-500">本餐实际：</span>
+                            <span class="font-bold text-blue-600">碳${Math.round(meal.actual.carbs*10)/10}g</span> · <span class="font-bold text-green-600">蛋${Math.round(meal.actual.protein*10)/10}g</span> · <span class="font-bold text-yellow-600">脂${Math.round(meal.actual.fat*10)/10}g</span> · <span class="font-bold text-gray-700">${Math.round(meal.actual.calories)}kcal</span>
+                        </div>
+                        <div class="text-right"><span class="text-gray-500">差值：</span><span class="${meal.diff.calories >= 0 ? 'text-green-600' : 'text-red-600'} font-bold">${meal.diff.calories >= 0 ? '+' : ''}${meal.diff.calories}kcal</span></div>
+                    </div>
+                    ${meal.dishes.some(d => d.tips) ? `<div class="mt-2 pt-2 border-t border-gray-200 text-xs text-yellow-700 bg-yellow-50 p-2 rounded"><strong>💡 提示：</strong>${meal.dishes.filter(d => d.tips).map(d => d.tips).join('；')}</div>` : ''}
+                `;
+                listContainer.appendChild(mealCard);
+            });
+        }
+        function regenerateCanteenMeal() { createCanteenMeal(); }
+
+        // ================= 智能训练引擎系统 =================
+        function updateTrainDays() {
+            const split = document.getElementById('trainSplit').value;
+            const daySelect = document.getElementById('trainDay');
+            if (split === '3day') {
+                daySelect.innerHTML = `<option value="day1">Day 1: 背 + 肩后束 + 肱二头</option><option value="day2">Day 2: 胸 + 肩前中束 + 肱三头</option><option value="day3">Day 3: 腿臀 + 腹部</option>`;
+            } else {
+                daySelect.innerHTML = `<option value="day1">Day 1: 背部 + 肱二头 (拉)</option><option value="day2">Day 2: 胸部 + 肱三头 (推)</option><option value="day3">Day 3: 腿臀 + 腹部 (下肢)</option><option value="day4">Day 4: 肩部整体轰炸 (前中后束)</option>`;
+            }
+        }
+        function syncSets(index, value) { if(currentTrainingPlan[index]) currentTrainingPlan[index].setsNum = Math.max(1, parseInt(value) || 3); }
+
+        function generateTraining() {
+            const split = document.getElementById('trainSplit').value;
+            const day = document.getElementById('trainDay').value;
+            const goal = document.getElementById('trainGoal').value;
+            const target = document.getElementById('targetMuscle').value;
+            const repsStr = goal === 'bulk' ? '10-15次 (保留1-2次余力)' : '12-20次 (高次数力竭)';
+            
+            document.getElementById('train-reps-display').innerText = repsStr;
+            let plan = [], title = '';
+            
+            if (split === '3day') {
+                if(day==='day1'){ title="三分化 Day1:核心拉力链"; plan=[{part:'背部(垂直拉)',name:'引体向上/高位下拉/直臂下压',sets:3},{part:'背部(水平拉)',name:'杠铃俯身划船/坐姿器械划船',sets:3},{part:'肩后束',name:'蝴蝶机反向飞鸟/哑铃俯身飞鸟',sets:3},{part:'肱二头肌',name:'哑铃交替弯举/牧师椅弯举',sets:3}]; if(target==='back') plan.splice(1,0,{part:'🔥背部(强化宽度)',name:'宽距高位下拉',sets:3}); }
+                if(day==='day2'){ title="三分化 Day2:核心推力链"; plan=[{part:'胸部(中胸)',name:'平板杠铃卧推/哑铃卧推',sets:3},{part:'胸部(上/下胸)',name:'上斜卧推/蝴蝶机夹胸',sets:3},{part:'肩前中束',name:'哑铃推举/哑铃侧平举',sets:3},{part:'肱三头肌',name:'龙门架绳索下压/颈后臂屈伸',sets:3}]; if(target==='chest') plan.splice(2,0,{part:'🔥胸部(强化厚度)',name:'双杠臂屈伸',sets:3}); if(target==='shoulder') plan.push({part:'🔥肩部(强化饱满度)',name:'单臂绳索侧平举',sets:3}); }
+                if(day==='day3'){ title="三分化 Day3:下肢与核心"; plan=[{part:'大腿前侧',name:'杠铃深蹲/倒蹬机',sets:3},{part:'大腿后侧',name:'罗马尼亚硬拉/俯卧腿弯举',sets:3},{part:'臀部',name:'杠铃臀推/史密斯臀冲',sets:3},{part:'核心腹部',name:'卷腹/悬垂举腿',sets:3}]; if(target==='legs') plan.splice(2,0,{part:'🔥腿臀(强化下肢)',name:'保加利亚单腿分腿蹲',sets:3}); }
+            } else {
+                if(day==='day1'){ title="四分化 Day1:纯粹拉力"; plan=[{part:'背部(垂直拉)',name:'引体向上/宽距高位下拉',sets:3},{part:'背部(水平拉)',name:'杠铃划船/T杠划船',sets:3},{part:'背部(孤立)',name:'直臂下压',sets:3},{part:'肱二头肌',name:'杠铃弯举/哑铃锤式弯举',sets:3}]; if(target==='back') plan.splice(2,0,{part:'🔥背部(强化宽度)',name:'单臂哑铃划船',sets:3}); }
+                if(day==='day2'){ title="四分化 Day2:纯粹推力"; plan=[{part:'胸部(中胸)',name:'平板杠铃卧推',sets:3},{part:'胸部(上胸)',name:'上斜哑铃卧推',sets:3},{part:'胸部(中缝)',name:'蝴蝶机夹胸',sets:3},{part:'肱三头肌',name:'绳索直杆下压',sets:3}]; if(target==='chest') plan.splice(2,0,{part:'🔥胸部(强化下沿)',name:'双杠臂屈伸',sets:3}); }
+                if(day==='day3'){ title="四分化 Day3:下肢系统"; plan=[{part:'大腿前侧',name:'杠铃深蹲/哈克深蹲',sets:3},{part:'大腿后侧',name:'罗马尼亚硬拉',sets:3},{part:'臀部',name:'杠铃臀推/箭步蹲',sets:3},{part:'核心腹部',name:'负重卷腹',sets:3}]; if(target==='legs') plan.splice(2,0,{part:'🔥腿臀(强化线条)',name:'保加利亚分腿蹲',sets:3}); }
+                if(day==='day4'){ title="四分化 Day4:肩部3D轰炸"; plan=[{part:'肩前束',name:'哑铃肩推/史密斯推举',sets:3},{part:'肩中束',name:'哑铃侧平举/绳索侧平举',sets:3},{part:'肩后束',name:'反向蝴蝶机/绳索面拉',sets:3},{part:'斜方肌',name:'哑铃耸肩',sets:3}]; if(target==='shoulder') plan.splice(2,0,{part:'🔥肩部(强化宽度)',name:'绳索Y字平举',sets:3}); }
+            }
+            
+            currentTrainingPlan = plan.map(item => ({...item, setsNum: item.sets}));
+            document.getElementById('train-title-display').innerText = title;
+            const tbody = document.getElementById('training-plan-body');
+            tbody.innerHTML = '';
+            plan.forEach((item, index) => {
+                const tr = document.createElement('tr');
+                const isTarget = item.part.includes('🔥');
+                tr.innerHTML = `<td class="${isTarget ? 'text-red-600' : 'text-gray-800'} font-bold">${item.part}</td><td class="${isTarget ? 'text-gray-900' : 'text-gray-600'}">${item.name}</td><td><input type="number" class="sets-input" value="3" min="1" onchange="syncSets(${index}, this.value)"></td><td class="text-xs text-gray-400">${repsStr}</td>`;
+                tbody.appendChild(tr);
+            });
+            document.getElementById('training-result-section').classList.remove('hidden');
+            document.getElementById('history-section').classList.remove('hidden');
+        }
+
+        // ================= 执行器逻辑 =================
+        function startExecution() {
+            if(currentTrainingPlan.length === 0) {alert('先生成训练计划！');return;}
+            let flatList = [];
+            currentTrainingPlan.forEach((exercise, exIndex) => {
+                for(let i=1; i<=exercise.setsNum; i++) flatList.push({ id: `${exIndex}-${i}`, exerciseIndex: exIndex, setNum: i, name: exercise.name, part: exercise.part, isCompleted: false, weight: 0 });
+            });
+            execState = { isActive: true, currentGlobalSetIndex: 0, totalSets: flatList.length, timer: null, elapsedSeconds: 0, flatSetList: flatList, restSeconds: 60, restTimer: null, isResting: false, restRemaining: 0 };
+            document.getElementById('plan-generator-area').classList.add('hidden');
+            document.getElementById('executor-area').classList.remove('hidden');
+            document.getElementById('workout-record').classList.add('hidden');
+            document.getElementById('rest-timer-box').classList.add('hidden');
+            renderSetList(); updateExecutorUI(); startMainTimer();
+        }
+
+        function renderSetList() {
+            const container = document.getElementById('set-list-container'); container.innerHTML = '';
+            let lastPart = '';
+            execState.flatSetList.forEach((item, index) => {
+                const currentPart = currentTrainingPlan[item.exerciseIndex].part;
+                if(currentPart !== lastPart) {
+                    const header = document.createElement('div'); header.className = 'px-4 py-2 bg-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200'; header.innerText = currentPart;
+                    container.appendChild(header); lastPart = currentPart;
+                }
+                const div = document.createElement('div');
+                div.className = `set-item ${item.isCompleted ? 'completed' : ''} ${index === execState.currentGlobalSetIndex && !item.isCompleted && !execState.isResting ? 'active' : ''}`;
+                div.id = `set-item-${index}`;
+                div.innerHTML = `<div class="flex items-center gap-3"><div class="check-circle">${item.isCompleted ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}</div><div><p class="font-bold text-gray-900 set-text">${item.name}</p><p class="text-xs text-gray-500">第 ${item.setNum} 组</p></div></div>${item.isCompleted && item.weight > 0 ? `<span class="text-sm font-bold text-gray-400">${item.weight}kg</span>` : ''}`;
+                container.appendChild(div);
+            });
+        }
+
+        function startMainTimer() { updateTimerDisplay(); execState.timer = setInterval(() => { execState.elapsedSeconds++; updateTimerDisplay(); }, 1000); }
+        function updateTimerDisplay() { document.getElementById('timer-display').innerText = `${String(Math.floor(execState.elapsedSeconds / 60)).padStart(2, '0')}:${String(execState.elapsedSeconds % 60).padStart(2, '0')}`; }
+
+        function startRestTimer() {
+            execState.restSeconds = parseInt(document.getElementById('exec-rest-input').value) || 60;
+            execState.restRemaining = execState.restSeconds; execState.isResting = true;
+            document.getElementById('rest-timer-box').classList.remove('hidden');
+            const btn = document.getElementById('btn-finish-set');
+            btn.className = 'exec-btn exec-btn-rest flex-1 cursor-pointer';
+            btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>跳过休息`;
+            btn.onclick = endRest;
+            updateRestDisplay();
+            execState.restTimer = setInterval(() => { execState.restRemaining--; updateRestDisplay(); if(execState.restRemaining <= 0) endRest(); }, 1000);
+        }
+
+        function updateRestDisplay() { document.getElementById('rest-display').innerText = `${String(Math.floor(execState.restRemaining / 60)).padStart(2, '0')}:${String(execState.restRemaining % 60).padStart(2, '0')}`; }
+
+        function endRest() {
+            clearInterval(execState.restTimer); execState.isResting = false;
+            document.getElementById('rest-timer-box').classList.add('hidden');
+            const btn = document.getElementById('btn-finish-set');
+            btn.className = 'exec-btn exec-btn-success flex-1';
+            btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
+            btn.onclick = finishCurrentSet;
+        }
+
+        function updateExecutorUI() {
+            const currentItem = execState.flatSetList[execState.currentGlobalSetIndex];
+            document.getElementById('exec-current-exercise').value = currentItem ? currentItem.name : '';
+            document.getElementById('exec-progress-text').innerText = currentItem ? `进行中: ${currentItem.part}` : '全部完成';
+            document.getElementById('exec-set-counter').innerText = `${execState.currentGlobalSetIndex}/${execState.totalSets}`;
+            document.getElementById('exec-progress-bar').style.width = `${Math.min((execState.currentGlobalSetIndex / execState.totalSets) * 100, 100)}%`;
+            const btn = document.getElementById('btn-finish-set');
+            if (execState.currentGlobalSetIndex >= execState.totalSets) btn.innerText = '查看记录';
+            else if(!execState.isResting) btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 完成这一组`;
+        }
+
+        function finishCurrentSet() {
+            if(execState.isResting) return;
+            if (execState.currentGlobalSetIndex >= execState.totalSets) { finalizeWorkout(); return; }
+            const currentItem = execState.flatSetList[execState.currentGlobalSetIndex];
+            const weight = parseFloat(document.getElementById('exec-weight-input').value) || 0;
+            currentItem.isCompleted = true; currentItem.weight = weight;
+            workoutRecordData.push({ exercise: currentItem.name, part: currentItem.part, weight: weight, set: currentItem.setNum, date: new Date().toLocaleDateString() });
+            execState.currentGlobalSetIndex++;
+            renderSetList(); updateExecutorUI();
+            const nextEl = document.getElementById(`set-item-${execState.currentGlobalSetIndex}`);
+            if(nextEl) nextEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            if(execState.currentGlobalSetIndex < execState.totalSets) startRestTimer();
+            if(execState.currentGlobalSetIndex >= execState.totalSets) finalizeWorkout();
+        }
+
+        function exitExecution() { clearInterval(execState.timer); clearInterval(execState.restTimer); document.getElementById('executor-area').classList.add('hidden'); document.getElementById('plan-generator-area').classList.remove('hidden'); }
+        function finalizeWorkout() { clearInterval(execState.timer); clearInterval(execState.restTimer); saveWorkoutRecord(); renderWorkoutRecord(); document.getElementById('workout-record').classList.remove('hidden'); document.getElementById('exec-workout-state').classList.add('hidden'); }
+
+        // ================= 历史记录与统计 =================
+        function saveWorkoutRecord() { localStorage.setItem('workoutHistory', JSON.stringify(workoutRecordData)); loadHistory(); }
+        function loadHistory() { const data = localStorage.getItem('workoutHistory'); workoutRecordData = data ? JSON.parse(data) : []; renderHistory(); calculateMonthlyStats(); }
+
+        function calculateMonthlyStats() {
+            const stats = {}; 
+            workoutRecordData.forEach(item => { 
+                const part = item.part.replace('🔥','').replace(/\(.*\)/,'').trim(); 
+                stats[part] = (stats[part] || 0) + 1; 
+            });
+            const container = document.getElementById('monthly-stats'); 
+            
+            let html = `
+                <div class="mb-5">
+                    <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center">
+                        <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                        本月肌群容量监控 (Sets/Month)
+                    </h4>
+                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+            `;
+            
+            Object.entries(MUSCLE_STATS).forEach(([part, cfg]) => {
+                const current = stats[part] || 0;
+                let level = '标准'; let statusColor = 'text-green-500'; let barColor = 'bg-green-500'; let pct = (current / cfg.max) * 100;
+                if (current < cfg.min) { level = '容量不足'; statusColor = 'text-yellow-500'; barColor = 'bg-yellow-400'; pct = (current / cfg.min) * 100; } 
+                else if (current > cfg.max) { level = '存在超量'; statusColor = 'text-red-500'; barColor = 'bg-red-500'; pct = 100; }
+                html += `
+                    <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+                        <p class="text-xs font-bold text-gray-400 mb-1">${part}</p>
+                        <div class="flex items-baseline gap-1 mb-2"><span class="text-2xl font-black text-gray-800 leading-none">${current}</span><span class="text-xs font-medium text-gray-400">组</span></div>
+                        <div class="w-full bg-gray-100 rounded-full h-1.5 mb-2 overflow-hidden"><div class="${barColor} h-1.5 rounded-full transition-all duration-500" style="width: ${Math.min(pct, 100)}%"></div></div>
+                        <div class="flex justify-between items-center text-[0.65rem] font-bold"><span class="text-gray-400">${cfg.min}-${cfg.max}组</span><span class="${statusColor}">${level}</span></div>
+                    </div>
+                `;
+            });
+            html += `</div></div>`; container.innerHTML = html;
+        }
+
+        function renderHistory() {
+            const container = document.getElementById('history-list'); 
+            container.innerHTML = `<div class="flex items-center justify-between mb-4 mt-8"><h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0121 12z"></path></svg>详细训练日志</h4></div>`;
+            const listWrapper = document.createElement('div'); listWrapper.className = 'space-y-3 max-h-72 overflow-y-auto pr-2 custom-scrollbar';
+            const grouped = {}; workoutRecordData.forEach(item => { if(!grouped[item.date]) grouped[item.date] = []; grouped[item.date].push(item); });
+            
+            if(Object.keys(grouped).length === 0) { listWrapper.innerHTML = '<div class="text-center py-8 text-gray-400 text-sm">暂无训练记录</div>'; } 
+            else {
+                Object.keys(grouped).reverse().forEach(date => {
+                    const records = grouped[date]; const div = document.createElement('div'); 
+                    div.className = 'group bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-md hover:border-blue-100 transition-all flex justify-between items-center';
+                    let d = new Date(date); let dayStr = isNaN(d.getTime()) ? date.slice(-2) + '日' : d.getDate() + '日';
+                    div.innerHTML = `
+                        <div class="flex items-center gap-4">
+                            <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">${dayStr}</div>
+                            <div><p class="font-bold text-gray-900 text-sm">${date}</p><p class="text-xs text-gray-500 font-medium mt-0.5">共完成 <span class="text-blue-600 font-bold">${records.length}</span> 组有效训练</p></div>
+                        </div>
+                        <button class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all p-2 rounded-lg hover:bg-red-50" onclick="deleteDateRecord('${date}')" title="删除该日记录"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                    `;
+                    listWrapper.appendChild(div);
+                });
+            }
+            container.appendChild(listWrapper);
+        }
+
+        function deleteDateRecord(date) { workoutRecordData = workoutRecordData.filter(item => item.date !== date); saveWorkoutRecord(); }
+        function clearAllHistory() { if(!confirm('确定清空所有历史训练记录吗？此操作无法撤销。')) return; workoutRecordData = []; saveWorkoutRecord(); }
+        function renderWorkoutRecord() {
+            const container = document.getElementById('record-content'); container.innerHTML = '';
+            const title = document.getElementById('train-title-display')?.innerText || '训练记录'; const duration = document.getElementById('timer-display')?.innerText || '00:00';
+            container.innerHTML = `<p class="text-center font-bold text-lg">${title}</p><p class="text-center text-sm text-gray-500 mb-4">总时长: ${duration}</p>`;
+            const todayRecords = workoutRecordData.filter(item=>item.date === new Date().toLocaleDateString());
+            const displayMap = {};
+            todayRecords.forEach(r => {
+                if(!displayMap[r.exercise]) displayMap[r.exercise] = { part: r.part, sets: 0, maxW: 0 };
+                displayMap[r.exercise].sets++;
+                if(r.weight > displayMap[r.exercise].maxW) displayMap[r.exercise].maxW = r.weight;
+            });
+            for(const [name, data] of Object.entries(displayMap)) container.innerHTML += `<div class="p-3 bg-gray-50 rounded flex justify-between"><span class="font-medium text-gray-800">${name}</span><span class="text-gray-500 font-bold">${data.sets}组 / 极限 ${data.maxW}kg</span></div>`;
+        }
+        function copyRecord() { navigator.clipboard.writeText(document.getElementById('record-content').innerText).then(()=>alert('复制成功！')); }
+
+        // ================= 知识库图鉴渲染 =================
+        function initArticleNav() {
+            const container = document.getElementById('article-nav-container'); container.innerHTML = '';
+            articles.forEach(article => {
+                const btn = document.createElement('button'); btn.className = 'article-btn'; btn.onclick = () => showArticle(article.id);
+                btn.innerHTML = `<span class="badge ${article.badge} mr-2">${article.module}</span>${article.title}`;
+                container.appendChild(btn);
+            });
+            if(articles.length > 0) showArticle(articles[0].id);
+        }
+
+        function showArticle(articleId) {
+            const article = articles.find(a => a.id === articleId); if(!article) return;
+            document.querySelectorAll('.article-btn').forEach(btn => btn.classList.remove('article-active'));
+            const activeBtn = Array.from(document.querySelectorAll('.article-btn')).find(btn => btn.innerText.includes(article.title));
+            if(activeBtn) activeBtn.classList.add('article-active');
+            document.getElementById('article-content-container').innerHTML = `<div class="border-b border-gray-100 pb-4 mb-4"><h2 class="text-xl font-bold text-gray-900">${article.title}</h2><p class="text-xs text-gray-500 mt-2">阅读时长：${article.readTime}</p></div><div class="content-box">${article.content}</div>`;
+        }
+
+        function renderVisualFoodDB() {
+            const grid = document.getElementById('visual-db-grid'); if(!grid) return; grid.innerHTML = '';
+            const iconMap = { '主食类': '🍚', '大荤硬菜类': '🥩', '荤素搭配类': '🥘', '素菜国民类': '🥬', '特色档口类': '🍜', '高蛋白小食': '🥚' };
+            CANTEEN_DATABASE.forEach(food => {
+                const icon = iconMap[food.category] || '🍽️'; const totalMacros = food.carbs + food.protein + food.fat;
+                const cPct = totalMacros > 0 ? (food.carbs / totalMacros * 100) : 0; const pPct = totalMacros > 0 ? (food.protein / totalMacros * 100) : 0; const fPct = totalMacros > 0 ? (food.fat / totalMacros * 100) : 0;
+                grid.innerHTML += `
+                    <div class="border border-gray-100 rounded-2xl p-5 bg-white hover:shadow-lg transition-all relative overflow-hidden group flex flex-col justify-between h-full">
+                        <div>
+                            <div class="flex justify-between items-start mb-3">
+                                <div><span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md mb-2 inline-block">${icon} ${food.category}</span><h3 class="font-bold text-gray-900 text-lg">${food.name}</h3></div>
+                                <div class="text-right bg-blue-50 px-2 py-1 rounded-lg"><span class="text-base font-black text-blue-700">${food.calories}</span><span class="text-[10px] text-blue-400 block -mt-1">kcal/${food.weight}g</span></div>
+                            </div>
+                            <div class="w-full h-1.5 flex rounded-full overflow-hidden mb-2 mt-4 bg-gray-100"><div style="width: ${cPct}%" class="bg-blue-400"></div><div style="width: ${pPct}%" class="bg-green-400"></div><div style="width: ${fPct}%" class="bg-yellow-400"></div></div>
+                            <div class="flex justify-between text-xs font-bold text-gray-600 mb-4"><span class="text-blue-600">碳水 ${food.carbs}g</span><span class="text-green-600">蛋白 ${food.protein}g</span><span class="text-yellow-600">脂肪 ${food.fat}g</span></div>
+                        </div>
+                        <div class="text-xs text-gray-500 bg-gray-50/80 border border-gray-100 p-2.5 rounded-lg leading-relaxed mt-auto">💡 ${food.tips}</div>
+                    </div>`;
+            });
+        }
+
+        window.onload = function() {
+            updateTrainDays(); loadHistory(); renderVisualFoodDB();
+        };
     </script>
 </body>
 </html>
