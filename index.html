@@ -1468,5 +1468,76 @@
             loadPlanFromLocal(); // 加载页面时自动恢复本地数据
         };
     </script>
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+
+    <script>
+        async function activatePro(btnElement) {
+            const inputCode = document.getElementById('activation-code-input').value.trim();
+            if(!inputCode) return alert("请输入激活码！");
+            
+            // ⚠️ 注意：一定要把下面这行网址，换成你 Cloudflare Worker 的真实网址！
+            const API_URL = "https://xf-auth-api.2462795033.workers.dev/";
+            
+            try {
+                btnElement.innerHTML = "验证中...";
+                
+                // 1. 获取设备唯一指纹
+                const fp = await FingerprintJS.load();
+                const result = await fp.get();
+                const deviceId = result.visitorId; 
+
+                // 2. 发送给 Cloudflare 查验
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: inputCode, deviceId: deviceId })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert(data.msg);
+                    // 激活成功，本地打上永久标记
+                    localStorage.setItem('xf_is_pro', 'true');
+                    // 刷新页面，让所有锁定的功能开放
+                    location.reload(); 
+                } else {
+                    alert(data.msg); // 报错：已被绑定或无效
+                    btnElement.innerHTML = "🚀 立即永久激活";
+                }
+            } catch(e) {
+                alert("网络请求失败，请检查网络或稍后再试");
+                btnElement.innerHTML = "🚀 立即永久激活";
+            }
+        }
+
+        // 页面加载时检查是否已经激活过 PRO
+        document.addEventListener('DOMContentLoaded', () => {
+            if(localStorage.getItem('xf_is_pro') === 'true') {
+                // 如果已经激活，去掉所有锁图标
+                document.querySelectorAll('.btn-locked').forEach(btn => {
+                    btn.classList.remove('btn-locked');
+                    btn.innerHTML = btn.innerHTML.replace('🔒', '✅').replace('PRO版', '已解锁').replace('PRO版专属', '已解锁');
+                    
+                    // 重点：移除弹窗拦截，恢复按钮原本的功能（你需要在这里把按钮原始的功能加回来）
+                    btn.onclick = () => {
+                        alert("功能已解锁！(这里可以接回你原始的函数，比如：MealHelpers.generateCanteen() 等)");
+                    };
+                });
+
+                // 把底部的激活框隐藏掉，告诉用户已经激活
+                const authBox = document.getElementById('activation-code-input')?.parentElement;
+                if(authBox) {
+                    authBox.innerHTML = '<p class="text-green-600 font-bold text-lg">✅ PRO 版永久授权已激活</p><p class="text-xs text-gray-500 mt-1">当前设备已绑定</p>';
+                }
+            }
+        });
+    </script>
+    ```
+
+### 贴完之后的检查步骤：
+1. 贴进去之后，检查一下代码里的 `API_URL` 有没有换成你在 Cloudflare 里复制的那个真实链接。
+2. 点击 GitHub 绿色的 **Commit changes** 保存。
+3. 等一两分钟刷新你的网页，随便输个错的激活码测试一下，如果弹出“网络请求失败”或者“激活码无效”，就说明前端代码已经成功跑起来，并且去敲你后端的门了！
 </body>
 </html>
