@@ -4,12 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>小凡健身 PRO - 终极知识库与排餐中枢</title>
-    
     <script src="https://cdn.tailwindcss.com"></script>
-    
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@4/dist/fp.umd.min.js"></script>
-
-    
     <style>
         body { background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #334155; -webkit-tap-highlight-color: transparent; }
         .brand-color { color: #2563eb; }
@@ -23,7 +19,7 @@
         @media (min-width: 768px) { .card { padding: 2rem; } }
         
         /* 移动端适配：强制16px防iOS自动缩放，调整高度 */
-        select, input { border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.6rem 0.75rem; width: 100%; outline: none; transition: all 0.2 ease; background-color: #f8fafc; color: #1e293b; font-weight: 500; font-size: 16px !important; }
+        select, input { border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.6rem 0.75rem; width: 100%; outline: none; transition: all 0.2s ease; background-color: #f8fafc; color: #1e293b; font-weight: 500; font-size: 16px !important; }
         select:focus, input:focus { border-color: #2563eb; background-color: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         label { font-weight: 600; color: #475569; margin-bottom: 0.3rem; display: block; font-size: 0.875rem;}
         
@@ -31,7 +27,7 @@
         .data-table th, .data-table td { border-bottom: 1px solid #f1f5f9; padding: 1rem 0.75rem; text-align: center; }
         .data-table td:first-child { text-align: left; font-weight: 600; color: #1e293b; width: 22%; }
         .data-table th { background-color: #f8fafc; font-weight: 600; color: #64748b; text-align: center; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;}
-        .data-table tr:hover { background-color: #f8fafc; transition: background-color 0.2; }
+        .data-table tr:hover { background-color: #f8fafc; transition: background-color 0.2s; }
 
         .sets-input { width: 60px; text-align: center; padding: 0.4rem; font-weight: bold; color: #2563eb; }
         .weight-input { width: 80px; text-align: center; padding: 0.6rem; font-weight: bold; font-size: 1.1rem !important; }
@@ -48,11 +44,11 @@
         nav { backdrop-filter: blur(8px); background-color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid #e2e8f0; }
         /* 移动端适配：开启 iOS 平滑惯性滚动 */
         #main-nav { -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
-        .nav-btn { cursor: pointer; padding: 1rem 1.25rem; font-weight: 600; color: #64748b; border-bottom: 3px solid transparent; transition: all 0.2; font-size: 0.95rem; white-space: nowrap; }
+        .nav-btn { cursor: pointer; padding: 1rem 1.25rem; font-weight: 600; color: #64748b; border-bottom: 3px solid transparent; transition: all 0.2s; font-size: 0.95rem; white-space: nowrap; }
         .nav-btn:hover { color: #1e293b; }
         .nav-active { color: #2563eb; border-bottom-color: #2563eb; }
 
-        .article-btn { width: 100%; text-align: left; padding: 0.75rem 1rem; font-size: 0.875rem; border-radius: 0.5rem; transition: all 0.2; color: #475569; font-weight: 500;}
+        .article-btn { width: 100%; text-align: left; padding: 0.75rem 1rem; font-size: 0.875rem; border-radius: 0.5rem; transition: all 0.2s; color: #475569; font-weight: 500;}
         .article-btn:hover { background-color: #f1f5f9; color: #1e293b;}
         .article-active { background-color: #eff6ff; color: #2563eb; font-weight: 700; }
 
@@ -63,7 +59,7 @@
         .content-box ul li::before { content: "•"; color: #2563eb; font-weight: bold; position: absolute; left: 0; }
         .highlight-box { background-color: #f8fafc; padding: 1.25rem; border-radius: 0.5rem; border-left: 4px solid #2563eb; margin: 1.5rem 0; font-size: 0.9rem; color: #1e293b;}
         
-        .data-matrix-box { background-color: #f8fafc; padding: 1.25rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2;}
+        .data-matrix-box { background-color: #f8fafc; padding: 1.25rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s;}
         .data-matrix-box:hover { border-color: #cbd5e1; background-color: #f1f5f9;}
         .data-matrix-title { font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em;}
         .data-matrix-value { font-size: 1.875rem; font-weight: 900; color: #0f172a; line-height: 1;}
@@ -76,7 +72,7 @@
         @media (min-width: 768px) { .exec-timer-display { font-size: 4rem; } }
         .rest-timer-display { font-size: 2.5rem; font-weight: 900; color: #f59e0b; font-variant-numeric: tabular-nums; line-height: 1; }
         
-        .exec-btn { padding: 1rem 2rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; transition: all 0.2; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; }
+        .exec-btn { padding: 1rem 2rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; transition: all 0.2s; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; }
         .exec-btn-primary { background-color: #0f172a; color: white; }
         .exec-btn-primary:hover { background-color: #1e293b; transform: scale(1.02); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .exec-btn-primary:active { transform: scale(0.98); }
@@ -84,19 +80,19 @@
         .exec-btn-success:hover { background-color: #16a34a; }
         .exec-btn-rest { background-color: #f59e0b; color: white; width: 100%; }
         
-        .set-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #f1f5f9; transition: all 0.2; }
+        .set-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #f1f5f9; transition: all 0.2s; }
         .set-item:last-child { border-bottom: none; }
         .set-item.completed { background-color: #f0fdf4; opacity: 0.6; }
         .set-item.completed .set-text { text-decoration: line-through; color: #94a3b8; }
         .set-item.active { background-color: #eff6ff; border-left: 4px solid #2563eb; margin-left: -4px; border-radius: 0 0.5rem 0.5rem 0; }
         
-        .check-circle { width: 28px; height: 28px; border-radius: 9999px; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2; }
+        .check-circle { width: 28px; height: 28px; border-radius: 9999px; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
         .set-item.completed .check-circle { background-color: #22c55e; border-color: #22c55e; color: white; }
 
         .progress-bar-container { width: 100%; height: 6px; background-color: #e2e8f0; border-radius: 9999px; overflow: hidden; margin-bottom: 2rem; }
-        .progress-bar-fill { height: 100%; background-color: #2563eb; width: 0%; transition: width 0.5 cubic-bezier(0.4, 0, 0.2, 1); }
+        .progress-bar-fill { height: 100%; background-color: #2563eb; width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        .record-card { margin-top: 2rem; animation: fadeIn 0.5 ease; }
+        .record-card { margin-top: 2rem; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
         /* 表格容器滚动顺滑 */
@@ -105,6 +101,9 @@
         .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
+
+        /* 新增：激活遮罩平滑过渡 */
+        #activation-overlay { transition: opacity 0.5s ease; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
@@ -112,16 +111,15 @@
     <div id="activation-overlay" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center">
         <div class="p-8 max-w-sm w-full text-center">
             <h2 class="text-3xl font-black text-gray-900 mb-2">小凡健身 <span class="text-blue-600">PRO</span></h2>
-            <p class="text-sm text-gray-500 mb-8">请输入激活码解锁专属内容</p>
-            
-            <input type="text" id="activation-code-input" placeholder="输入激活码" class="w-full border-2 border-gray-200 rounded-xl px-4 py-4 mb-4 text-center font-bold text-xl uppercase focus:border-blue-600 outline-none">
-            
-            <button id="btn-activate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all text-lg">
-                立即绑定本设备
+            <p class="text-sm text-gray-500 mb-8">本系统为私域工具，请输入激活码解锁</p>
+            <input type="text" id="activation-code-input" placeholder="输入激活码" class="w-full border-2 border-gray-200 rounded-xl px-4 py-4 mb-4 text-center font-bold text-xl uppercase focus:border-blue-600 outline-none transition-all">
+            <button id="btn-activate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 rounded-xl transition-all text-lg shadow-lg">
+                立即绑定并解锁
             </button>
-            <p id="activation-error" class="text-red-500 text-sm font-bold mt-4 hidden"></p>
+            <p id="activation-error" class="text-red-500 text-sm font-bold mt-4 hidden bg-red-50 p-2 rounded-lg"></p>
         </div>
     </div>
+
     <nav class="sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -671,6 +669,8 @@
         };
 
         const AppState = {
+            // 新增：全局设备 ID 用于激活绑定
+            deviceId: "",
             planner: {
                 goal: 'cut', gender: 'male', activity: '1.2', weight: null, height: null, age: null, workoutTime: 'evening_after',
                 plan: [], totalCal: 0, totalCarb: 0, totalPro: 0, totalFat: 0
@@ -690,6 +690,72 @@
         const StorageSvc = {
             save(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {} },
             load(key) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : null; } catch (e) { return null; } }
+        };
+
+        // 新增：核心激活验证模块
+        const AuthModule = {
+            API_URL: "https://xf-auth-api.2462795033.workers.dev",
+            
+            init: function() {
+                // 如果已经激活，直接移除遮罩
+                if (localStorage.getItem('xf_pro_activated') === 'true') {
+                    document.getElementById('activation-overlay').style.display = 'none';
+                    return;
+                }
+
+                // 生成指纹
+                FingerprintJS.load().then(fp => fp.get()).then(result => {
+                    AppState.deviceId = result.visitorId;
+                }).catch(() => {
+                    AppState.deviceId = localStorage.getItem('xf_fallback_id') || "fb-" + Math.random().toString(36).substring(2);
+                    localStorage.setItem('xf_fallback_id', AppState.deviceId);
+                });
+
+                // 绑定按钮
+                document.getElementById('btn-activate').addEventListener('click', () => this.verify());
+            },
+
+            verify: function() {
+                const btn = document.getElementById('btn-activate');
+                const err = document.getElementById('activation-error');
+                const code = document.getElementById('activation-code-input').value.trim();
+
+                if (!code) {
+                    err.innerText = "请输入激活码";
+                    err.classList.remove('hidden');
+                    return;
+                }
+
+                btn.innerText = "校验中...";
+                btn.disabled = true;
+                err.classList.add('hidden');
+
+                fetch(this.API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ code: code, deviceId: AppState.deviceId })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.code === 200) {
+                        localStorage.setItem('xf_pro_activated', 'true');
+                        alert("🎉 解锁成功！欢迎使用 PRO 版");
+                        document.getElementById('activation-overlay').style.opacity = '0';
+                        setTimeout(() => { document.getElementById('activation-overlay').style.display = 'none'; }, 500);
+                    } else {
+                        err.innerText = data.msg;
+                        err.classList.remove('hidden');
+                    }
+                })
+                .catch(() => {
+                    err.innerText = "连接服务器失败，请稍后重试";
+                    err.classList.remove('hidden');
+                })
+                .finally(() => {
+                    btn.innerText = "立即绑定并解锁";
+                    btn.disabled = false;
+                });
+            }
         };
 
         const PlannerModule = {
@@ -853,7 +919,6 @@
                 UI.renderCanteen();
             },
 
-            // 新增核心功能：替换餐单里的单个菜品
             regenerateSingleDish(mealIndex, dishIndex) {
                 if (!AppState.planner.plan.length) return;
                 const meal = AppState.canteen.meals[mealIndex];
@@ -1159,37 +1224,37 @@
             },
 
             renderExecutor() {
-                const  = AppState.exec;
-                document.getElementById('exec-progress-bar').style.width = `${Math.min((.currentGlobalSetIndex/.totalSets)*100, 100)}%`;
-                document.getElementById('exec-set-counter').innerText = `${.currentGlobalSetIndex}/${.totalSets}`;
-                document.getElementById('exec-progress-text').innerText = .currentGlobalSetIndex >= .totalSets ? '全部完成' : `进行中: ${.flatSetList[.currentGlobalSetIndex]?.part}`;
+                const s = AppState.exec;
+                document.getElementById('exec-progress-bar').style.width = `${Math.min((s.currentGlobalSetIndex/s.totalSets)*100, 100)}%`;
+                document.getElementById('exec-set-counter').innerText = `${s.currentGlobalSetIndex}/${s.totalSets}`;
+                document.getElementById('exec-progress-text').innerText = s.currentGlobalSetIndex >= s.totalSets ? '全部完成' : `进行中: ${s.flatSetList[s.currentGlobalSetIndex]?.part}`;
                 
-                if (.isResting) {
+                if (s.isResting) {
                     document.getElementById('rest-timer-box').classList.remove('hidden');
                     const btn = document.getElementById('btn-finish-set');
                     btn.className = 'exec-btn exec-btn-rest flex-[2]'; btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>跳过休息`;
                 } else {
                     document.getElementById('rest-timer-box').classList.add('hidden');
-                    const curr = .flatSetList[.currentGlobalSetIndex];
+                    const curr = s.flatSetList[s.currentGlobalSetIndex];
                     if(curr) document.getElementById('exec-current-exercise').value = curr.name;
                     const btn = document.getElementById('btn-finish-set');
-                    btn.className = 'exec-btn exec-btn-success flex-[2]'; btn.innerHTML = .currentGlobalSetIndex >= .totalSets ? '查看记录' : `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
+                    btn.className = 'exec-btn exec-btn-success flex-[2]'; btn.innerHTML = s.currentGlobalSetIndex >= s.totalSets ? '查看记录' : `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
                 }
 
                 const container = document.getElementById('set-list-container'); container.innerHTML = '';
                 let lastPart = '';
-                .flatSetList.forEach((item, index) => {
+                s.flatSetList.forEach((item, index) => {
                     if(item.part !== lastPart) {
                         container.innerHTML += `<div class="px-4 py-2 bg-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">${item.part}</div>`;
                         lastPart = item.part;
                     }
-                    container.innerHTML += `<div id="set-item-${index}" class="set-item ${item.isCompleted ? 'completed' : ''} ${index === .currentGlobalSetIndex && !item.isCompleted && !.isResting ? 'active' : ''}">
+                    container.innerHTML += `<div id="set-item-${index}" class="set-item ${item.isCompleted ? 'completed' : ''} ${index === s.currentGlobalSetIndex && !item.isCompleted && !s.isResting ? 'active' : ''}">
                         <div class="flex items-center gap-3"><div class="check-circle">${item.isCompleted ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}</div><div><p class="font-bold text-gray-900 set-text">${item.name}</p><p class="text-xs text-gray-500">第 ${item.setNum} 组</p></div></div>
                         ${item.isCompleted && item.weight > 0 ? `<span class="text-sm font-bold text-gray-400">${item.weight}kg</span>` : ''}
                     </div>`;
                 });
                 
-                const activeEl = document.getElementById(`set-item-${.currentGlobalSetIndex}`);
+                const activeEl = document.getElementById(`set-item-${s.currentGlobalSetIndex}`);
                 if (activeEl) activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             },
             updateExecTime() { document.getElementById('timer-display').innerText = `${String(Math.floor(AppState.exec.elapsedSeconds/60)).padStart(2,'0')}:${String(AppState.exec.elapsedSeconds%60).padStart(2,'0')}`; },
@@ -1314,120 +1379,52 @@
             }
         };
 
-// --- 1. 全局方法 ---
-window.deleteRecord = function(date) { TrainingModule.deleteDateRecord(date); };
-window.regenerateSingleMeal = function(index) { MealHelpers.regenerateSingleMeal(index); };
-window.regenerateSingleDish = function(mealIndex, dishIndex) { MealHelpers.regenerateSingleDish(mealIndex, dishIndex); };
+        // 将方法暴露给全局，供动态生成的 HTML 内联 onclick 调用
+        window.deleteRecord = function(date) { TrainingModule.deleteDateRecord(date); };
+        window.regenerateSingleMeal = function(index) { MealHelpers.regenerateSingleMeal(index); };
+        window.regenerateSingleDish = function(mealIndex, dishIndex) { MealHelpers.regenerateSingleDish(mealIndex, dishIndex); };
 
-// --- 2. 主入口 ---
-document.addEventListener('DOMContentLoaded', function() {
-    var API_URL = "https://xf-auth-api.2462795033.workers.dev";
-    var overlay = document.getElementById('activation-overlay');
-    var deviceId = "";
+        document.addEventListener('DOMContentLoaded', () => {
+            // 新增：DOM 加载完成后第一时间初始化鉴权模块
+            AuthModule.init();
 
-    // 激活校验函数
-    function startAuth() {
-        if (localStorage.getItem('xf_pro_activated') === 'true') {
-            if (overlay) overlay.style.display = 'none';
-            return;
-        }
+            document.getElementById('main-nav').addEventListener('click', (e) => { if (e.target.dataset.tab) UI.switchTab(e.target.dataset.tab); });
+            document.getElementById('btn-generate-plan').addEventListener('click', () => PlannerModule.generate());
+            
+            document.getElementById('btn-show-tracker').addEventListener('click', () => MealHelpers.initTracker());
+            document.getElementById('btn-show-canteen').addEventListener('click', () => MealHelpers.generateCanteen());
+            document.getElementById('btn-add-snack').addEventListener('click', () => MealHelpers.addSnack());
+            document.getElementById('btn-clear-tracker').addEventListener('click', () => MealHelpers.clearTracker());
+            document.getElementById('btn-save-tracker').addEventListener('click', () => MealHelpers.saveTracker());
+            document.getElementById('btn-regenerate-canteen').addEventListener('click', () => MealHelpers.generateCanteen());
+            
+            document.getElementById('trainSplit').addEventListener('change', () => TrainingModule.updateDays());
+            document.getElementById('btn-generate-training').addEventListener('click', () => TrainingModule.generate());
+            document.getElementById('btn-start-exec').addEventListener('click', () => ExecutorModule.start());
+            document.getElementById('btn-finish-set').addEventListener('click', () => ExecutorModule.finishSet());
+            document.getElementById('btn-exit-exec').addEventListener('click', () => ExecutorModule.exit());
+            
+            document.getElementById('btn-clear-history').addEventListener('click', () => TrainingModule.clearAllHistory());
+            document.getElementById('btn-copy-record').addEventListener('click', () => {
+                navigator.clipboard.writeText(document.getElementById('record-content').innerText).then(()=>alert('复制成功！'));
+            });
 
-        // 获取指纹
-        FingerprintJS.load().then(function(fp) {
-            return fp.get();
-        }).then(function(result) {
-            deviceId = result.visitorId;
-        })['catch'](function(err) {
-            deviceId = localStorage.getItem('xf_fallback_id') || ("fb-" + Math.random().toString(36).slice(2));
-            localStorage.setItem('xf_fallback_id', deviceId);
-        });
-
-        var btn = document.getElementById('btn-activate');
-        if (btn) {
-            btn.onclick = function() {
-                var codeInput = document.getElementById('activation-code-input').value.trim();
-                var errorMsg = document.getElementById('activation-error');
-                if (!codeInput) {
-                    errorMsg.innerText = "请输入激活码";
-                    errorMsg.classList.remove('hidden');
-                    return;
-                }
-                btn.innerText = "正在验证...";
-                btn.disabled = true;
+            TrainingModule.updateDays();
+            const savedPlan = StorageSvc.load('userMealPlan');
+            if(savedPlan && savedPlan.plan && savedPlan.plan.length > 0) {
+                AppState.planner.plan = savedPlan.plan;
                 
-                fetch(API_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ code: codeInput, deviceId: deviceId })
-                }).then(function(r) { return r.json(); })
-                .then(function(res) {
-                    if (res.code === 200) {
-                        localStorage.setItem('xf_pro_activated', 'true');
-                        alert("🎉 " + res.msg);
-                        if (overlay) overlay.style.display = 'none';
-                    } else {
-                        errorMsg.innerText = res.msg;
-                        errorMsg.classList.remove('hidden');
-                    }
-                })['catch'](function() {
-                    errorMsg.innerText = "网络请求失败";
-                    errorMsg.classList.remove('hidden');
-                }).finally(function() {
-                    btn.innerText = "立即绑定本设备";
-                    btn.disabled = false;
-                });
-            };
-        }
-    }
+                AppState.planner.goal = savedPlan.goal || 'cut';
+                const goalSelect = document.getElementById('goal');
+                if (goalSelect) goalSelect.value = AppState.planner.goal;
 
-    // 执行
-    startAuth();
-
-    // --- 以下是原本的业务逻辑绑定 (修正了 ID 检查) ---
-    var bindClick = function(id, fn) {
-        var el = document.getElementById(id);
-        if (el) el.addEventListener('click', fn);
-    };
-
-    bindClick('main-nav', function(e) { if (e.target.dataset.tab) UI.switchTab(e.target.dataset.tab); });
-    bindClick('btn-generate-plan', function() { PlannerModule.generate(); });
-    bindClick('btn-show-tracker', function() { MealHelpers.initTracker(); });
-    bindClick('btn-show-canteen', function() { MealHelpers.generateCanteen(); });
-    bindClick('btn-add-snack', function() { MealHelpers.addSnack(); });
-    bindClick('btn-clear-tracker', function() { MealHelpers.clearTracker(); });
-    bindClick('btn-save-tracker', function() { MealHelpers.saveTracker(); });
-    bindClick('btn-regenerate-canteen', function() { MealHelpers.generateCanteen(); });
-    
-    var ts = document.getElementById('trainSplit');
-    if (ts) ts.onchange = function() { TrainingModule.updateDays(); };
-
-    bindClick('btn-generate-training', function() { TrainingModule.generate(); });
-    bindClick('btn-start-exec', function() { ExecutorModule.start(); });
-    bindClick('btn-finish-set', function() { ExecutorModule.finishSet(); });
-    bindClick('btn-exit-exec', function() { ExecutorModule.exit(); });
-    bindClick('btn-clear-history', function() { TrainingModule.clearAllHistory(); });
-    
-    bindClick('btn-copy-record', function() {
-        navigator.clipboard.writeText(document.getElementById('record-content').innerText).then(function() {
-            alert('复制成功！');
+                AppState.planner.totalCal = savedPlan.plan.reduce((sum,m)=>sum+(m.carbs*4+m.protein*4+m.fat*9),0);
+                AppState.planner.totalCarb = savedPlan.plan.reduce((sum,m)=>sum+m.carbs,0);
+                AppState.planner.totalPro = savedPlan.plan.reduce((sum,m)=>sum+m.protein,0);
+                AppState.planner.totalFat = savedPlan.plan.reduce((sum,m)=>sum+m.fat,0);
+                UI.renderPlannerResult();
+            }
         });
-    });
-
-    // 初始化页面
-    TrainingModule.updateDays();
-    var saved = StorageSvc.load('userMealPlan');
-    if(saved && saved.plan && saved.plan.length > 0) {
-        AppState.planner.plan = saved.plan;
-        AppState.planner.goal = saved.goal || 'cut';
-        var gs = document.getElementById('goal');
-        if (gs) gs.value = AppState.planner.goal;
-        AppState.planner.totalCal = saved.plan.reduce(function(, m) { return  + (m.carbs * 4 + m.protein * 4 + m.fat * 9); }, 0);
-        AppState.planner.totalCarb = saved.plan.reduce(function(, m) { return  + m.carbs; }, 0);
-        AppState.planner.totalPro = saved.plan.reduce(function(, m) { return  + m.protein; }, 0);
-        AppState.planner.totalFat = saved.plan.reduce(function(, m) { return  + m.fat; }, 0);
-        UI.renderPlannerResult();
-    }
-});
     </script>
 </body>
 </html>
