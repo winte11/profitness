@@ -23,7 +23,7 @@
         @media (min-width: 768px) { .card { padding: 2rem; } }
         
         /* 移动端适配：强制16px防iOS自动缩放，调整高度 */
-        select, input { border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.6rem 0.75rem; width: 100%; outline: none; transition: all 0.2s ease; background-color: #f8fafc; color: #1e293b; font-weight: 500; font-size: 16px !important; }
+        select, input { border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.6rem 0.75rem; width: 100%; outline: none; transition: all 0.2 ease; background-color: #f8fafc; color: #1e293b; font-weight: 500; font-size: 16px !important; }
         select:focus, input:focus { border-color: #2563eb; background-color: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         label { font-weight: 600; color: #475569; margin-bottom: 0.3rem; display: block; font-size: 0.875rem;}
         
@@ -31,7 +31,7 @@
         .data-table th, .data-table td { border-bottom: 1px solid #f1f5f9; padding: 1rem 0.75rem; text-align: center; }
         .data-table td:first-child { text-align: left; font-weight: 600; color: #1e293b; width: 22%; }
         .data-table th { background-color: #f8fafc; font-weight: 600; color: #64748b; text-align: center; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;}
-        .data-table tr:hover { background-color: #f8fafc; transition: background-color 0.2s; }
+        .data-table tr:hover { background-color: #f8fafc; transition: background-color 0.2; }
 
         .sets-input { width: 60px; text-align: center; padding: 0.4rem; font-weight: bold; color: #2563eb; }
         .weight-input { width: 80px; text-align: center; padding: 0.6rem; font-weight: bold; font-size: 1.1rem !important; }
@@ -48,11 +48,11 @@
         nav { backdrop-filter: blur(8px); background-color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid #e2e8f0; }
         /* 移动端适配：开启 iOS 平滑惯性滚动 */
         #main-nav { -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
-        .nav-btn { cursor: pointer; padding: 1rem 1.25rem; font-weight: 600; color: #64748b; border-bottom: 3px solid transparent; transition: all 0.2s; font-size: 0.95rem; white-space: nowrap; }
+        .nav-btn { cursor: pointer; padding: 1rem 1.25rem; font-weight: 600; color: #64748b; border-bottom: 3px solid transparent; transition: all 0.2; font-size: 0.95rem; white-space: nowrap; }
         .nav-btn:hover { color: #1e293b; }
         .nav-active { color: #2563eb; border-bottom-color: #2563eb; }
 
-        .article-btn { width: 100%; text-align: left; padding: 0.75rem 1rem; font-size: 0.875rem; border-radius: 0.5rem; transition: all 0.2s; color: #475569; font-weight: 500;}
+        .article-btn { width: 100%; text-align: left; padding: 0.75rem 1rem; font-size: 0.875rem; border-radius: 0.5rem; transition: all 0.2; color: #475569; font-weight: 500;}
         .article-btn:hover { background-color: #f1f5f9; color: #1e293b;}
         .article-active { background-color: #eff6ff; color: #2563eb; font-weight: 700; }
 
@@ -63,7 +63,7 @@
         .content-box ul li::before { content: "•"; color: #2563eb; font-weight: bold; position: absolute; left: 0; }
         .highlight-box { background-color: #f8fafc; padding: 1.25rem; border-radius: 0.5rem; border-left: 4px solid #2563eb; margin: 1.5rem 0; font-size: 0.9rem; color: #1e293b;}
         
-        .data-matrix-box { background-color: #f8fafc; padding: 1.25rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s;}
+        .data-matrix-box { background-color: #f8fafc; padding: 1.25rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2;}
         .data-matrix-box:hover { border-color: #cbd5e1; background-color: #f1f5f9;}
         .data-matrix-title { font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em;}
         .data-matrix-value { font-size: 1.875rem; font-weight: 900; color: #0f172a; line-height: 1;}
@@ -76,7 +76,7 @@
         @media (min-width: 768px) { .exec-timer-display { font-size: 4rem; } }
         .rest-timer-display { font-size: 2.5rem; font-weight: 900; color: #f59e0b; font-variant-numeric: tabular-nums; line-height: 1; }
         
-        .exec-btn { padding: 1rem 2rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; transition: all 0.2s; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; }
+        .exec-btn { padding: 1rem 2rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; transition: all 0.2; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; }
         .exec-btn-primary { background-color: #0f172a; color: white; }
         .exec-btn-primary:hover { background-color: #1e293b; transform: scale(1.02); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .exec-btn-primary:active { transform: scale(0.98); }
@@ -1159,37 +1159,37 @@
             },
 
             renderExecutor() {
-                const s = AppState.exec;
-                document.getElementById('exec-progress-bar').style.width = `${Math.min((s.currentGlobalSetIndex/s.totalSets)*100, 100)}%`;
-                document.getElementById('exec-set-counter').innerText = `${s.currentGlobalSetIndex}/${s.totalSets}`;
-                document.getElementById('exec-progress-text').innerText = s.currentGlobalSetIndex >= s.totalSets ? '全部完成' : `进行中: ${s.flatSetList[s.currentGlobalSetIndex]?.part}`;
+                const  = AppState.exec;
+                document.getElementById('exec-progress-bar').style.width = `${Math.min((.currentGlobalSetIndex/.totalSets)*100, 100)}%`;
+                document.getElementById('exec-set-counter').innerText = `${.currentGlobalSetIndex}/${.totalSets}`;
+                document.getElementById('exec-progress-text').innerText = .currentGlobalSetIndex >= .totalSets ? '全部完成' : `进行中: ${.flatSetList[.currentGlobalSetIndex]?.part}`;
                 
-                if (s.isResting) {
+                if (.isResting) {
                     document.getElementById('rest-timer-box').classList.remove('hidden');
                     const btn = document.getElementById('btn-finish-set');
                     btn.className = 'exec-btn exec-btn-rest flex-[2]'; btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>跳过休息`;
                 } else {
                     document.getElementById('rest-timer-box').classList.add('hidden');
-                    const curr = s.flatSetList[s.currentGlobalSetIndex];
+                    const curr = .flatSetList[.currentGlobalSetIndex];
                     if(curr) document.getElementById('exec-current-exercise').value = curr.name;
                     const btn = document.getElementById('btn-finish-set');
-                    btn.className = 'exec-btn exec-btn-success flex-[2]'; btn.innerHTML = s.currentGlobalSetIndex >= s.totalSets ? '查看记录' : `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
+                    btn.className = 'exec-btn exec-btn-success flex-[2]'; btn.innerHTML = .currentGlobalSetIndex >= .totalSets ? '查看记录' : `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
                 }
 
                 const container = document.getElementById('set-list-container'); container.innerHTML = '';
                 let lastPart = '';
-                s.flatSetList.forEach((item, index) => {
+                .flatSetList.forEach((item, index) => {
                     if(item.part !== lastPart) {
                         container.innerHTML += `<div class="px-4 py-2 bg-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">${item.part}</div>`;
                         lastPart = item.part;
                     }
-                    container.innerHTML += `<div id="set-item-${index}" class="set-item ${item.isCompleted ? 'completed' : ''} ${index === s.currentGlobalSetIndex && !item.isCompleted && !s.isResting ? 'active' : ''}">
+                    container.innerHTML += `<div id="set-item-${index}" class="set-item ${item.isCompleted ? 'completed' : ''} ${index === .currentGlobalSetIndex && !item.isCompleted && !.isResting ? 'active' : ''}">
                         <div class="flex items-center gap-3"><div class="check-circle">${item.isCompleted ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}</div><div><p class="font-bold text-gray-900 set-text">${item.name}</p><p class="text-xs text-gray-500">第 ${item.setNum} 组</p></div></div>
                         ${item.isCompleted && item.weight > 0 ? `<span class="text-sm font-bold text-gray-400">${item.weight}kg</span>` : ''}
                     </div>`;
                 });
                 
-                const activeEl = document.getElementById(`set-item-${s.currentGlobalSetIndex}`);
+                const activeEl = document.getElementById(`set-item-${.currentGlobalSetIndex}`);
                 if (activeEl) activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             },
             updateExecTime() { document.getElementById('timer-display').innerText = `${String(Math.floor(AppState.exec.elapsedSeconds/60)).padStart(2,'0')}:${String(AppState.exec.elapsedSeconds%60).padStart(2,'0')}`; },
@@ -1314,125 +1314,109 @@
             }
         };
 
-        // 将方法暴露给全局，供动态生成的 HTML 内联 onclick 调用
-        window.deleteRecord = function(date) { TrainingModule.deleteDateRecord(date); };
-        window.regenerateSingleMeal = function(index) { MealHelpers.regenerateSingleMeal(index); };
-        window.regenerateSingleDish = function(mealIndex, dishIndex) { MealHelpers.regenerateSingleDish(mealIndex, dishIndex); };
+     // 将方法暴露给全局
+window.deleteRecord = function(date) { TrainingModule.deleteDateRecord(date); };
+window.regenerateSingleMeal = function(index) { MealHelpers.regenerateSingleMeal(index); };
+window.regenerateSingleDish = function(mealIndex, dishIndex) { MealHelpers.regenerateSingleDish(mealIndex, dishIndex); };
 
-        document.addEventListener('DOMContentLoaded', () => {
-// ================= 激活码校验模块 (极简版) =================
-        const AuthModule = {
-            API_URL: "https://xf-auth-api.2462795033.workers.dev",
-            overlay: document.getElementById('activation-overlay'),
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // ================= 激活码校验模块 =================
+    const AuthModule = {
+        API_URL: "https://xf-auth-api.2462795033.workers.dev",
+        overlay: document.getElementById('activation-overlay'),
 
-            async init() {
-                // 1. 如果缓存显示已激活，直接把遮罩层删掉
-                if (localStorage.getItem('xf_pro_activated') === 'true') {
+        async init() {
+            if (localStorage.getItem('xf_pro_activated') === 'true') {
+                if (this.overlay) this.overlay.style.display = 'none'; 
+                return;
+            }
+            try {
+                const fp = await (await FingerprintJS.load()).get();
+                this.deviceId = fp.visitorId;
+            } catch (err) {
+                let fallbackId = localStorage.getItem('xf_fallback_id') || ("fallback-" + Math.random().toString(36).substring(2, 15));
+                localStorage.setItem('xf_fallback_id', fallbackId);
+                this.deviceId = fallbackId;
+            }
+            const btn = document.getElementById('btn-activate');
+            if (btn) btn.addEventListener('click', () => this.verifyCode());
+        },
+
+        async verifyCode() {
+            const btn = document.getElementById('btn-activate');
+            const errorMsg = document.getElementById('activation-error');
+            const codeInput = document.getElementById('activation-code-input').value.trim();
+            if (!codeInput) {
+                errorMsg.innerText = "请输入激活码"; 
+                errorMsg.classList.remove('hidden');
+                return;
+            }
+            btn.innerText = "正在验证..."; btn.disabled = true; errorMsg.classList.add('hidden');
+            try {
+                const response = await fetch(this.API_URL, {
+                    method: "POST", 
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ code: codeInput, deviceId: this.deviceId })
+                });
+                const resData = await response.json();
+                if (resData.code === 200) {
+                    localStorage.setItem('xf_pro_activated', 'true');
+                    alert("🎉 " + resData.msg);
                     this.overlay.style.display = 'none'; 
-                    return;
+                } else {
+                    errorMsg.innerText = resData.msg; errorMsg.classList.remove('hidden');
                 }
-
-                // 2. 生成设备唯一指纹
-                try {
-                    const fp = await (await FingerprintJS.load()).get();
-                    this.deviceId = fp.visitorId;
-                } catch (err) {
-                    let fallbackId = localStorage.getItem('xf_fallback_id') || ("fallback-" + Math.random().toString(36).substring(2, 15));
-                    localStorage.setItem('xf_fallback_id', fallbackId);
-                    this.deviceId = fallbackId;
-                }
-
-                // 3. 绑定按钮点击事件
-                document.getElementById('btn-activate').addEventListener('click', () => this.verifyCode());
-            },
-
-            async verifyCode() {
-                const btn = document.getElementById('btn-activate');
-                const errorMsg = document.getElementById('activation-error');
-                const codeInput = document.getElementById('activation-code-input').value.trim();
-
-                if (!codeInput) {
-                    errorMsg.innerText = "请输入激活码"; 
-                    errorMsg.classList.remove('hidden');
-                    return;
-                }
-
-                btn.innerText = "正在验证..."; 
-                btn.disabled = true; 
-                errorMsg.classList.add('hidden');
-
-                try {
-                    const response = await fetch(this.API_URL, {
-                        method: "POST", 
-                        headers: { "Content-Type": "application/json" },
-                        body: JSON.stringify({ code: codeInput, deviceId: this.deviceId })
-                    });
-                    const resData = await response.json();
-
-                    if (resData.code === 200) {
-                        // 激活成功：存入本地缓存，弹窗提示，并隐藏遮罩层
-                        localStorage.setItem('xf_pro_activated', 'true');
-                        alert("🎉 " + resData.msg);
-                        this.overlay.style.display = 'none'; 
-                    } else {
-                        // 激活失败：显示报错
-                        errorMsg.innerText = resData.msg; 
-                        errorMsg.classList.remove('hidden');
-                    }
-                } catch (error) {
-                    errorMsg.innerText = "网络请求失败，请检查网络或稍后重试"; 
-                    errorMsg.classList.remove('hidden');
-                } finally {
-                    btn.innerText = "立即绑定本设备"; 
-                    btn.disabled = false;
-                }
+            } catch (error) {
+                errorMsg.innerText = "网络请求失败"; errorMsg.classList.remove('hidden');
+            } finally {
+                btn.innerText = "立即绑定本设备"; btn.disabled = false;
             }
-        };
+        }
+    };
 
-        // 初始化激活验证
-        AuthModule.init();
+    // 1. 初始化激活验证
+    AuthModule.init();
 
-        // -----------------------------------------------------
-        // 下面是你原来绑定的那些事件，保留不动
-        document.getElementById('main-nav').addEventListener('click', (e) => { 
-        // ...
-            document.getElementById('main-nav').addEventListener('click', (e) => { if (e.target.dataset.tab) UI.switchTab(e.target.dataset.tab); });
-            document.getElementById('btn-generate-plan').addEventListener('click', () => PlannerModule.generate());
-            
-            document.getElementById('btn-show-tracker').addEventListener('click', () => MealHelpers.initTracker());
-            document.getElementById('btn-show-canteen').addEventListener('click', () => MealHelpers.generateCanteen());
-            document.getElementById('btn-add-snack').addEventListener('click', () => MealHelpers.addSnack());
-            document.getElementById('btn-clear-tracker').addEventListener('click', () => MealHelpers.clearTracker());
-            document.getElementById('btn-save-tracker').addEventListener('click', () => MealHelpers.saveTracker());
-            document.getElementById('btn-regenerate-canteen').addEventListener('click', () => MealHelpers.generateCanteen());
-            
-            document.getElementById('trainSplit').addEventListener('change', () => TrainingModule.updateDays());
-            document.getElementById('btn-generate-training').addEventListener('click', () => TrainingModule.generate());
-            document.getElementById('btn-start-exec').addEventListener('click', () => ExecutorModule.start());
-            document.getElementById('btn-finish-set').addEventListener('click', () => ExecutorModule.finishSet());
-            document.getElementById('btn-exit-exec').addEventListener('click', () => ExecutorModule.exit());
-            
-            document.getElementById('btn-clear-history').addEventListener('click', () => TrainingModule.clearAllHistory());
-            document.getElementById('btn-copy-record').addEventListener('click', () => {
-                navigator.clipboard.writeText(document.getElementById('record-content').innerText).then(()=>alert('复制成功！'));
-            });
+    // 2. 原有的导航与生成事件
+    document.getElementById('main-nav').addEventListener('click', (e) => { if (e.target.dataset.tab) UI.switchTab(e.target.dataset.tab); });
+    document.getElementById('btn-generate-plan').addEventListener('click', () => PlannerModule.generate());
+    
+    // 3. 原有的饮食/生成器事件
+    document.getElementById('btn-show-tracker').addEventListener('click', () => MealHelpers.initTracker());
+    document.getElementById('btn-show-canteen').addEventListener('click', () => MealHelpers.generateCanteen());
+    document.getElementById('btn-add-snack').addEventListener('click', () => MealHelpers.addSnack());
+    document.getElementById('btn-clear-tracker').addEventListener('click', () => MealHelpers.clearTracker());
+    document.getElementById('btn-save-tracker').addEventListener('click', () => MealHelpers.saveTracker());
+    document.getElementById('btn-regenerate-canteen').addEventListener('click', () => MealHelpers.generateCanteen());
+    
+    // 4. 原有的训练/执行器事件
+    document.getElementById('trainSplit').addEventListener('change', () => TrainingModule.updateDays());
+    document.getElementById('btn-generate-training').addEventListener('click', () => TrainingModule.generate());
+    document.getElementById('btn-start-exec').addEventListener('click', () => ExecutorModule.start());
+    document.getElementById('btn-finish-set').addEventListener('click', () => ExecutorModule.finishSet());
+    document.getElementById('btn-exit-exec').addEventListener('click', () => ExecutorModule.exit());
+    
+    // 5. 其他历史/保存逻辑
+    document.getElementById('btn-clear-history').addEventListener('click', () => TrainingModule.clearAllHistory());
+    document.getElementById('btn-copy-record').addEventListener('click', () => {
+        navigator.clipboard.writeText(document.getElementById('record-content').innerText).then(()=>alert('复制成功！'));
+    });
 
-            TrainingModule.updateDays();
-            const savedPlan = StorageSvc.load('userMealPlan');
-            if(savedPlan && savedPlan.plan && savedPlan.plan.length > 0) {
-                AppState.planner.plan = savedPlan.plan;
-                
-                AppState.planner.goal = savedPlan.goal || 'cut';
-                const goalSelect = document.getElementById('goal');
-                if (goalSelect) goalSelect.value = AppState.planner.goal;
-
-                AppState.planner.totalCal = savedPlan.plan.reduce((sum,m)=>sum+(m.carbs*4+m.protein*4+m.fat*9),0);
-                AppState.planner.totalCarb = savedPlan.plan.reduce((sum,m)=>sum+m.carbs,0);
-                AppState.planner.totalPro = savedPlan.plan.reduce((sum,m)=>sum+m.protein,0);
-                AppState.planner.totalFat = savedPlan.plan.reduce((sum,m)=>sum+m.fat,0);
-                UI.renderPlannerResult();
-            }
-        });
+    TrainingModule.updateDays();
+    const savedPlan = StorageSvc.load('userMealPlan');
+    if(savedPlan && savedPlan.plan && savedPlan.plan.length > 0) {
+        AppState.planner.plan = savedPlan.plan;
+        AppState.planner.goal = savedPlan.goal || 'cut';
+        const goalSelect = document.getElementById('goal');
+        if (goalSelect) goalSelect.value = AppState.planner.goal;
+        AppState.planner.totalCal = savedPlan.plan.reduce((sum,m)=>sum+(m.carbs*4+m.protein*4+m.fat*9),0);
+        AppState.planner.totalCarb = savedPlan.plan.reduce((sum,m)=>sum+m.carbs,0);
+        AppState.planner.totalPro = savedPlan.plan.reduce((sum,m)=>sum+m.protein,0);
+        AppState.planner.totalFat = savedPlan.plan.reduce((sum,m)=>sum+m.fat,0);
+        UI.renderPlannerResult();
+    }
+}); // 👈 整个 DOMContentLoaded 事件在这里结束
     </script>
 </body>
 </html>
