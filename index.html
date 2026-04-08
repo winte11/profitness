@@ -140,9 +140,9 @@
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                    <div><label>体重 (kg)</label><input type="number" id="weight" value="70"></div>
-                    <div><label>身高 (cm)</label><input type="number" id="height" value="175"></div>
-                    <div><label>年龄 (岁)</label><input type="number" id="age" value="25"></div>
+                    <div><label>体重 (kg)</label><input type="number" id="weight" value="" placeholder="填写体重"></div>
+                    <div><label>身高 (cm)</label><input type="number" id="height" value="" placeholder="填写身高"></div>
+                    <div><label>年龄 (岁)</label><input type="number" id="age" value="" placeholder="填写年龄"></div>
                     <div>
                         <label>日常活动量 (NEAT)</label>
                         <select id="activity">
@@ -521,7 +521,7 @@
                 <h2 class="text-lg font-bold mb-6 flex items-center text-gray-900 border-b border-gray-100 pb-4">
                     <span class="text-2xl mr-3">🍱</span> 常见外卖/食堂菜品宏量图鉴 (Visual DB)
                 </h2>
-                <div id="visual-db-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5"></div>
+                <div id="visual-db-grid" class="space-y-10"></div>
             </div>
         </section>
 
@@ -579,7 +579,7 @@
                             
                             <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
                                 <h4 class="font-bold text-gray-900 mb-2 flex items-center"><span class="w-2 h-2 rounded-full bg-yellow-500 mr-2"></span> 3. 关于食堂的菜单</h4>
-                                <p class="text-sm text-gray-600 leading-relaxed">一键生成的食堂餐单绝对不是预设好的“死菜单”，是我根据deep research这个功能推断出大概食堂阿姨或外卖一份的量，当然这个肯定是有出入的，但对于那些对自己饮食要求没那么严格的人来说这个是足够的，如果你对自己的饮食想严格一点，<strong class="text-green-600">强烈建议大家买个克重称</strong>，平时遇到什么东西都称一下，让自己对克数有个大概的概念。</p>
+                                <p class="text-sm text-gray-600 leading-relaxed">一键生成的食堂餐单绝对不是预设好的“死菜单”，是我根据推断出大概食堂阿姨或外卖一份的量，当然这个肯定是有出入的，但对于那些对自己饮食要求没那么严格的人来说这个是足够的，如果你对自己的饮食想严格一点，<strong class="text-green-600">强烈建议大家买个克重称</strong>，平时遇到什么东西都称一下，让自己对克数有个大概的概念。</p>
                             </div>
 
                             <div class="bg-gray-50 border border-gray-200 rounded-xl p-5">
@@ -611,32 +611,77 @@
 
     <script>
         const CANTEEN_DATABASE = [
+            // 原有大荤硬菜类
             { category: '大荤硬菜类', name: '红烧肉', weight: 120, calories: 480, carbs: 2, protein: 12, fat: 45, goals: ['bulk'], tips: '脂肪含量极高，减脂期慎选' },
             { category: '大荤硬菜类', name: '红烧排骨', weight: 150, calories: 410, carbs: 8, protein: 25, fat: 28, goals: ['recomp', 'bulk'], tips: '骨头占重，实际肉量较少' },
             { category: '大荤硬菜类', name: '糖醋里脊', weight: 150, calories: 450, carbs: 35, protein: 18, fat: 22, goals: ['bulk'], tips: '含糖量高，减脂期禁用' },
             { category: '大荤硬菜类', name: '清蒸鱼', weight: 150, calories: 180, carbs: 0, protein: 35, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '高蛋白低脂肪，减脂期首选' },
+            // 新增：高频大荤硬菜
+            { category: '大荤硬菜类', name: '红烧鸡腿(1个)', weight: 150, calories: 240, carbs: 5, protein: 22, fat: 14, goals: ['cut', 'recomp', 'bulk'], tips: '去皮吃可以少摄入至少5g脂肪，减脂期首选硬菜' },
+            { category: '大荤硬菜类', name: '水煮肉片', weight: 200, calories: 380, carbs: 12, protein: 20, fat: 28, goals: ['bulk'], tips: '表面浮油极多，吃前建议过水，减脂期避开' },
+            { category: '大荤硬菜类', name: '土豆炖牛腩', weight: 200, calories: 310, carbs: 20, protein: 18, fat: 16, goals: ['recomp', 'bulk'], tips: '土豆吸满了牛油，按主食+脂肪算，注意控量' },
             
+            // 原有荤素搭配类
             { category: '荤素搭配类', name: '宫保鸡丁', weight: 180, calories: 310, carbs: 12, protein: 22, fat: 18, goals: ['cut', 'recomp', 'bulk'], tips: '花生多，注意脂肪量' },
             { category: '荤素搭配类', name: '番茄炒蛋', weight: 180, calories: 220, carbs: 8, protein: 10, fat: 15, goals: ['cut', 'recomp', 'bulk'], tips: '经典下饭菜，控制量' },
             { category: '荤素搭配类', name: '木须肉', weight: 200, calories: 280, carbs: 15, protein: 20, fat: 14, goals: ['cut', 'recomp', 'bulk'], tips: '营养均衡' },
+            // 新增：高频荤素搭配
+            { category: '荤素搭配类', name: '青椒炒肉丝', weight: 150, calories: 210, carbs: 8, protein: 12, fat: 14, goals: ['cut', 'recomp', 'bulk'], tips: '食堂百搭菜，肉丝过油较多' },
+            { category: '荤素搭配类', name: '鱼香肉丝', weight: 150, calories: 240, carbs: 16, protein: 10, fat: 15, goals: ['recomp', 'bulk'], tips: '糖醋调味热量偏高，碳水刺客' },
+            { category: '荤素搭配类', name: '芹菜炒牛肉', weight: 150, calories: 180, carbs: 6, protein: 15, fat: 10, goals: ['cut', 'recomp', 'bulk'], tips: '优质红肉来源，芹菜高纤维' },
             
+            // 原有素菜国民类
             { category: '素菜国民类', name: '蒜蓉西兰花', weight: 200, calories: 120, carbs: 10, protein: 6, fat: 7, goals: ['cut', 'recomp', 'bulk'], tips: '高纤维，饱腹感强' },
             { category: '素菜国民类', name: '红烧豆腐', weight: 200, calories: 180, carbs: 8, protein: 15, fat: 10, goals: ['cut', 'recomp', 'bulk'], tips: '植物蛋白好来源' },
             { category: '素菜国民类', name: '凉拌黄瓜', weight: 150, calories: 50, carbs: 5, protein: 2, fat: 3, goals: ['cut', 'recomp'], tips: '低卡解腻' },
+            // 新增：高频素菜
+            { category: '素菜国民类', name: '清炒小白菜', weight: 150, calories: 60, carbs: 4, protein: 2, fat: 4, goals: ['cut', 'recomp', 'bulk'], tips: '补充微量元素，热量可忽略' },
+            { category: '素菜国民类', name: '干煸四季豆', weight: 150, calories: 130, carbs: 10, protein: 3, fat: 8, goals: ['recomp', 'bulk'], tips: '油炸过再炒的，含有隐形脂肪' },
+            { category: '素菜国民类', name: '地三鲜', weight: 150, calories: 220, carbs: 18, protein: 3, fat: 15, goals: ['bulk'], tips: '茄子和土豆都是吸油海绵，纯素菜里的热量炸弹' },
             
+            // 原有特色档口类
             { category: '特色档口类', name: '韩式拌饭', weight: 350, calories: 520, carbs: 70, protein: 20, fat: 18, goals: ['bulk'], tips: '热量高，增肌好选择' },
             { category: '特色档口类', name: '黄焖鸡米饭', weight: 400, calories: 580, carbs: 65, protein: 30, fat: 18, goals: ['bulk'], tips: '酱汁多，别泡饭' },
+            // 新增：高频档口
+            { category: '特色档口类', name: '牛肉板面/拉面', weight: 400, calories: 520, carbs: 65, protein: 20, fat: 18, goals: ['bulk'], tips: '汤底红油多，只吃面和牛肉，别喝汤' },
+            { category: '特色档口类', name: '麻辣烫(荤素搭)', weight: 400, calories: 450, carbs: 40, protein: 15, fat: 25, goals: ['recomp', 'bulk'], tips: '尽量选清汤/骨汤，避开麻酱底和丸子类' },
             
             { category: '主食类', name: '白米饭', weight: 100, calories: 116, carbs: 25, protein: 2.6, fat: 0.3, goals: ['cut', 'recomp', 'bulk'], tips: '常规分量，消化快' },
             { category: '主食类', name: '糙米/杂粮饭', weight: 100, calories: 120, carbs: 26, protein: 3, fat: 1, goals: ['cut', 'recomp'], tips: '低GI，饱腹感极强' },
             { category: '主食类', name: '蒸红薯/紫薯', weight: 100, calories: 86, carbs: 20, protein: 1.6, fat: 0.2, goals: ['cut', 'recomp'], tips: '优质粗粮，减脂期神仙主食' },
             { category: '主食类', name: '荞麦面(熟)', weight: 100, calories: 130, carbs: 28, protein: 5, fat: 0.5, goals: ['cut', 'recomp', 'bulk'], tips: '控糖期优选面食' },
             { category: '主食类', name: '馒头', weight: 100, calories: 221, carbs: 47, protein: 7, fat: 1.1, goals: ['recomp', 'bulk'], tips: '碳水密度大，管饱' },
-            { category: '主食类', name: '全麦面包', weight: 60, calories: 150, carbs: 25, protein: 6, fat: 3, goals: ['cut', 'recomp'], tips: '看配料表，选真全麦' },
             
             { category: '高蛋白小食', name: '水煮蛋', weight: 50, calories: 70, carbs: 0.6, protein: 6, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '完美蛋白来源' },
             { category: '高蛋白小食', name: '无糖豆浆', weight: 250, calories: 80, carbs: 6, protein: 8, fat: 3, goals: ['cut', 'recomp', 'bulk'], tips: '别加糖' },
-            { category: '高蛋白小食', name: '牛奶(全脂)', weight: 250, calories: 150, carbs: 12, protein: 8, fat: 8, goals: ['recomp', 'bulk'], tips: '减脂期选脱脂' }
+            { category: '高蛋白小食', name: '牛奶(全脂)', weight: 250, calories: 150, carbs: 12, protein: 8, fat: 8, goals: ['recomp', 'bulk'], tips: '减脂期选脱脂' },
+
+            { category: '中式早餐类', name: '大肉包', weight: 100, calories: 250, carbs: 30, protein: 10, fat: 10, goals: ['recomp', 'bulk'], tips: '肉馅多肥肉，减脂期建议只吃半个皮或换菜包' },
+            { category: '中式早餐类', name: '香菇菜包', weight: 100, calories: 180, carbs: 32, protein: 5, fat: 4, goals: ['cut', 'recomp', 'bulk'], tips: '热量较低的快手碳水，配个鸡蛋很完美' },
+            { category: '中式早餐类', name: '茶叶蛋', weight: 50, calories: 75, carbs: 1, protein: 6, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '早八最强廉价蛋白，减脂期可一天吃2个' },
+            { category: '中式早餐类', name: '煎饼果子(加薄脆)', weight: 250, calories: 450, carbs: 50, protein: 15, fat: 20, goals: ['bulk'], tips: '薄脆全是油！减脂期点单暗号：不要薄脆，少刷酱' },
+            { category: '中式早餐类', name: '鸡蛋灌饼', weight: 200, calories: 420, carbs: 45, protein: 12, fat: 21, goals: ['bulk'], tips: '饼皮是起酥油煎的，脂肪爆炸，减脂绝对刺客' },
+            { category: '中式早餐类', name: '皮蛋瘦肉粥', weight: 300, calories: 180, carbs: 25, protein: 8, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '好消化，但GI较高，适合练前一小时吃' },
+            { category: '中式早餐类', name: '原味小米粥', weight: 300, calories: 120, carbs: 25, protein: 3, fat: 1, goals: ['cut', 'recomp'], tips: '清肠胃优质流质碳水，但缺乏蛋白质，需额外配肉蛋' },
+            { category: '中式早餐类', name: '油条(一根)', weight: 80, calories: 310, carbs: 35, protein: 6, fat: 16, goals: ['none'], tips: '纯纯的海绵吸油机器，除了热量没营养，尽量戒掉' },
+            { category: '中式早餐类', name: '鲜肉小馄饨', weight: 150, calories: 250, carbs: 30, protein: 10, fat: 10, goals: ['recomp', 'bulk'], tips: '汤底通常有猪油和味精，吃馄饨别喝汤' },
+            { category: '中式早餐类', name: '甜豆浆(食堂杯装)', weight: 250, calories: 120, carbs: 15, protein: 7, fat: 4, goals: ['recomp', 'bulk'], tips: '很多是粉冲的且加了大量白糖。能喝无糖选无糖' },
+            { category: '中式早餐类', name: '全麦面包(2片)', weight: 70, calories: 180, carbs: 35, protein: 7, fat: 2, goals: ['cut', 'recomp'], tips: '注意看配料表，全麦粉排第一位的才是真全麦' },
+            { category: '中式早餐类', name: '便利店肉松面包', weight: 120, calories: 380, carbs: 45, protein: 9, fat: 18, goals: ['bulk'], tips: '肉松+沙拉酱=热量炸弹，偶尔解馋可以，不建议当日常主食' },
+            { category: '中式早餐类', name: '即食燕麦片(30g)', weight: 30, calories: 110, carbs: 20, protein: 4, fat: 2, goals: ['cut', 'recomp'], tips: '宿舍党神器，加点食堂打的豆浆/牛奶就是完美早餐' },
+            { category: '中式早餐类', name: '玉米(一根)', weight: 200, calories: 170, carbs: 34, protein: 5, fat: 2, goals: ['cut', 'recomp'], tips: '食堂最推荐的粗粮主食，饱腹感极强' },
+            { category: '中式早餐类', name: '纯牛奶(250ml)', weight: 250, calories: 160, carbs: 12, protein: 8, fat: 9, goals: ['recomp', 'bulk'], tips: '优质蛋白来源，减脂期选脱脂/低脂可省下不少脂肪额度' },
+            { category: '中式早餐类', name: '冰美式(中杯)', weight: 350, calories: 10, carbs: 2, protein: 0, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '早八提神、消除晨起水肿利器，热量可忽略不计，但空腹喝易伤胃' },
+            
+            { category: '水果快充类', name: '香蕉(中等1根)', weight: 120, calories: 105, carbs: 27, protein: 1, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '练前练后神级快碳，富含钾元素防抽筋' },
+            { category: '水果快充类', name: '苹果(中等1个)', weight: 200, calories: 100, carbs: 25, protein: 0.5, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '饱腹感强，含果胶，适合练前或加餐' },
+            { category: '水果快充类', name: '西瓜(大片/300g)', weight: 300, calories: 95, carbs: 24, protein: 2, fat: 0, goals: ['recomp', 'bulk'], tips: '升糖极快，非常适合练后迅速补充肌糖原，但减脂期少吃' },
+            { category: '水果快充类', name: '橙子(1个)', weight: 150, calories: 70, carbs: 15, protein: 1, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '富含维C，帮助降低练后皮质醇' },
+            { category: '水果快充类', name: '葡萄(一小串/150g)', weight: 150, calories: 100, carbs: 26, protein: 1, fat: 0, goals: ['recomp', 'bulk'], tips: '快碳吸收极速，练后吃极佳' },
+            
+            { category: '练后补剂类', name: '乳清蛋白粉(1勺)', weight: 30, calories: 120, carbs: 3, protein: 24, fat: 1.5, goals: ['cut', 'recomp', 'bulk'], tips: '吸收最快的顶级氨基酸，练后30分钟内必喝' },
+            { category: '练后补剂类', name: '纯蛋清(3个量)', weight: 100, calories: 45, carbs: 0, protein: 11, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '如果不喝粉，这是最纯净的无脂极速蛋白' },
+            { category: '练后补剂类', name: '白馒头(半个)', weight: 50, calories: 110, carbs: 23, protein: 3.5, fat: 0.5, goals: ['recomp', 'bulk'], tips: '最接地气的练后快碳，配蛋白粉吃堪称完美' }
         ];
 
         let currentMealPlan = [];
@@ -669,10 +714,12 @@
 
         const articles = [
             { id: 'm1_1', module: '减脂底层逻辑', badge: 'badge-red', title: '体重停滞的假象：皮质醇与“水肿欺骗”', readTime: '5分钟', content: `<p>很多小白减脂，每天少吃多动，前几天掉秤很快，到了第二周体重却一动不动，甚至喝口水都能涨半斤。这时候80%的人会崩溃，选择暴饮暴食放弃。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">皮质醇 (Cortisol) 的锁水效应</h3><p>当你长时间制造极大的热量缺口，或者每天疯狂做有氧时，身体会认为你处于“逃生/生存危机”状态。此时，肾上腺会分泌大量的压力激素——<strong>皮质醇</strong>。</p><p>皮质醇不仅会分解你的肌肉，还会导致一种极端的生理现象：<strong>水钠潴留（Water Retention）</strong>。皮下细胞会像海绵一样死死锁住水分。事实上，你每天制造的缺口已经在燃烧脂肪了，脂肪细胞变空了，但立刻被水分填满撑起，所以在体重秤上，你的数字纹丝不动。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡硬核破局法 (The Whoosh Effect)：</strong>当遇到储水期，你需要立刻停止节食，吃一顿富含碳水化合物的高热量大餐（欺骗餐），并好好睡一觉。大量的碳水和放松的心情会瞬间压制皮质醇水平。第二天，你的身体会排出滞留的水分（医学上称为 Whoosh 效应），你会发现体重直接“尿崩”式下降 1-2 公斤。记住：看镜子里的维度，永远比看体重秤更准确。</div>` },
-            { id: 'm1_2', module: '减脂底层逻辑', badge: 'badge-red', title: '局部减脂谎言与“顽固脂肪”受体学说', readTime: '6分钟', content: `<p>“教练，我怎么才能只减肚子上的肉？” 这是健身界最大的谎言。你每天做100个卷腹，最后只会让腰椎间盘突出，肚子外面的肥肉依然存在。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">细胞学真相：α受体与β受体</h3><p>脂肪细胞内有两种受体决定了脂肪分解的难度：</p><ul><li><strong>β-2 受体：</strong> 促进脂肪分解的“加速器”。</li><li><strong>α-2 受体：</strong> 抑制脂肪分解的“刹车片”。</li></ul><p>由于人类基因的设定，我们的面部、手臂和胸部布满了 β-2 受体，所以只要一节食，脸和胸最先瘦；而腹部、腰间（Love Handles）以及女性的大腿根部，密密麻麻地长满了 α-2 受体，血液循环极差。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡实战指南：</strong>不要再花钱买什么“暴汗服”和“腹部按摩仪”了，那排出的只是水分。想要减掉腹部的顽固脂肪，没有任何捷径。你必须依靠<strong>持续、系统性的热量缺口</strong>。当你的脸和四肢脂肪被榨干后，身体为了生存，才会迫不得已去调动腹部那些被 α-2 受体锁死的“顽固脂肪”。</div>` },
+            { id: 'm1_2', module: '减脂底层逻辑', badge: 'badge-red', title: '局部减脂谎言与“顽固脂肪”受体学说', readTime: '6分钟', content: `<p>“教练，我怎么才能只减肚子上的肉？” 这是健身界最大的谎言。你每天做100个卷腹，最后只会让腰椎间盘突出，肚子外面的肥肉依然存在。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">细胞学真相：α受体与β受体</h3><p>脂肪细胞内有两种受体决定了脂肪分解的难度：</p><ul><li><strong>β-2 受体：</strong> 促进脂肪分解的“加速器”。</li><li><strong>α-2 受体：</strong> 抑制脂肪分解的“刹车片”。</li></ul><p>由于人类基因的设定，我们的面部、手臂和胸部布满了 β-2 受体，所以只要一节食，脸和胸最先瘦；而腹部、腰间（Love Handles）以及女性的大腿根部，密密麻麻地长满了 α-2 受体，血液循环极差。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡实战指南：</strong>不要再花钱买什么“暴汗服”和“腹部按摩仪”了，那排出的只是水分。想要减掉腹部的顽固脂肪，没有任何捷径。你必须依靠<strong>持续、系统性的热量缺口</strong>。当你的脸和四肢脂肪被榨干后，身体为了生存，才会迫不得迫去调动腹部那些被 α-2 受体锁死的“顽固脂肪”。</div>` },
             { id: 'm2_1', module: '增肌核心理论', badge: 'badge-green', title: '拒绝脏增肌：P-Ratio 分配率与体脂红线', readTime: '7分钟', content: `<p>很多人以为增肌期就是“放开吃”，汉堡炸鸡来者不拒，美其名曰“Dirty Bulk（脏增肌）”。结果练了半年，肌肉长了 1 斤，纯脂肪长了 10 斤。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">胰岛素敏感度与 P-Ratio</h3><p>运动营养学中有一个核心概念叫 <strong>P-Ratio (营养分配率)</strong>。当你吃下 500 大卡的盈余热量时，这 500 大卡有多少拿去合成肌肉，有多少变成脂肪储存起来，完全取决于你的 <strong>体脂率和胰岛素敏感度</strong>。</p><ul><li><strong>体脂越低（男<12%）：</strong> 你的肌肉细胞对胰岛素极度渴望。吃下去的碳水和蛋白，会优先被强行压进肌纤维里，肌肉合成率极高。</li><li><strong>体脂偏高（男>18%）：</strong> 身体处于轻度胰岛素抵抗状态。肌肉细胞对营养“关门拒客”，你吃下去的多余热量，只能被迫转化为脂肪堆积在肚子里。</li></ul><div class="highlight-box"><strong class="block mb-2 text-blue-700">体脂红线警告：</strong>如果你男性的体脂率超过 15%-18%（女性超过 25%-28%），<strong>绝对不要进行热量盈余的增肌！</strong> 你必须先通过减脂，把体脂率降到能隐约看到腹肌的健康水平（胰岛素敏感度恢复），然后再制造每天 300 大卡的小缺口进行“干净增肌（Clean Bulk）”。</div>` },
             { id: 'm2_2', module: '增肌核心理论', badge: 'badge-green', title: '垃圾容量陷阱：为什么练了3小时却不长肉？', readTime: '6分钟', content: `<p>很多新手喜欢在健身房泡两三个小时，用极轻的重量做几十上百次，追求那种“肌肉酸痛灼烧”的感觉。但其实，这除了消耗体力，对肌肉生长毫无帮助。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">机械张力 (Mechanical Tension) 才是王道</h3><p>肌纤维变粗的唯一核心驱动力是“机械张力”，即肌肉在对抗大重量拉伸时产生的微小撕裂。而轻重量带来的酸痛，只是乳酸堆积造成的“代谢压力（Metabolic Stress）”。</p><p>什么是<strong>有效组（Effective Reps）</strong>？研究表明，只有当你做到离力竭还剩最后 3-4 个的时候（RIR 1-3），高门槛的运动单位才会被全面募集，那些粗大的肌纤维才会被真正刺激到。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡训练除垢法：</strong>如果你用 10kg 的哑铃能轻松做 20 个，那你前面做的 15 个全都是无效的“垃圾容量”，纯粹是在浪费中枢神经能量。立刻增加重量，把每组次数控制在 8-12 次，并且确保在做最后两三个的时候，你的脸部已经扭曲，动作极其吃力（但依然保持标准变形）。每天只需高质量的 45 分钟，肌肉生长效果秒杀在健身房瞎晃 3 小时。</div>` },
-            { id: 'm3_1', module: '结构力学与数据', badge: 'badge-purple', title: '深蹲剪切力与动作轨迹的 CV 视觉测算', readTime: '8分钟', content: `<p>在高阶力量领域，我们需要把人体看作一个<strong>精密的桁架结构</strong>：骨骼是承重构件，肌肉和肌腱是提供预应力的拉索。很多人深蹲时腰疼，是因为受力结构的失稳。</p><p>标准深蹲的核心是<strong>髋膝同步驱动</strong>。如果你的膝盖先动，重心前移，剪切力会全部压在膝关节上；如果你的髋部先动，身体过度前倾，剪切力会转移到腰椎。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">视觉测算技巧：</strong>侧面观察，杠铃的垂直投影线必须始终穿过你的足中位置。无论蹲起还是下落，保持这条线不动，你的关节受力就是最安全、最标准的。</div>` }
+            { id: 'm3_1', module: '结构力学与数据', badge: 'badge-purple', title: '深蹲剪切力与动作轨迹的 CV 视觉测算', readTime: '8分钟', content: `<p>在高阶力量领域，我们需要把人体看作一个<strong>精密的桁架结构</strong>：骨骼是承重构件，肌肉和肌腱是提供预应力的拉索。很多人深蹲时腰疼，是因为受力结构的失稳。</p><p>标准深蹲的核心是<strong>髋膝同步驱动</strong>。如果你的膝盖先动，重心前移，剪切力会全部压在膝关节上；如果你的髋部先动，身体过度前倾，剪切力会转移到腰椎。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">视觉测算技巧：</strong>侧面观察，杠铃的垂直投影线必须始终穿过你的足中位置。无论蹲起还是下落，保持这条线不动，你的关节受力就是最安全、最标准的。</div>` },
+            // 核心新增：增肌停滞微调与常见食物避坑指南
+            { id: 'm2_3', module: '增肌核心理论', badge: 'badge-green', title: '增肌停滞与暴涨怎么调？常见食物刺客避坑', readTime: '8分钟', content: `<p>执行了一个月计划，体重毫无变化或者飙升太快怎么办？很多新手在增肌期最容易陷入“死吃”或“不敢吃”的极端。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">增肌体重的“极慢速”原则</h3><p>建议男性每月体重增加<strong>不超过1kg</strong>，女性<strong>不超过0.5kg</strong>。想尽可能少长脂肪甚至可以再减半。为什么这么慢？因为肌肉合成速度比脂肪分解慢得多，平均每天能合成10g肌肉已经极其高效了，每月的纯肌肉增量最多也就300g。如果体重暴涨数倍于此，多出来的全都是未来的减脂累赘！增肌期的体重不需要严格每天上涨，只要有<strong>微弱的上行趋势</strong>即可。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">动态微调策略：</strong><br>• <strong>停滞不前（确实处于热量平衡）：</strong>每天增加碳水30-60g（约100-200g熟米饭）或者脂肪10-20g（30g坚果或2盒全脂牛奶），相当于增加一两百大卡。观察一周，还不长再加一次。<br>• <strong>增长过快（热量盈余过大）：</strong>反向操作，每天扣除上述碳水或脂肪额度。</div><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">为什么初期必须“定量称重”？</h3><p>新手对日常食物的碳蛋脂毫无概念，凭“感觉”吃饭大概率会导致总量严重偏差。我已经帮你把食物宏量算好了，你需要做的唯一事情就是<strong>买个食物秤，在初期（几天到一周时间）进行严格的定量饮食</strong>，建立起克数概念。当然，增肌期的容错率比减脂期高得多，不用过度焦虑和精细。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">🚨 常见食物刺客与硬核避坑指南</h3><ul><li><strong>面条/米线/卷饼（主食刺客）：</strong>饱腹感极低的主食！一顿能吃很多却感觉不到。一份外卖的碳水量常高达80-160g。如果经常吃，请务必自己称重定量一次。（碳水率参考：熟面条23%、凉面/米线33%、生鲜面/卷饼/烙饼50%、干面条70%）</li><li><strong>肉馅水饺/肉包（脂肪刺客）：</strong>它们不是纯碳水主食，而是“碳水+五花肉”。碳脂比例通常高达3:1甚至3:2。吃肉包子/饺子，会额外附赠20-40g脂肪，极其占脂肪配额。去包子铺请直接买白馒头/素包。</li><li><strong>瘦肉与内脏：</strong>表格里指的瘦肉是（不带白肉的猪牛羊+去皮鸡鸭肉+鱼虾）。内脏中，肝、肾、心、肚、血属于干净优质蛋白；脑、舌脂肪偏高只能浅尝；<strong>肠类（大肠小肠）脂肪极高，等同五花肉，坚决不吃！</strong></li><li><strong>快餐汉堡：</strong>若非要吃，只能选：去皮奥尔良/板烧鸡腿堡、双吉芝士堡、鳕鱼堡（宏量大致为碳30g/蛋20g/脂20g）。绝不要碰安格斯厚牛堡等脂肪炸弹。汉堡饱腹感极低，不建议做日常配餐，且如果吃一个碳水不够，吃两个脂肪又超标，很尴尬。</li><li><strong>外卖煎蛋/炒蛋（吸油海绵）：</strong>一个蛋6g蛋白，但外卖煎蛋像海绵一样吸油，能带入至少20g的隐形脂肪，花掉一大笔脂肪配额，血亏！除非自己在家用3-5g油煎。</li><li><strong>水果的本质是糖水：</strong>吃水果就是吃糖（果糖/葡萄糖/蔗糖）。它必须占据你当天的碳水配额，记得吃水果就要等比例减少主食摄入。</li></ul>` }
         ];
 
         function switchTab(tabId) {
@@ -688,11 +735,62 @@
             if(tabId === 'food') { renderVisualFoodDB(); }
         }
 
+        // ================= 核心新增：本地缓存方案 =================
+        function loadPlanFromLocal() {
+            const saved = localStorage.getItem('userMealPlan');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    if (data && data.plan && data.plan.length > 0) {
+                        currentMealPlan = data.plan;
+                        if(data.goal) document.getElementById('goal').value = data.goal;
+                        
+                        let tc = 0, tp = 0, tf = 0;
+                        currentMealPlan.forEach(m => { tc += m.carbs; tp += m.protein; tf += m.fat; });
+                        let tCal = Math.round(tc * 4 + tp * 4 + tf * 9);
+                        
+                        document.getElementById('res-cal').innerText = tCal;
+                        document.getElementById('res-carb').innerText = tc;
+                        document.getElementById('res-pro').innerText = tp;
+                        document.getElementById('res-fat').innerText = tf;
+
+                        const tbody = document.getElementById('meal-plan-body');
+                        tbody.innerHTML = '';
+                        currentMealPlan.forEach(meal => {
+                            const tr = document.createElement('tr');
+                            tr.innerHTML = `
+                                <td class="font-bold text-gray-800">${meal.name}</td>
+                                <td class="text-blue-600 font-bold text-center bg-blue-50/30">${meal.carbs}</td>
+                                <td class="text-green-600 font-bold text-center bg-green-50/30">${meal.protein}</td>
+                                <td class="text-yellow-600 font-bold text-center bg-yellow-50/30">${meal.fat}</td>
+                            `;
+                            tbody.appendChild(tr);
+                        });
+
+                        document.getElementById('canteen-buttons-container').classList.remove('hidden');
+                        document.getElementById('result-section').classList.remove('hidden');
+                    }
+                } catch (e) {
+                    console.error("加载本地排餐数据失败", e);
+                }
+            }
+        }
+
         function generatePlan() {
             const goal = document.getElementById('goal').value;
-            const weight = parseFloat(document.getElementById('weight').value);
-            const height = parseFloat(document.getElementById('height').value);
-            const age = parseFloat(document.getElementById('age').value);
+            const weightVal = document.getElementById('weight').value;
+            const heightVal = document.getElementById('height').value;
+            const ageVal = document.getElementById('age').value;
+            
+            // 核心修改：防呆保护，防止因为输入框为空导致计算 NaN 崩溃
+            if (!weightVal || !heightVal || !ageVal) {
+                alert('⚠️ 请先填写完整的体重、身高和年龄信息，再生成方案！');
+                return;
+            }
+
+            const weight = parseFloat(weightVal);
+            const height = parseFloat(heightVal);
+            const age = parseFloat(ageVal);
             const gender = document.getElementById('gender').value;
             const activity = parseFloat(document.getElementById('activity').value);
             const workoutTime = document.getElementById('workoutTime').value;
@@ -747,6 +845,10 @@
             });
 
             currentMealPlan = meals.map(meal => ({ name: meal.name, carbs: Math.round(carbs * meal.r[0]), protein: Math.round(protein * meal.r[1]), fat: Math.round(fat * meal.r[2]) }));
+            
+            // 核心新增：存储到本地
+            localStorage.setItem('userMealPlan', JSON.stringify({ plan: currentMealPlan, goal: goal }));
+
             document.getElementById('canteen-buttons-container').classList.remove('hidden');
             document.getElementById('custom-tracker-container').classList.add('hidden');
             document.getElementById('canteen-meal-container').classList.add('hidden');
@@ -755,6 +857,11 @@
         }
 
         function showCustomTracker() {
+            // 核心新增：防呆拦截
+            if (!currentMealPlan || currentMealPlan.length === 0) {
+                alert('⚠️ 请先在上方填写体重信息并点击“生成数据化方案”！');
+                return;
+            }
             document.getElementById('custom-tracker-container').classList.remove('hidden');
             document.getElementById('canteen-meal-container').classList.add('hidden');
             initTracker();
@@ -832,6 +939,11 @@
         function saveTracker() { localStorage.setItem('trackerData', JSON.stringify({ date: new Date().toLocaleDateString(), data: trackerData })); alert('💾 今日打卡数据已保存！'); }
 
         function generateCanteenMeal() {
+            // 核心新增：防呆拦截
+            if (!currentMealPlan || currentMealPlan.length === 0) {
+                alert('⚠️ 请先在上方填写体重信息并点击“生成数据化方案”！');
+                return;
+            }
             document.getElementById('canteen-meal-container').classList.remove('hidden');
             document.getElementById('custom-tracker-container').classList.add('hidden');
             createCanteenMeal();
@@ -841,27 +953,42 @@
         function matchMeal(mealTarget, stapleFoods, proteinDishes, vegDishes, goal) {
             let meal = { name: mealTarget.name, target: mealTarget, dishes: [], actual: { carbs: 0, protein: 0, fat: 0, calories: 0 } };
             
+            // 1. 匹配主食
             let staple = stapleFoods[Math.floor(Math.random() * stapleFoods.length)];
-            let stapleRatio = Math.max(0.3, Math.min(2.5, mealTarget.carbs / staple.carbs));
-            
+            let stapleRatio = Math.max(0.3, Math.min(2.5, mealTarget.carbs / Math.max(staple.carbs, 1)));
             let adjustedStaple = {
                 ...staple, weight: Math.round(staple.weight * stapleRatio), carbs: Math.round(staple.carbs * stapleRatio),
                 protein: Math.round(staple.protein * stapleRatio * 10) / 10, fat: Math.round(staple.fat * stapleRatio * 10) / 10,
                 calories: Math.round(staple.calories * stapleRatio)
             };
-            
             meal.dishes.push(adjustedStaple);
             meal.actual.carbs += adjustedStaple.carbs; meal.actual.protein += adjustedStaple.protein; meal.actual.fat += adjustedStaple.fat; meal.actual.calories += adjustedStaple.calories;
             
+            // 2. 匹配主蛋白质菜品
             let remainingProtein = mealTarget.protein - meal.actual.protein;
-            let suitableProteins = proteinDishes.filter(d => d.protein >= remainingProtein * 0.3 && d.protein <= remainingProtein * 1.5);
+            let suitableProteins = proteinDishes.filter(d => d.protein >= remainingProtein * 0.4 && d.protein <= remainingProtein * 1.5);
+            if(suitableProteins.length === 0 && proteinDishes.length > 0) suitableProteins = proteinDishes;
+            
+            let proteinDish1 = null;
             if (suitableProteins.length > 0) {
-                let proteinDish = suitableProteins[Math.floor(Math.random() * suitableProteins.length)];
-                meal.dishes.push(proteinDish);
-                meal.actual.carbs += proteinDish.carbs; meal.actual.protein += proteinDish.protein; meal.actual.fat += proteinDish.fat; meal.actual.calories += proteinDish.calories;
+                proteinDish1 = suitableProteins[Math.floor(Math.random() * suitableProteins.length)];
+                meal.dishes.push(proteinDish1);
+                meal.actual.carbs += proteinDish1.carbs; meal.actual.protein += proteinDish1.protein; meal.actual.fat += proteinDish1.fat; meal.actual.calories += proteinDish1.calories;
+            }
+
+            // 3. 匹配副蛋白质菜品 (针对午餐/晚餐/高蛋白需求餐次)
+            let stillNeed = mealTarget.protein - meal.actual.protein;
+            if (stillNeed > 10 && proteinDishes.length > 1) {
+                let smallProteins = proteinDishes.filter(d => d.name !== (proteinDish1 ? proteinDish1.name : '') && d.protein >= 6 && d.protein <= stillNeed * 1.5);
+                if (smallProteins.length > 0) {
+                    let proteinDish2 = smallProteins[Math.floor(Math.random() * smallProteins.length)];
+                    meal.dishes.push(proteinDish2);
+                    meal.actual.carbs += proteinDish2.carbs; meal.actual.protein += proteinDish2.protein; meal.actual.fat += proteinDish2.fat; meal.actual.calories += proteinDish2.calories;
+                }
             }
             
-            if (!mealTarget.name.includes('加餐') && vegDishes.length > 0) {
+            // 4. 匹配蔬菜
+            if (!mealTarget.name.includes('加餐') && !mealTarget.name.includes('夜宵') && vegDishes.length > 0) {
                 let vegDish = vegDishes[Math.floor(Math.random() * vegDishes.length)];
                 meal.dishes.push(vegDish);
                 meal.actual.carbs += vegDish.carbs; meal.actual.protein += vegDish.protein; meal.actual.fat += vegDish.fat; meal.actual.calories += vegDish.calories;
@@ -871,33 +998,72 @@
             return meal;
         }
 
+        // ================= 核心优化逻辑 (针对早饭及多场景练后餐) =================
+        function getDishesForMeal(mealName, filteredDishes) {
+            const isBreakfast = mealName.includes('早饭');
+            const isPostWorkout = mealName.includes('练后');
+            const isSnack = mealName.includes('加餐') || mealName.includes('夜宵');
+            const isMainMeal = mealName.includes('正餐') || mealName.includes('午饭') || mealName.includes('晚饭');
+
+            let stapleFoods, proteinDishes, vegDishes;
+
+            if (isBreakfast) {
+                stapleFoods = filteredDishes.filter(d => (d.category === '中式早餐类' && d.carbs >= 15) || d.category === '主食类');
+                proteinDishes = filteredDishes.filter(d => d.category === '高蛋白小食' || (d.category === '中式早餐类' && d.protein >= 6 && d.carbs < 15));
+                vegDishes = []; 
+            } else if (isPostWorkout && isSnack) {
+                // 场景 A：练后加餐/夜宵 (快充模式)
+                stapleFoods = filteredDishes.filter(d => d.category === '水果快充类' || (d.category === '练后补剂类' && d.carbs > 15) || (d.category === '主食类' && (d.name.includes('馒头') || d.name.includes('米饭'))));
+                proteinDishes = filteredDishes.filter(d => d.category === '练后补剂类' || d.category === '高蛋白小食');
+                vegDishes = []; // 快充不吃蔬菜
+            } else if (isPostWorkout && isMainMeal) {
+                // 场景 B：练后正餐 (干净大餐模式)
+                stapleFoods = filteredDishes.filter(d => d.category === '主食类');
+                // 练后正餐要求纯净高蛋白，过滤掉脂肪太高的大荤
+                proteinDishes = filteredDishes.filter(d => (d.category === '大荤硬菜类' || d.category === '荤素搭配类' || d.category === '高蛋白小食') && d.fat <= 15);
+                vegDishes = filteredDishes.filter(d => d.category === '素菜国民类');
+            } else {
+                // 场景 C：常规正餐
+                stapleFoods = filteredDishes.filter(d => d.category === '主食类');
+                proteinDishes = filteredDishes.filter(d => d.category === '大荤硬菜类' || d.category === '荤素搭配类' || d.category === '高蛋白小食');
+                vegDishes = filteredDishes.filter(d => d.category === '素菜国民类');
+            }
+            
+            return { stapleFoods, proteinDishes, vegDishes };
+        }
+
         function createCanteenMeal() {
             const goal = document.getElementById('goal').value;
             let filteredDishes = CANTEEN_DATABASE.filter(dish => {
+                if (dish.goals && dish.goals.includes('none')) return false;
                 if (goal === 'cut') return dish.fat <= 20 && !dish.tips?.includes('减脂期慎选') && !dish.tips?.includes('减脂期别碰') && !dish.tips?.includes('减脂期禁用');
                 else if (goal === 'recomp') return dish.fat <= 30 && !dish.tips?.includes('减脂期别碰');
                 else return true;
             });
-            const stapleFoods = filteredDishes.filter(d => d.category === '主食类');
-            const proteinDishes = filteredDishes.filter(d => d.category === '大荤硬菜类' || d.category === '荤素搭配类' || d.category === '高蛋白小食');
-            const vegDishes = filteredDishes.filter(d => d.category === '素菜国民类');
-            currentCanteenMeal = currentMealPlan.map(meal => matchMeal(meal, stapleFoods, proteinDishes, vegDishes, goal));
+
+            currentCanteenMeal = currentMealPlan.map(meal => {
+                const { stapleFoods, proteinDishes, vegDishes } = getDishesForMeal(meal.name, filteredDishes);
+                return matchMeal(meal, stapleFoods, proteinDishes, vegDishes, goal);
+            });
             renderCanteenMeal();
         }
 
         function regenerateSingleMeal(index) {
             const goal = document.getElementById('goal').value;
             let filteredDishes = CANTEEN_DATABASE.filter(dish => {
+                if (dish.goals && dish.goals.includes('none')) return false;
                 if (goal === 'cut') return dish.fat <= 20 && !dish.tips?.includes('减脂期慎选') && !dish.tips?.includes('减脂期别碰') && !dish.tips?.includes('减脂期禁用');
                 else if (goal === 'recomp') return dish.fat <= 30 && !dish.tips?.includes('减脂期别碰');
                 else return true;
             });
-            const stapleFoods = filteredDishes.filter(d => d.category === '主食类');
-            const proteinDishes = filteredDishes.filter(d => d.category === '大荤硬菜类' || d.category === '荤素搭配类' || d.category === '高蛋白小食');
-            const vegDishes = filteredDishes.filter(d => d.category === '素菜国民类');
-            currentCanteenMeal[index] = matchMeal(currentMealPlan[index], stapleFoods, proteinDishes, vegDishes, goal);
+            
+            const mealTarget = currentMealPlan[index];
+            const { stapleFoods, proteinDishes, vegDishes } = getDishesForMeal(mealTarget.name, filteredDishes);
+            
+            currentCanteenMeal[index] = matchMeal(mealTarget, stapleFoods, proteinDishes, vegDishes, goal);
             renderCanteenMeal();
         }
+        // ======================================================================
 
         function renderCanteenMeal() {
             const summaryContainer = document.getElementById('canteen-meal-summary');
@@ -1208,28 +1374,98 @@
         }
 
         function renderVisualFoodDB() {
-            const grid = document.getElementById('visual-db-grid'); if(!grid) return; grid.innerHTML = '';
-            const iconMap = { '主食类': '🍚', '大荤硬菜类': '🥩', '荤素搭配类': '🥘', '素菜国民类': '🥬', '特色档口类': '🍜', '高蛋白小食': '🥚' };
-            CANTEEN_DATABASE.forEach(food => {
-                const icon = iconMap[food.category] || '🍽️'; const totalMacros = food.carbs + food.protein + food.fat;
-                const cPct = totalMacros > 0 ? (food.carbs / totalMacros * 100) : 0; const pPct = totalMacros > 0 ? (food.protein / totalMacros * 100) : 0; const fPct = totalMacros > 0 ? (food.fat / totalMacros * 100) : 0;
-                grid.innerHTML += `
-                    <div class="border border-gray-100 rounded-2xl p-5 bg-white hover:shadow-lg transition-all relative overflow-hidden group flex flex-col justify-between h-full">
-                        <div>
-                            <div class="flex justify-between items-start mb-3">
-                                <div><span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md mb-2 inline-block">${icon} ${food.category}</span><h3 class="font-bold text-gray-900 text-lg">${food.name}</h3></div>
-                                <div class="text-right bg-blue-50 px-2 py-1 rounded-lg"><span class="text-base font-black text-blue-700">${food.calories}</span><span class="text-[10px] text-blue-400 block -mt-1">kcal/${food.weight}g</span></div>
+            const container = document.getElementById('visual-db-grid'); 
+            if(!container) return;
+            
+            container.innerHTML = '';
+            container.className = 'space-y-10'; 
+
+            const iconMap = { 
+                '主食类': '🍚', '大荤硬菜类': '🥩', '荤素搭配类': '🥘', 
+                '素菜国民类': '🥬', '特色档口类': '🍜', '高蛋白小食': '🥚', 
+                '中式早餐类': '🥟', '水果快充类': '🍎', '练后补剂类': '🥤' 
+            };
+
+            const zones = [
+                {
+                    title: '🌅 晨间唤醒 (早八人专属)',
+                    colorText: 'text-orange-600',
+                    colorBorder: 'border-orange-200',
+                    categories: ['中式早餐类']
+                },
+                {
+                    title: '🍱 食堂正餐 (午晚吃饱)',
+                    colorText: 'text-blue-600',
+                    colorBorder: 'border-blue-200',
+                    categories: ['大荤硬菜类', '荤素搭配类', '素菜国民类', '特色档口类', '主食类']
+                },
+                {
+                    title: '⚡ 练后快充与加餐',
+                    colorText: 'text-green-600',
+                    colorBorder: 'border-green-200',
+                    categories: ['水果快充类', '练后补剂类', '高蛋白小食']
+                }
+            ];
+
+            zones.forEach(zone => {
+                const zoneFoods = CANTEEN_DATABASE.filter(food => zone.categories.includes(food.category));
+                if (zoneFoods.length === 0) return;
+
+                let html = `
+                    <div class="animation-fade-in">
+                        <h3 class="text-xl font-black ${zone.colorText} mb-5 flex items-center border-b ${zone.colorBorder} pb-2">
+                            ${zone.title}
+                        </h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                `;
+
+                zoneFoods.forEach(food => {
+                    const icon = iconMap[food.category] || '🍽️'; 
+                    const totalMacros = food.carbs + food.protein + food.fat;
+                    const cPct = totalMacros > 0 ? (food.carbs / totalMacros * 100) : 0; 
+                    const pPct = totalMacros > 0 ? (food.protein / totalMacros * 100) : 0; 
+                    const fPct = totalMacros > 0 ? (food.fat / totalMacros * 100) : 0;
+                    
+                    html += `
+                        <div class="border border-gray-100 rounded-2xl p-5 bg-white hover:shadow-lg transition-all relative overflow-hidden group flex flex-col justify-between h-full">
+                            <div>
+                                <div class="flex justify-between items-start mb-3">
+                                    <div>
+                                        <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md mb-2 inline-block">${icon} ${food.category}</span>
+                                        <h3 class="font-bold text-gray-900 text-lg">${food.name}</h3>
+                                    </div>
+                                    <div class="text-right bg-blue-50 px-2 py-1 rounded-lg">
+                                        <span class="text-base font-black text-blue-700">${food.calories}</span>
+                                        <span class="text-[10px] text-blue-400 block -mt-1">kcal/${food.weight}g</span>
+                                    </div>
+                                </div>
+                                <div class="w-full h-1.5 flex rounded-full overflow-hidden mb-2 mt-4 bg-gray-100">
+                                    <div style="width: ${cPct}%" class="bg-blue-400" title="碳水"></div>
+                                    <div style="width: ${pPct}%" class="bg-green-400" title="蛋白"></div>
+                                    <div style="width: ${fPct}%" class="bg-yellow-400" title="脂肪"></div>
+                                </div>
+                                <div class="flex justify-between text-xs font-bold text-gray-600 mb-4">
+                                    <span class="text-blue-600">碳水 ${food.carbs}g</span>
+                                    <span class="text-green-600">蛋白 ${food.protein}g</span>
+                                    <span class="text-yellow-600">脂肪 ${food.fat}g</span>
+                                </div>
                             </div>
-                            <div class="w-full h-1.5 flex rounded-full overflow-hidden mb-2 mt-4 bg-gray-100"><div style="width: ${cPct}%" class="bg-blue-400"></div><div style="width: ${pPct}%" class="bg-green-400"></div><div style="width: ${fPct}%" class="bg-yellow-400"></div></div>
-                            <div class="flex justify-between text-xs font-bold text-gray-600 mb-4"><span class="text-blue-600">碳水 ${food.carbs}g</span><span class="text-green-600">蛋白 ${food.protein}g</span><span class="text-yellow-600">脂肪 ${food.fat}g</span></div>
-                        </div>
-                        <div class="text-xs text-gray-500 bg-gray-50/80 border border-gray-100 p-2.5 rounded-lg leading-relaxed mt-auto">💡 ${food.tips}</div>
-                    </div>`;
+                            <div class="text-xs text-gray-500 bg-gray-50/80 border border-gray-100 p-2.5 rounded-lg leading-relaxed mt-auto">
+                                💡 ${food.tips}
+                            </div>
+                        </div>`;
+                });
+
+                html += `</div></div>`;
+                container.innerHTML += html;
             });
         }
 
         window.onload = function() {
-            updateTrainDays(); loadHistory(); renderVisualFoodDB();
+            updateTrainDays(); 
+            loadHistory(); 
+            renderVisualFoodDB();
+            loadPlanFromLocal(); // 加载页面时自动恢复本地数据
         };
     </script>
 </body>
