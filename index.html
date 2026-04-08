@@ -2,21 +2,23 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>小凡健身 PRO - 终极知识库与排餐中枢</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #334155; }
-        
+        body { background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #334155; -webkit-tap-highlight-color: transparent; }
         .brand-color { color: #2563eb; }
         .bg-brand { background-color: #2563eb; color: white; }
-        .bg-brand:hover { background-color: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 6px -1 rgba(37, 99, 235, 0.2); }
+        .bg-brand:hover { background-color: #1d4ed8; transform: translateY(-1px); box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.2); }
         .bg-brand:active { transform: translateY(0); }
         .border-brand { border-color: #2563eb; }
         
-        .card { background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px -1 rgba(0, 0, 0, 0.05), 0 2px 4px -1 rgba(0, 0, 0, 0.03); padding: 2rem; border: 1px solid #f1f5f9; }
+        /* 移动端适配：缩小卡片内边距以节省屏幕空间 */
+        .card { background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); padding: 1.25rem; border: 1px solid #f1f5f9; }
+        @media (min-width: 768px) { .card { padding: 2rem; } }
         
-        select, input { border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.6rem 0.75rem; width: 100%; outline: none; transition: all 0.2 ease; background-color: #f8fafc; color: #1e293b; font-weight: 500;}
+        /* 移动端适配：强制16px防iOS自动缩放，调整高度 */
+        select, input { border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.6rem 0.75rem; width: 100%; outline: none; transition: all 0.2s ease; background-color: #f8fafc; color: #1e293b; font-weight: 500; font-size: 16px !important; }
         select:focus, input:focus { border-color: #2563eb; background-color: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         label { font-weight: 600; color: #475569; margin-bottom: 0.3rem; display: block; font-size: 0.875rem;}
         
@@ -24,11 +26,11 @@
         .data-table th, .data-table td { border-bottom: 1px solid #f1f5f9; padding: 1rem 0.75rem; text-align: center; }
         .data-table td:first-child { text-align: left; font-weight: 600; color: #1e293b; width: 22%; }
         .data-table th { background-color: #f8fafc; font-weight: 600; color: #64748b; text-align: center; text-transform: uppercase; font-size: 0.75rem; letter-spacing: 0.05em;}
-        .data-table tr:hover { background-color: #f8fafc; transition: background-color 0.2; }
+        .data-table tr:hover { background-color: #f8fafc; transition: background-color 0.2s; }
 
         .sets-input { width: 60px; text-align: center; padding: 0.4rem; font-weight: bold; color: #2563eb; }
-        .weight-input { width: 80px; text-align: center; padding: 0.6rem; font-weight: bold; font-size: 1.1rem; }
-        .rest-input { width: 80px; text-align: center; padding: 0.6rem; font-weight: bold; font-size: 1.1rem; }
+        .weight-input { width: 80px; text-align: center; padding: 0.6rem; font-weight: bold; font-size: 1.1rem !important; }
+        .rest-input { width: 80px; text-align: center; padding: 0.6rem; font-weight: bold; font-size: 1.1rem !important; }
         
         .badge { display: inline-block; padding: 0.25rem 0.6rem; border-radius: 9999px; font-size: 0.7rem; font-weight: 700; margin-bottom: 0.2rem; letter-spacing: 0.02em;}
         .badge-blue { background-color: #eff6ff; color: #1d4ed8; }
@@ -39,11 +41,13 @@
         .badge-gray { background-color: #f1f5f9; color: #475569; }
 
         nav { backdrop-filter: blur(8px); background-color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid #e2e8f0; }
-        .nav-btn { cursor: pointer; padding: 1rem 1.25rem; font-weight: 600; color: #64748b; border-bottom: 3px solid transparent; transition: all 0.2; font-size: 0.95rem;}
+        /* 移动端适配：开启 iOS 平滑惯性滚动 */
+        #main-nav { -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
+        .nav-btn { cursor: pointer; padding: 1rem 1.25rem; font-weight: 600; color: #64748b; border-bottom: 3px solid transparent; transition: all 0.2s; font-size: 0.95rem; white-space: nowrap; }
         .nav-btn:hover { color: #1e293b; }
         .nav-active { color: #2563eb; border-bottom-color: #2563eb; }
 
-        .article-btn { width: 100%; text-align: left; padding: 0.75rem 1rem; font-size: 0.875rem; border-radius: 0.5rem; transition: all 0.2; color: #475569; font-weight: 500;}
+        .article-btn { width: 100%; text-align: left; padding: 0.75rem 1rem; font-size: 0.875rem; border-radius: 0.5rem; transition: all 0.2s; color: #475569; font-weight: 500;}
         .article-btn:hover { background-color: #f1f5f9; color: #1e293b;}
         .article-active { background-color: #eff6ff; color: #2563eb; font-weight: 700; }
 
@@ -54,40 +58,45 @@
         .content-box ul li::before { content: "•"; color: #2563eb; font-weight: bold; position: absolute; left: 0; }
         .highlight-box { background-color: #f8fafc; padding: 1.25rem; border-radius: 0.5rem; border-left: 4px solid #2563eb; margin: 1.5rem 0; font-size: 0.9rem; color: #1e293b;}
         
-        .data-matrix-box { background-color: #f8fafc; padding: 1.25rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2;}
+        .data-matrix-box { background-color: #f8fafc; padding: 1.25rem; border-radius: 0.75rem; border: 1px solid #e2e8f0; display: flex; flex-direction: column; align-items: center; justify-content: center; transition: all 0.2s;}
         .data-matrix-box:hover { border-color: #cbd5e1; background-color: #f1f5f9;}
         .data-matrix-title { font-size: 0.75rem; color: #64748b; font-weight: 700; text-transform: uppercase; margin-bottom: 0.5rem; letter-spacing: 0.05em;}
         .data-matrix-value { font-size: 1.875rem; font-weight: 900; color: #0f172a; line-height: 1;}
         .data-matrix-unit { font-size: 0.875rem; font-weight: 500; color: #94a3b8; margin-left: 0.2rem;}
 
         .executor-container { display: flex; flex-direction: column; align-items: center; min-height: 500px; }
-
-        .exec-timer-display { font-size: 4rem; font-weight: 900; color: #0f172a; font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: -0.02em; }
+        
+        /* 移动端适配：调整计时器字体大小防溢出 */
+        .exec-timer-display { font-size: 3.5rem; font-weight: 900; color: #0f172a; font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: -0.02em; }
+        @media (min-width: 768px) { .exec-timer-display { font-size: 4rem; } }
         .rest-timer-display { font-size: 2.5rem; font-weight: 900; color: #f59e0b; font-variant-numeric: tabular-nums; line-height: 1; }
-        .exec-btn { padding: 1rem 2rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; transition: all 0.2; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; }
+        
+        .exec-btn { padding: 1rem 2rem; border-radius: 0.75rem; font-weight: 700; font-size: 1rem; transition: all 0.2s; cursor: pointer; border: none; display: flex; align-items: center; justify-content: center; }
         .exec-btn-primary { background-color: #0f172a; color: white; }
-        .exec-btn-primary:hover { background-color: #1e293b; transform: scale(1.02); box-shadow: 0 10px 15px -3 rgba(0, 0, 0, 0.1); }
+        .exec-btn-primary:hover { background-color: #1e293b; transform: scale(1.02); box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1); }
         .exec-btn-primary:active { transform: scale(0.98); }
         .exec-btn-success { background-color: #22c55e; color: white; width: 100%; }
         .exec-btn-success:hover { background-color: #16a34a; }
         .exec-btn-rest { background-color: #f59e0b; color: white; width: 100%; }
         
-        .set-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #f1f5f9; transition: all 0.2; }
+        .set-item { display: flex; justify-content: space-between; align-items: center; padding: 1rem; border-bottom: 1px solid #f1f5f9; transition: all 0.2s; }
         .set-item:last-child { border-bottom: none; }
         .set-item.completed { background-color: #f0fdf4; opacity: 0.6; }
         .set-item.completed .set-text { text-decoration: line-through; color: #94a3b8; }
         .set-item.active { background-color: #eff6ff; border-left: 4px solid #2563eb; margin-left: -4px; border-radius: 0 0.5rem 0.5rem 0; }
         
-        .check-circle { width: 28px; height: 28px; border-radius: 9999px; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2; }
+        .check-circle { width: 28px; height: 28px; border-radius: 9999px; border: 2px solid #e2e8f0; display: flex; align-items: center; justify-content: center; flex-shrink: 0; transition: all 0.2s; }
         .set-item.completed .check-circle { background-color: #22c55e; border-color: #22c55e; color: white; }
 
         .progress-bar-container { width: 100%; height: 6px; background-color: #e2e8f0; border-radius: 9999px; overflow: hidden; margin-bottom: 2rem; }
-        .progress-bar-fill { height: 100%; background-color: #2563eb; width: 0%; transition: width 0.5 cubic-bezier(0.4, 0, 0.2, 1); }
+        .progress-bar-fill { height: 100%; background-color: #2563eb; width: 0%; transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1); }
 
-        .record-card { margin-top: 2rem; animation: fadeIn 0.5 ease; }
+        .record-card { margin-top: 2rem; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        .custom-scrollbar::-webkit-scrollbar { width: 6px; }
+        /* 表格容器滚动顺滑 */
+        .overflow-x-auto { -webkit-overflow-scrolling: touch; }
+        .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
@@ -101,12 +110,12 @@
                 <div class="flex items-center">
                     <span class="text-2xl font-black tracking-tight text-gray-900">小凡健身 <span class="brand-color">PRO</span></span>
                 </div>
-                <div class="flex items-center space-x-1 md:space-x-4 overflow-x-auto">
-                    <button onclick="switchTab('planner')" id="tab-planner" class="nav-btn nav-active whitespace-nowrap">排餐系统</button>
-                    <button onclick="switchTab('training')" id="tab-training" class="nav-btn whitespace-nowrap">智能训练引擎</button>
-                    <button onclick="switchTab('food')" id="tab-food" class="nav-btn whitespace-nowrap">终极食物库</button>
-                    <button onclick="switchTab('learn')" id="tab-learn" class="nav-btn whitespace-nowrap">高阶智库</button>
-                    <button onclick="switchTab('about')" id="tab-about" class="nav-btn whitespace-nowrap">关于我</button>
+                <div class="flex items-center space-x-1 md:space-x-4 overflow-x-auto" id="main-nav">
+                    <button data-tab="planner" class="nav-btn nav-active whitespace-nowrap">排餐系统</button>
+                    <button data-tab="training" class="nav-btn whitespace-nowrap">智能训练引擎</button>
+                    <button data-tab="food" class="nav-btn whitespace-nowrap">终极食物库</button>
+                    <button data-tab="learn" class="nav-btn whitespace-nowrap">高阶智库</button>
+                    <button data-tab="about" class="nav-btn whitespace-nowrap">关于我</button>
                 </div>
             </div>
         </div>
@@ -114,7 +123,7 @@
 
     <main class="max-w-6xl mx-auto p-4 md:p-8 flex-grow w-full">
         
-        <section id="sec-planner" class="space-y-6 transition-opacity duration-300">
+        <section id="sec-planner" class="view-section space-y-6 transition-opacity duration-300">
             <div class="text-center pb-6">
                 <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">动态自适应排餐系统</h1>
                 <p class="text-gray-500 mt-3 text-sm md:text-base max-w-2xl mx-auto">拒绝死板食谱，基于运动营养学底层逻辑，一键生成精准到克的宏量营养素分配方案。</p>
@@ -140,9 +149,9 @@
                 </div>
 
                 <div class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-                    <div><label>体重 (kg)</label><input type="number" id="weight" value="" placeholder="填写体重"></div>
-                    <div><label>身高 (cm)</label><input type="number" id="height" value="" placeholder="填写身高"></div>
-                    <div><label>年龄 (岁)</label><input type="number" id="age" value="" placeholder="填写年龄"></div>
+                    <div><label>体重 (kg)</label><input type="number" id="weight" placeholder="填写体重"></div>
+                    <div><label>身高 (cm)</label><input type="number" id="height" placeholder="填写身高"></div>
+                    <div><label>年龄 (岁)</label><input type="number" id="age" placeholder="填写年龄"></div>
                     <div>
                         <label>日常活动量 (NEAT)</label>
                         <select id="activity">
@@ -166,7 +175,7 @@
                     </select>
                 </div>
 
-                <button onclick="generatePlan()" class="w-full bg-brand font-bold py-4 rounded-lg transition duration-200 mt-4 text-white text-lg tracking-wide">
+                <button id="btn-generate-plan" class="w-full bg-brand font-bold py-4 rounded-lg transition duration-200 mt-4 text-white text-lg tracking-wide">
                     生成数据化方案
                 </button>
             </div>
@@ -204,7 +213,7 @@
                         餐序分配表 (结合营养时机)
                     </h3>
                     <div class="overflow-x-auto rounded-xl border border-gray-200">
-                        <table class="data-table mt-0">
+                        <table class="data-table mt-0 min-w-[500px]">
                             <thead><tr><th>餐次与时机</th><th>碳水建议 (g)</th><th>蛋白建议 (g)</th><th>脂肪建议 (g)</th></tr></thead>
                             <tbody id="meal-plan-body"></tbody>
                         </table>
@@ -224,46 +233,26 @@
                 </div>
 
                 <div id="canteen-buttons-container" class="hidden grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-100">
-                    <button onclick="showCustomTracker()" class="bg-brand font-bold py-3 rounded-lg transition duration-200 text-white text-base tracking-wide flex items-center justify-center">
-                        📋 自定义三大营养素饮食打卡表
+                    <button id="btn-show-tracker" class="bg-brand font-bold py-3 rounded-lg transition duration-200 text-white text-base tracking-wide flex items-center justify-center">
+                        📋 自定义饮食打卡表
                     </button>
-                    <button onclick="generateCanteenMeal()" class="bg-brand font-bold py-3 rounded-lg transition duration-200 text-white text-base tracking-wide flex items-center justify-center">
-                        🍚 一键生成适配食堂餐单
+                    <button id="btn-show-canteen" class="bg-brand font-bold py-3 rounded-lg transition duration-200 text-white text-base tracking-wide flex items-center justify-center">
+                        🍚 生成适配食堂餐单
                     </button>
                 </div>
 
                 <div id="custom-tracker-container" class="hidden card space-y-4 mt-6">
-                    <div class="flex justify-between items-center border-b border-gray-100 pb-4">
-                        <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                            📋 自定义三大营养素饮食打卡表
-                        </h3>
-                        <div class="flex gap-2">
-                            <button onclick="addSnackRow()" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg font-medium text-gray-700 transition">
-                                ➕ 新增加餐
-                            </button>
-                            <button onclick="clearTracker()" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg font-medium text-gray-700 transition">
-                                🗑️ 清空打卡
-                            </button>
-                            <button onclick="saveTracker()" class="text-sm bg-brand hover:bg-blue-700 px-3 py-1.5 rounded-lg font-medium text-white transition">
-                                💾 保存今日打卡
-                            </button>
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center border-b border-gray-100 pb-4 gap-4">
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center">📋 自定义三大营养素饮食打卡表</h3>
+                        <div class="flex gap-2 w-full md:w-auto overflow-x-auto custom-scrollbar pb-1">
+                            <button id="btn-add-snack" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg font-medium text-gray-700 transition whitespace-nowrap">➕ 新增加餐</button>
+                            <button id="btn-clear-tracker" class="text-sm bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-lg font-medium text-gray-700 transition whitespace-nowrap">🗑️ 清空打卡</button>
+                            <button id="btn-save-tracker" class="text-sm bg-brand hover:bg-blue-700 px-3 py-1.5 rounded-lg font-medium text-white transition whitespace-nowrap">💾 保存今日打卡</button>
                         </div>
                     </div>
                     <div class="overflow-x-auto rounded-xl border border-gray-200">
-                        <table class="data-table mt-0" id="tracker-table">
-                            <thead>
-                                <tr>
-                                    <th>餐次名称</th>
-                                    <th>碳水目标 (g)</th>
-                                    <th>实际摄入 (g)</th>
-                                    <th>蛋白目标 (g)</th>
-                                    <th>实际摄入 (g)</th>
-                                    <th>脂肪目标 (g)</th>
-                                    <th>实际摄入 (g)</th>
-                                    <th>热量差值 (kcal)</th>
-                                    <th>完成状态</th>
-                                </tr>
-                            </thead>
+                        <table class="data-table mt-0 min-w-[700px]" id="tracker-table">
+                            <thead><tr><th>餐次名称</th><th>碳水目标(g)</th><th>实际摄入(g)</th><th>蛋白目标(g)</th><th>实际摄入(g)</th><th>脂肪目标(g)</th><th>实际摄入(g)</th><th>热量差值(kcal)</th><th>完成状态</th></tr></thead>
                             <tbody id="tracker-tbody"></tbody>
                             <tfoot id="tracker-tfoot"></tfoot>
                         </table>
@@ -272,12 +261,8 @@
 
                 <div id="canteen-meal-container" class="hidden card space-y-4 mt-6">
                     <div class="flex justify-between items-center border-b border-gray-100 pb-4">
-                        <h3 class="text-lg font-bold text-gray-900 flex items-center">
-                            🍚 一键生成适配食堂餐单
-                        </h3>
-                        <button onclick="regenerateCanteenMeal()" class="bg-brand font-bold py-2 px-4 rounded-lg transition duration-200 text-white text-sm tracking-wide flex items-center">
-                            🔄 全部换一换
-                        </button>
+                        <h3 class="text-lg font-bold text-gray-900 flex items-center">🍚 一键生成适配食堂餐单</h3>
+                        <button id="btn-regenerate-canteen" class="bg-brand font-bold py-2 px-4 rounded-lg transition duration-200 text-white text-sm tracking-wide flex items-center">🔄 全部换一换</button>
                     </div>
                     <div id="canteen-meal-summary" class="bg-gray-50 rounded-xl p-4 border border-gray-200"></div>
                     <div id="canteen-meal-list" class="space-y-4"></div>
@@ -293,7 +278,7 @@
             </div>
         </section>
 
-        <section id="sec-training" class="space-y-6 transition-opacity duration-300 hidden">
+        <section id="sec-training" class="view-section space-y-6 transition-opacity duration-300 hidden">
             <div class="text-center pb-6">
                 <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">小凡解剖学训练引擎</h1>
                 <p class="text-gray-500 mt-3 text-sm md:text-base max-w-2xl mx-auto">基于肌肉协同发力与关节活动学，为你定制精准的抗阻力训练计划。</p>
@@ -304,7 +289,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label>训练分化模式</label>
-                            <select id="trainSplit" onchange="updateTrainDays()">
+                            <select id="trainSplit">
                                 <option value="3day">三分化 (3次练遍全身/适合绝大多数人)</option>
                                 <option value="4day">四分化 (4次练遍全身/肩部独立轰炸)</option>
                             </select>
@@ -314,7 +299,6 @@
                             <select id="trainDay"></select>
                         </div>
                     </div>
-
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <div>
                             <label>当前训练侧重</label>
@@ -334,8 +318,7 @@
                             </select>
                         </div>
                     </div>
-
-                    <button onclick="generateTraining()" class="w-full bg-gray-900 font-bold py-4 rounded-lg transition duration-200 mt-4 text-white text-lg tracking-wide hover:bg-gray-800">
+                    <button id="btn-generate-training" class="w-full bg-gray-900 font-bold py-4 rounded-lg transition duration-200 mt-4 text-white text-lg tracking-wide hover:bg-gray-800">
                         生成今日专属课表
                     </button>
                 </div>
@@ -347,28 +330,26 @@
                             <p class="text-sm font-medium text-gray-600">要求: <strong id="train-reps-display" class="text-gray-900"></strong></p>
                         </div>
                     </div>
-
                     <div class="overflow-x-auto rounded-xl border border-gray-200">
-                        <table class="data-table mt-0">
+                        <table class="data-table mt-0 min-w-[500px]">
                             <thead><tr><th style="width: 20%;">部位</th><th>推荐动作 (选1-2个)</th><th>建议组数</th><th>要求</th></tr></thead>
                             <tbody id="training-plan-body"></tbody>
                         </table>
                     </div>
-
                     <div class="flex justify-center pt-4">
-                        <button onclick="startExecution()" class="exec-btn exec-btn-primary">
+                        <button id="btn-start-exec" class="exec-btn exec-btn-primary w-full md:w-auto">
                             <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0121 12z"></path></svg>
                             启动执行器
                         </button>
                     </div>
-
+                    
                     <div id="history-section" class="card record-card hidden mt-8 border-t-4 border-gray-800">
-                        <div class="flex justify-between items-center mb-6">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
                             <h3 class="text-xl font-black text-gray-900 tracking-tight">训练数据分析中枢</h3>
                         </div>
                         <div id="monthly-stats"></div>
                         <div id="history-list"></div>
-                        <button onclick="clearAllHistory()" class="mt-6 w-full py-3 rounded-xl border border-dashed border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300 font-bold text-sm transition-all flex justify-center items-center">
+                        <button id="btn-clear-history" class="mt-6 w-full py-3 rounded-xl border border-dashed border-red-200 text-red-500 hover:bg-red-50 hover:border-red-300 font-bold text-sm transition-all flex justify-center items-center">
                             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
                             清空所有历史数据
                         </button>
@@ -383,74 +364,59 @@
                             <span id="exec-progress-text">准备开始</span>
                             <span id="exec-set-counter">--/--</span>
                         </div>
-                        <div class="progress-bar-container">
-                            <div class="progress-bar-fill" id="exec-progress-bar"></div>
-                        </div>
+                        <div class="progress-bar-container"><div class="progress-bar-fill" id="exec-progress-bar"></div></div>
                     </div>
-
                     <div id="exec-workout-state" class="w-full flex flex-col items-center">
                         <div class="mb-8 text-center">
                             <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">训练时长</p>
                             <div class="exec-timer-display" id="timer-display">00:00</div>
                         </div>
-
                         <div class="mb-8 text-center hidden" id="rest-timer-box">
                             <p class="text-sm font-bold text-orange-400 uppercase tracking-widest mb-2">组间休息</p>
                             <div class="rest-timer-display" id="rest-display">00:00</div>
                         </div>
-
                         <div class="w-full max-w-md mb-8">
                             <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 text-center">当前动作</p>
-                            <input type="text" id="exec-current-exercise" class="exec-input w-full text-center text-2xl font-black text-gray-900" value="动作名称" readonly />
-                            
+                            <input type="text" id="exec-current-exercise" class="exec-input w-full text-center text-2xl font-black text-gray-900" readonly />
                             <div class="mt-6 flex items-center justify-center gap-4 flex-wrap">
-                                <label class="text-sm font-bold text-gray-500">使用重量 (kg):</label>
-                                <input type="number" id="exec-weight-input" class="weight-input border border-gray-200 rounded-lg" placeholder="0" min="0" value="0">
-                                
-                                <label class="text-sm font-bold text-gray-500 ml-4">休息秒数:</label>
-                                <input type="number" id="exec-rest-input" class="rest-input border border-gray-200 rounded-lg" placeholder="60" min="10" value="60">
+                                <div>
+                                    <label class="text-xs font-bold text-gray-500 block text-center">重量(kg)</label>
+                                    <input type="number" id="exec-weight-input" class="weight-input border border-gray-200 rounded-lg mt-1" value="0">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-gray-500 block text-center">休息(秒)</label>
+                                    <input type="number" id="exec-rest-input" class="rest-input border border-gray-200 rounded-lg mt-1" value="60">
+                                </div>
                             </div>
                         </div>
-
                         <div class="w-full max-w-2xl bg-gray-50 rounded-xl border border-gray-200 overflow-hidden mb-8">
-                            <div class="p-4 border-b border-gray-200 bg-white">
-                                <h3 class="font-bold text-gray-900">今日组次清单</h3>
-                            </div>
+                            <div class="p-4 border-b border-gray-200 bg-white"><h3 class="font-bold text-gray-900">今日组次清单</h3></div>
                             <div id="set-list-container" class="max-h-64 overflow-y-auto custom-scrollbar"></div>
                         </div>
-
                         <div class="flex gap-4 w-full justify-center max-w-md">
-                            <button onclick="exitExecution()" class="exec-btn bg-gray-100 text-gray-600 hover:bg-gray-200">
-                               退出
-                            </button>
-                            <button id="btn-finish-set" onclick="finishCurrentSet()" class="exec-btn exec-btn-success flex-1">
-                                <svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                                完成这一组
-                            </button>
+                            <button id="btn-exit-exec" class="exec-btn bg-gray-100 text-gray-600 hover:bg-gray-200 flex-1 md:flex-none">退出</button>
+                            <button id="btn-finish-set" class="exec-btn exec-btn-success flex-[2]">完成这一组</button>
                         </div>
                     </div>
-
                     <div id="workout-record" class="w-full mt-8 hidden record-card">
                         <h3 class="text-xl font-bold text-gray-900 mb-4 text-center">✅ 训后完成记录表</h3>
                         <div id="record-content" class="space-y-4"></div>
-                        <button onclick="copyRecord()" class="w-full bg-brand mt-4 py-2 rounded-lg text-white font-bold">
-                            复制记录
-                        </button>
+                        <button id="btn-copy-record" class="w-full bg-brand mt-4 py-3 rounded-lg text-white font-bold tracking-wide">复制记录</button>
                     </div>
                 </div>
             </div>
         </section>
 
-        <section id="sec-food" class="space-y-6 hidden transition-opacity duration-300">
+        <section id="sec-food" class="view-section space-y-6 hidden transition-opacity duration-300">
             <div class="text-center pb-6">
                 <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">终极食物成分字典</h1>
                 <p class="text-gray-500 mt-3 text-sm md:text-base max-w-2xl mx-auto">掌握核心食材的生熟转化率，你的眼睛就是最准的秤。（数据为每100g可食用部分）</p>
             </div>
-
+            
             <div class="card">
                 <h2 class="text-lg font-bold mb-4 flex items-center text-gray-900"><span class="badge badge-blue mr-3">A级 复合碳水</span> 肌糖原主要来源</h2>
                 <div class="overflow-x-auto rounded-xl border border-gray-200">
-                    <table class="data-table mt-0">
+                    <table class="data-table mt-0 min-w-[500px]">
                         <thead><tr><th>食材 (状态)</th><th>碳水率</th><th>GI指数</th><th>硬核避坑指南 (生熟转化)</th></tr></thead>
                         <tbody>
                             <tr><td>生米类 (大/糙/小米)</td><td class="font-bold text-blue-600">75%</td><td>高/中</td><td class="text-left text-xs">除了黑米外，糙米等生重碳水率均在75%左右，并不属于低GI。</td></tr>
@@ -469,7 +435,7 @@
             <div class="card">
                 <h2 class="text-lg font-bold mb-4 flex items-center text-gray-900"><span class="badge badge-green mr-3">S级 核心蛋白</span> 修复肌纤维基石</h2>
                 <div class="overflow-x-auto rounded-xl border border-gray-200">
-                    <table class="data-table mt-0">
+                    <table class="data-table mt-0 min-w-[500px]">
                         <thead><tr><th>食材 (状态)</th><th>蛋白率</th><th>脂肪/碳水</th><th>硬核避坑指南 (隐形脂肪)</th></tr></thead>
                         <tbody>
                             <tr><td>生瘦肉 (鸡胸/瘦牛/里脊)</td><td class="font-bold text-green-600">20%</td><td>极低脂</td><td class="text-left text-xs">绝大多数陆地纯瘦肉生重蛋白率均在20%。猪里脊也是极佳的瘦肉来源。</td></tr>
@@ -489,7 +455,7 @@
                 <div class="card">
                     <h2 class="text-lg font-bold mb-4 text-gray-900"><span class="badge badge-yellow">B级 优质脂肪</span><br><span class="text-xs text-gray-500 font-normal mt-1 block">合成睾酮素的必需品，切忌零脂</span></h2>
                     <div class="overflow-x-auto rounded-xl border border-gray-200">
-                        <table class="data-table mt-0">
+                        <table class="data-table mt-0 min-w-[300px]">
                             <thead><tr><th>食材/类别</th><th>脂肪率</th><th>避坑指南</th></tr></thead>
                             <tbody>
                                 <tr><td>坚果 (核桃/巴旦木)</td><td class="font-bold text-yellow-600">>50%</td><td class="text-xs text-left">热量炸弹。一天最多一小把(20g)，多吃必胖。</td></tr>
@@ -504,7 +470,7 @@
                 <div class="card">
                     <h2 class="text-lg font-bold mb-4 text-gray-900"><span class="badge badge-gray">黑客区：无卡平替</span><br><span class="text-xs text-gray-500 font-normal mt-1 block">减脂期提升幸福感的合法作弊手段</span></h2>
                     <div class="overflow-x-auto rounded-xl border border-gray-200">
-                        <table class="data-table mt-0">
+                        <table class="data-table mt-0 min-w-[300px]">
                             <thead><tr><th>类别</th><th>推荐平替方案</th><th>减掉的隐形热量</th></tr></thead>
                             <tbody>
                                 <tr><td><strong>面条类</strong></td><td class="text-left text-xs">魔芋丝 / 魔芋结 (几乎0卡)</td><td class="text-xs text-blue-600 font-bold">- 250大卡纯碳水</td></tr>
@@ -525,7 +491,7 @@
             </div>
         </section>
 
-        <section id="sec-learn" class="hidden transition-opacity duration-300">
+        <section id="sec-learn" class="view-section hidden transition-opacity duration-300">
             <div class="text-center pb-6 mt-4">
                 <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">小凡高阶健身智库 <span class="brand-color text-xl align-top block sm:inline mt-2 sm:mt-0">PRO</span></h1>
                 <p class="text-gray-500 mt-3 text-sm md:text-base max-w-2xl mx-auto">粉碎业界伪科学，从底层逻辑重塑减脂、增肌与结构力学。</p>
@@ -537,7 +503,7 @@
                             <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 110-4m0 4v2m0-6V4"></path></svg>
                             智库文献目录
                         </div>
-                        <div id="article-nav-container" class="space-y-1"></div>
+                        <div id="article-nav-container" class="space-y-1 flex flex-col md:block"></div>
                     </div>
                 </div>
                 <div class="w-full md:w-2/3">
@@ -546,7 +512,7 @@
             </div>
         </section>
 
-        <section id="sec-about" class="hidden transition-opacity duration-300">
+        <section id="sec-about" class="view-section hidden transition-opacity duration-300">
             <div class="text-center pb-6 mt-4">
                 <h1 class="text-3xl md:text-4xl font-black text-gray-900 tracking-tight">关于作者</h1>
             </div>
@@ -593,7 +559,7 @@
                     
                     <div class="bg-blue-50 border border-blue-100 rounded-xl p-6 mt-8">
                         <p class="text-gray-800 font-medium mb-3">目前我一个人的能力有限，还有很多想法没能实现。如果你懂营销、懂程序开发或者懂健身，也恰好看好这个方向，欢迎联系我交流合作：</p>
-                        <div class="flex items-center text-lg font-black brand-color">
+                        <div class="flex items-center text-lg font-black brand-color break-all">
                             <span class="mr-2">📧</span> 邮箱：2462795033@qq.com
                         </div>
                     </div>
@@ -610,863 +576,769 @@
     </footer>
 
     <script>
-        const CANTEEN_DATABASE = [
-            // 原有大荤硬菜类
-            { category: '大荤硬菜类', name: '红烧肉', weight: 120, calories: 480, carbs: 2, protein: 12, fat: 45, goals: ['bulk'], tips: '脂肪含量极高，减脂期慎选' },
-            { category: '大荤硬菜类', name: '红烧排骨', weight: 150, calories: 410, carbs: 8, protein: 25, fat: 28, goals: ['recomp', 'bulk'], tips: '骨头占重，实际肉量较少' },
-            { category: '大荤硬菜类', name: '糖醋里脊', weight: 150, calories: 450, carbs: 35, protein: 18, fat: 22, goals: ['bulk'], tips: '含糖量高，减脂期禁用' },
-            { category: '大荤硬菜类', name: '清蒸鱼', weight: 150, calories: 180, carbs: 0, protein: 35, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '高蛋白低脂肪，减脂期首选' },
-            // 新增：高频大荤硬菜
-            { category: '大荤硬菜类', name: '红烧鸡腿(1个)', weight: 150, calories: 240, carbs: 5, protein: 22, fat: 14, goals: ['cut', 'recomp', 'bulk'], tips: '去皮吃可以少摄入至少5g脂肪，减脂期首选硬菜' },
-            { category: '大荤硬菜类', name: '水煮肉片', weight: 200, calories: 380, carbs: 12, protein: 20, fat: 28, goals: ['bulk'], tips: '表面浮油极多，吃前建议过水，减脂期避开' },
-            { category: '大荤硬菜类', name: '土豆炖牛腩', weight: 200, calories: 310, carbs: 20, protein: 18, fat: 16, goals: ['recomp', 'bulk'], tips: '土豆吸满了牛油，按主食+脂肪算，注意控量' },
-            
-            // 原有荤素搭配类
-            { category: '荤素搭配类', name: '宫保鸡丁', weight: 180, calories: 310, carbs: 12, protein: 22, fat: 18, goals: ['cut', 'recomp', 'bulk'], tips: '花生多，注意脂肪量' },
-            { category: '荤素搭配类', name: '番茄炒蛋', weight: 180, calories: 220, carbs: 8, protein: 10, fat: 15, goals: ['cut', 'recomp', 'bulk'], tips: '经典下饭菜，控制量' },
-            { category: '荤素搭配类', name: '木须肉', weight: 200, calories: 280, carbs: 15, protein: 20, fat: 14, goals: ['cut', 'recomp', 'bulk'], tips: '营养均衡' },
-            // 新增：高频荤素搭配
-            { category: '荤素搭配类', name: '青椒炒肉丝', weight: 150, calories: 210, carbs: 8, protein: 12, fat: 14, goals: ['cut', 'recomp', 'bulk'], tips: '食堂百搭菜，肉丝过油较多' },
-            { category: '荤素搭配类', name: '鱼香肉丝', weight: 150, calories: 240, carbs: 16, protein: 10, fat: 15, goals: ['recomp', 'bulk'], tips: '糖醋调味热量偏高，碳水刺客' },
-            { category: '荤素搭配类', name: '芹菜炒牛肉', weight: 150, calories: 180, carbs: 6, protein: 15, fat: 10, goals: ['cut', 'recomp', 'bulk'], tips: '优质红肉来源，芹菜高纤维' },
-            
-            // 原有素菜国民类
-            { category: '素菜国民类', name: '蒜蓉西兰花', weight: 200, calories: 120, carbs: 10, protein: 6, fat: 7, goals: ['cut', 'recomp', 'bulk'], tips: '高纤维，饱腹感强' },
-            { category: '素菜国民类', name: '红烧豆腐', weight: 200, calories: 180, carbs: 8, protein: 15, fat: 10, goals: ['cut', 'recomp', 'bulk'], tips: '植物蛋白好来源' },
-            { category: '素菜国民类', name: '凉拌黄瓜', weight: 150, calories: 50, carbs: 5, protein: 2, fat: 3, goals: ['cut', 'recomp'], tips: '低卡解腻' },
-            // 新增：高频素菜
-            { category: '素菜国民类', name: '清炒小白菜', weight: 150, calories: 60, carbs: 4, protein: 2, fat: 4, goals: ['cut', 'recomp', 'bulk'], tips: '补充微量元素，热量可忽略' },
-            { category: '素菜国民类', name: '干煸四季豆', weight: 150, calories: 130, carbs: 10, protein: 3, fat: 8, goals: ['recomp', 'bulk'], tips: '油炸过再炒的，含有隐形脂肪' },
-            { category: '素菜国民类', name: '地三鲜', weight: 150, calories: 220, carbs: 18, protein: 3, fat: 15, goals: ['bulk'], tips: '茄子和土豆都是吸油海绵，纯素菜里的热量炸弹' },
-            
-            // 原有特色档口类
-            { category: '特色档口类', name: '韩式拌饭', weight: 350, calories: 520, carbs: 70, protein: 20, fat: 18, goals: ['bulk'], tips: '热量高，增肌好选择' },
-            { category: '特色档口类', name: '黄焖鸡米饭', weight: 400, calories: 580, carbs: 65, protein: 30, fat: 18, goals: ['bulk'], tips: '酱汁多，别泡饭' },
-            // 新增：高频档口
-            { category: '特色档口类', name: '牛肉板面/拉面', weight: 400, calories: 520, carbs: 65, protein: 20, fat: 18, goals: ['bulk'], tips: '汤底红油多，只吃面和牛肉，别喝汤' },
-            { category: '特色档口类', name: '麻辣烫(荤素搭)', weight: 400, calories: 450, carbs: 40, protein: 15, fat: 25, goals: ['recomp', 'bulk'], tips: '尽量选清汤/骨汤，避开麻酱底和丸子类' },
-            
-            { category: '主食类', name: '白米饭', weight: 100, calories: 116, carbs: 25, protein: 2.6, fat: 0.3, goals: ['cut', 'recomp', 'bulk'], tips: '常规分量，消化快' },
-            { category: '主食类', name: '糙米/杂粮饭', weight: 100, calories: 120, carbs: 26, protein: 3, fat: 1, goals: ['cut', 'recomp'], tips: '低GI，饱腹感极强' },
-            { category: '主食类', name: '蒸红薯/紫薯', weight: 100, calories: 86, carbs: 20, protein: 1.6, fat: 0.2, goals: ['cut', 'recomp'], tips: '优质粗粮，减脂期神仙主食' },
-            { category: '主食类', name: '荞麦面(熟)', weight: 100, calories: 130, carbs: 28, protein: 5, fat: 0.5, goals: ['cut', 'recomp', 'bulk'], tips: '控糖期优选面食' },
-            { category: '主食类', name: '馒头', weight: 100, calories: 221, carbs: 47, protein: 7, fat: 1.1, goals: ['recomp', 'bulk'], tips: '碳水密度大，管饱' },
-            
-            { category: '高蛋白小食', name: '水煮蛋', weight: 50, calories: 70, carbs: 0.6, protein: 6, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '完美蛋白来源' },
-            { category: '高蛋白小食', name: '无糖豆浆', weight: 250, calories: 80, carbs: 6, protein: 8, fat: 3, goals: ['cut', 'recomp', 'bulk'], tips: '别加糖' },
-            { category: '高蛋白小食', name: '牛奶(全脂)', weight: 250, calories: 150, carbs: 12, protein: 8, fat: 8, goals: ['recomp', 'bulk'], tips: '减脂期选脱脂' },
-
-            { category: '中式早餐类', name: '大肉包', weight: 100, calories: 250, carbs: 30, protein: 10, fat: 10, goals: ['recomp', 'bulk'], tips: '肉馅多肥肉，减脂期建议只吃半个皮或换菜包' },
-            { category: '中式早餐类', name: '香菇菜包', weight: 100, calories: 180, carbs: 32, protein: 5, fat: 4, goals: ['cut', 'recomp', 'bulk'], tips: '热量较低的快手碳水，配个鸡蛋很完美' },
-            { category: '中式早餐类', name: '茶叶蛋', weight: 50, calories: 75, carbs: 1, protein: 6, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '早八最强廉价蛋白，减脂期可一天吃2个' },
-            { category: '中式早餐类', name: '煎饼果子(加薄脆)', weight: 250, calories: 450, carbs: 50, protein: 15, fat: 20, goals: ['bulk'], tips: '薄脆全是油！减脂期点单暗号：不要薄脆，少刷酱' },
-            { category: '中式早餐类', name: '鸡蛋灌饼', weight: 200, calories: 420, carbs: 45, protein: 12, fat: 21, goals: ['bulk'], tips: '饼皮是起酥油煎的，脂肪爆炸，减脂绝对刺客' },
-            { category: '中式早餐类', name: '皮蛋瘦肉粥', weight: 300, calories: 180, carbs: 25, protein: 8, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '好消化，但GI较高，适合练前一小时吃' },
-            { category: '中式早餐类', name: '原味小米粥', weight: 300, calories: 120, carbs: 25, protein: 3, fat: 1, goals: ['cut', 'recomp'], tips: '清肠胃优质流质碳水，但缺乏蛋白质，需额外配肉蛋' },
-            { category: '中式早餐类', name: '油条(一根)', weight: 80, calories: 310, carbs: 35, protein: 6, fat: 16, goals: ['none'], tips: '纯纯的海绵吸油机器，除了热量没营养，尽量戒掉' },
-            { category: '中式早餐类', name: '鲜肉小馄饨', weight: 150, calories: 250, carbs: 30, protein: 10, fat: 10, goals: ['recomp', 'bulk'], tips: '汤底通常有猪油和味精，吃馄饨别喝汤' },
-            { category: '中式早餐类', name: '甜豆浆(食堂杯装)', weight: 250, calories: 120, carbs: 15, protein: 7, fat: 4, goals: ['recomp', 'bulk'], tips: '很多是粉冲的且加了大量白糖。能喝无糖选无糖' },
-            { category: '中式早餐类', name: '全麦面包(2片)', weight: 70, calories: 180, carbs: 35, protein: 7, fat: 2, goals: ['cut', 'recomp'], tips: '注意看配料表，全麦粉排第一位的才是真全麦' },
-            { category: '中式早餐类', name: '便利店肉松面包', weight: 120, calories: 380, carbs: 45, protein: 9, fat: 18, goals: ['bulk'], tips: '肉松+沙拉酱=热量炸弹，偶尔解馋可以，不建议当日常主食' },
-            { category: '中式早餐类', name: '即食燕麦片(30g)', weight: 30, calories: 110, carbs: 20, protein: 4, fat: 2, goals: ['cut', 'recomp'], tips: '宿舍党神器，加点食堂打的豆浆/牛奶就是完美早餐' },
-            { category: '中式早餐类', name: '玉米(一根)', weight: 200, calories: 170, carbs: 34, protein: 5, fat: 2, goals: ['cut', 'recomp'], tips: '食堂最推荐的粗粮主食，饱腹感极强' },
-            { category: '中式早餐类', name: '纯牛奶(250ml)', weight: 250, calories: 160, carbs: 12, protein: 8, fat: 9, goals: ['recomp', 'bulk'], tips: '优质蛋白来源，减脂期选脱脂/低脂可省下不少脂肪额度' },
-            { category: '中式早餐类', name: '冰美式(中杯)', weight: 350, calories: 10, carbs: 2, protein: 0, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '早八提神、消除晨起水肿利器，热量可忽略不计，但空腹喝易伤胃' },
-            
-            { category: '水果快充类', name: '香蕉(中等1根)', weight: 120, calories: 105, carbs: 27, protein: 1, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '练前练后神级快碳，富含钾元素防抽筋' },
-            { category: '水果快充类', name: '苹果(中等1个)', weight: 200, calories: 100, carbs: 25, protein: 0.5, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '饱腹感强，含果胶，适合练前或加餐' },
-            { category: '水果快充类', name: '西瓜(大片/300g)', weight: 300, calories: 95, carbs: 24, protein: 2, fat: 0, goals: ['recomp', 'bulk'], tips: '升糖极快，非常适合练后迅速补充肌糖原，但减脂期少吃' },
-            { category: '水果快充类', name: '橙子(1个)', weight: 150, calories: 70, carbs: 15, protein: 1, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '富含维C，帮助降低练后皮质醇' },
-            { category: '水果快充类', name: '葡萄(一小串/150g)', weight: 150, calories: 100, carbs: 26, protein: 1, fat: 0, goals: ['recomp', 'bulk'], tips: '快碳吸收极速，练后吃极佳' },
-            
-            { category: '练后补剂类', name: '乳清蛋白粉(1勺)', weight: 30, calories: 120, carbs: 3, protein: 24, fat: 1.5, goals: ['cut', 'recomp', 'bulk'], tips: '吸收最快的顶级氨基酸，练后30分钟内必喝' },
-            { category: '练后补剂类', name: '纯蛋清(3个量)', weight: 100, calories: 45, carbs: 0, protein: 11, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '如果不喝粉，这是最纯净的无脂极速蛋白' },
-            { category: '练后补剂类', name: '白馒头(半个)', weight: 50, calories: 110, carbs: 23, protein: 3.5, fat: 0.5, goals: ['recomp', 'bulk'], tips: '最接地气的练后快碳，配蛋白粉吃堪称完美' }
-        ];
-
-        let currentMealPlan = [];
-        let trackerData = [];
-        let currentCanteenMeal = [];
-        let currentTrainingPlan = []; 
-        let workoutRecordData = [];
-        
-        let execState = {
-            isActive: false,
-            currentGlobalSetIndex: 0,
-            totalSets: 0,
-            timer: null,
-            elapsedSeconds: 0,
-            flatSetList: [],
-            restSeconds: 60,
-            restTimer: null,
-            isResting: false,
-            restRemaining: 0
+        const AppDB = {
+            canteenFoods: [
+                { category: '大荤硬菜类', name: '红烧肉', weight: 120, calories: 480, carbs: 2, protein: 12, fat: 45, goals: ['bulk'], tips: '脂肪含量极高，减脂期慎选' },
+                { category: '大荤硬菜类', name: '红烧排骨', weight: 150, calories: 410, carbs: 8, protein: 25, fat: 28, goals: ['recomp', 'bulk'], tips: '骨头占重，实际肉量较少' },
+                { category: '大荤硬菜类', name: '糖醋里脊', weight: 150, calories: 450, carbs: 35, protein: 18, fat: 22, goals: ['bulk'], tips: '含糖量高，减脂期禁用' },
+                { category: '大荤硬菜类', name: '清蒸鱼', weight: 150, calories: 180, carbs: 0, protein: 35, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '高蛋白低脂肪，减脂期首选' },
+                { category: '大荤硬菜类', name: '红烧鸡腿(1个)', weight: 150, calories: 240, carbs: 5, protein: 22, fat: 14, goals: ['cut', 'recomp', 'bulk'], tips: '去皮吃可以少摄入至少5g脂肪，减脂期首选硬菜' },
+                { category: '大荤硬菜类', name: '水煮肉片', weight: 200, calories: 380, carbs: 12, protein: 20, fat: 28, goals: ['bulk'], tips: '表面浮油极多，吃前建议过水，减脂期避开' },
+                { category: '大荤硬菜类', name: '土豆炖牛腩', weight: 200, calories: 310, carbs: 20, protein: 18, fat: 16, goals: ['recomp', 'bulk'], tips: '土豆吸满了牛油，按主食+脂肪算，注意控量' },
+                { category: '荤素搭配类', name: '宫保鸡丁', weight: 180, calories: 310, carbs: 12, protein: 22, fat: 18, goals: ['cut', 'recomp', 'bulk'], tips: '花生多，注意脂肪量' },
+                { category: '荤素搭配类', name: '番茄炒蛋', weight: 180, calories: 220, carbs: 8, protein: 10, fat: 15, goals: ['cut', 'recomp', 'bulk'], tips: '经典下饭菜，控制量' },
+                { category: '荤素搭配类', name: '木须肉', weight: 200, calories: 280, carbs: 15, protein: 20, fat: 14, goals: ['cut', 'recomp', 'bulk'], tips: '营养均衡' },
+                { category: '荤素搭配类', name: '青椒炒肉丝', weight: 150, calories: 210, carbs: 8, protein: 12, fat: 14, goals: ['cut', 'recomp', 'bulk'], tips: '食堂百搭菜，肉丝过油较多' },
+                { category: '荤素搭配类', name: '鱼香肉丝', weight: 150, calories: 240, carbs: 16, protein: 10, fat: 15, goals: ['recomp', 'bulk'], tips: '糖醋调味热量偏高，碳水刺客' },
+                { category: '荤素搭配类', name: '芹菜炒牛肉', weight: 150, calories: 180, carbs: 6, protein: 15, fat: 10, goals: ['cut', 'recomp', 'bulk'], tips: '优质红肉来源，芹菜高纤维' },
+                { category: '素菜国民类', name: '蒜蓉西兰花', weight: 200, calories: 120, carbs: 10, protein: 6, fat: 7, goals: ['cut', 'recomp', 'bulk'], tips: '高纤维，饱腹感强' },
+                { category: '素菜国民类', name: '红烧豆腐', weight: 200, calories: 180, carbs: 8, protein: 15, fat: 10, goals: ['cut', 'recomp', 'bulk'], tips: '植物蛋白好来源' },
+                { category: '素菜国民类', name: '凉拌黄瓜', weight: 150, calories: 50, carbs: 5, protein: 2, fat: 3, goals: ['cut', 'recomp'], tips: '低卡解腻' },
+                { category: '素菜国民类', name: '清炒小白菜', weight: 150, calories: 60, carbs: 4, protein: 2, fat: 4, goals: ['cut', 'recomp', 'bulk'], tips: '补充微量元素，热量可忽略' },
+                { category: '素菜国民类', name: '干煸四季豆', weight: 150, calories: 130, carbs: 10, protein: 3, fat: 8, goals: ['recomp', 'bulk'], tips: '油炸过再炒的，含有隐形脂肪' },
+                { category: '素菜国民类', name: '地三鲜', weight: 150, calories: 220, carbs: 18, protein: 3, fat: 15, goals: ['bulk'], tips: '茄子和土豆都是吸油海绵，纯素菜里的热量炸弹' },
+                { category: '特色档口类', name: '韩式拌饭', weight: 350, calories: 520, carbs: 70, protein: 20, fat: 18, goals: ['bulk'], tips: '热量高，增肌好选择' },
+                { category: '特色档口类', name: '黄焖鸡米饭', weight: 400, calories: 580, carbs: 65, protein: 30, fat: 18, goals: ['bulk'], tips: '酱汁多，别泡饭' },
+                { category: '特色档口类', name: '牛肉板面/拉面', weight: 400, calories: 520, carbs: 65, protein: 20, fat: 18, goals: ['bulk'], tips: '汤底红油多，只吃面和牛肉，别喝汤' },
+                { category: '特色档口类', name: '麻辣烫(荤素搭)', weight: 400, calories: 450, carbs: 40, protein: 15, fat: 25, goals: ['recomp', 'bulk'], tips: '尽量选清汤/骨汤，避开麻酱底和丸子类' },
+                { category: '主食类', name: '白米饭', weight: 100, calories: 116, carbs: 25, protein: 2.6, fat: 0.3, goals: ['cut', 'recomp', 'bulk'], tips: '常规分量，消化快' },
+                { category: '主食类', name: '糙米/杂粮饭', weight: 100, calories: 120, carbs: 26, protein: 3, fat: 1, goals: ['cut', 'recomp'], tips: '低GI，饱腹感极强' },
+                { category: '主食类', name: '蒸红薯/紫薯', weight: 100, calories: 86, carbs: 20, protein: 1.6, fat: 0.2, goals: ['cut', 'recomp'], tips: '优质粗粮，减脂期神仙主食' },
+                { category: '主食类', name: '荞麦面(熟)', weight: 100, calories: 130, carbs: 28, protein: 5, fat: 0.5, goals: ['cut', 'recomp', 'bulk'], tips: '控糖期优选面食' },
+                { category: '主食类', name: '馒头', weight: 100, calories: 221, carbs: 47, protein: 7, fat: 1.1, goals: ['recomp', 'bulk'], tips: '碳水密度大，管饱' },
+                { category: '高蛋白小食', name: '水煮蛋', weight: 50, calories: 70, carbs: 0.6, protein: 6, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '完美蛋白来源' },
+                { category: '高蛋白小食', name: '无糖豆浆', weight: 250, calories: 80, carbs: 6, protein: 8, fat: 3, goals: ['cut', 'recomp', 'bulk'], tips: '别加糖' },
+                { category: '高蛋白小食', name: '牛奶(全脂)', weight: 250, calories: 150, carbs: 12, protein: 8, fat: 8, goals: ['recomp', 'bulk'], tips: '减脂期选脱脂' },
+                { category: '中式早餐类', name: '大肉包', weight: 100, calories: 250, carbs: 30, protein: 10, fat: 10, goals: ['recomp', 'bulk'], tips: '肉馅多肥肉，减脂期建议只吃半个皮或换菜包' },
+                { category: '中式早餐类', name: '香菇菜包', weight: 100, calories: 180, carbs: 32, protein: 5, fat: 4, goals: ['cut', 'recomp', 'bulk'], tips: '热量较低的快手碳水，配个鸡蛋很完美' },
+                { category: '中式早餐类', name: '茶叶蛋', weight: 50, calories: 75, carbs: 1, protein: 6, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '早八最强廉价蛋白，减脂期可一天吃2个' },
+                { category: '中式早餐类', name: '煎饼果子(加薄脆)', weight: 250, calories: 450, carbs: 50, protein: 15, fat: 20, goals: ['bulk'], tips: '薄脆全是油！减脂期点单暗号：不要薄脆，少刷酱' },
+                { category: '中式早餐类', name: '鸡蛋灌饼', weight: 200, calories: 420, carbs: 45, protein: 12, fat: 21, goals: ['bulk'], tips: '饼皮是起酥油煎的，脂肪爆炸，减脂绝对刺客' },
+                { category: '中式早餐类', name: '皮蛋瘦肉粥', weight: 300, calories: 180, carbs: 25, protein: 8, fat: 5, goals: ['cut', 'recomp', 'bulk'], tips: '好消化，但GI较高，适合练前一小时吃' },
+                { category: '中式早餐类', name: '原味小米粥', weight: 300, calories: 120, carbs: 25, protein: 3, fat: 1, goals: ['cut', 'recomp'], tips: '清肠胃优质流质碳水，但缺乏蛋白质，需额外配肉蛋' },
+                { category: '中式早餐类', name: '油条(一根)', weight: 80, calories: 310, carbs: 35, protein: 6, fat: 16, goals: ['none'], tips: '纯纯的海绵吸油机器，除了热量没营养，尽量戒掉' },
+                { category: '中式早餐类', name: '鲜肉小馄饨', weight: 150, calories: 250, carbs: 30, protein: 10, fat: 10, goals: ['recomp', 'bulk'], tips: '汤底通常有猪油和味精，吃馄饨别喝汤' },
+                { category: '中式早餐类', name: '甜豆浆(食堂杯装)', weight: 250, calories: 120, carbs: 15, protein: 7, fat: 4, goals: ['recomp', 'bulk'], tips: '很多是粉冲的且加了大量白糖。能喝无糖选无糖' },
+                { category: '中式早餐类', name: '全麦面包(2片)', weight: 70, calories: 180, carbs: 35, protein: 7, fat: 2, goals: ['cut', 'recomp'], tips: '注意看配料表，全麦粉排第一位的才是真全麦' },
+                { category: '中式早餐类', name: '便利店肉松面包', weight: 120, calories: 380, carbs: 45, protein: 9, fat: 18, goals: ['bulk'], tips: '肉松+沙拉酱=热量炸弹，偶尔解馋可以，不建议当日常主食' },
+                { category: '中式早餐类', name: '即食燕麦片(30g)', weight: 30, calories: 110, carbs: 20, protein: 4, fat: 2, goals: ['cut', 'recomp'], tips: '宿舍党神器，加点食堂打的豆浆/牛奶就是完美早餐' },
+                { category: '中式早餐类', name: '玉米(一根)', weight: 200, calories: 170, carbs: 34, protein: 5, fat: 2, goals: ['cut', 'recomp'], tips: '食堂最推荐的粗粮主食，饱腹感极强' },
+                { category: '中式早餐类', name: '纯牛奶(250ml)', weight: 250, calories: 160, carbs: 12, protein: 8, fat: 9, goals: ['recomp', 'bulk'], tips: '优质蛋白来源，减脂期选脱脂/低脂可省下不少脂肪额度' },
+                { category: '中式早餐类', name: '冰美式(中杯)', weight: 350, calories: 10, carbs: 2, protein: 0, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '早八提神、消除晨起水肿利器，热量可忽略不计，但空腹喝易伤胃' },
+                { category: '水果快充类', name: '香蕉(中等1根)', weight: 120, calories: 105, carbs: 27, protein: 1, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '练前练后神级快碳，富含钾元素防抽筋' },
+                { category: '水果快充类', name: '苹果(中等1个)', weight: 200, calories: 100, carbs: 25, protein: 0.5, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '饱腹感强，含果胶，适合练前或加餐' },
+                { category: '水果快充类', name: '西瓜(大片/300g)', weight: 300, calories: 95, carbs: 24, protein: 2, fat: 0, goals: ['recomp', 'bulk'], tips: '升糖极快，非常适合练后迅速补充肌糖原，但减脂期少吃' },
+                { category: '水果快充类', name: '橙子(1个)', weight: 150, calories: 70, carbs: 15, protein: 1, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '富含维C，帮助降低练后皮质醇' },
+                { category: '水果快充类', name: '葡萄(一小串/150g)', weight: 150, calories: 100, carbs: 26, protein: 1, fat: 0, goals: ['recomp', 'bulk'], tips: '快碳吸收极速，练后吃极佳' },
+                { category: '练后补剂类', name: '乳清蛋白粉(1勺)', weight: 30, calories: 120, carbs: 3, protein: 24, fat: 1.5, goals: ['cut', 'recomp', 'bulk'], tips: '吸收最快的顶级氨基酸，练后30分钟内必喝' },
+                { category: '练后补剂类', name: '纯蛋清(3个量)', weight: 100, calories: 45, carbs: 0, protein: 11, fat: 0, goals: ['cut', 'recomp', 'bulk'], tips: '如果不喝粉，这是最纯净的无脂极速蛋白' },
+                { category: '练后补剂类', name: '白馒头(半个)', weight: 50, calories: 110, carbs: 23, protein: 3.5, fat: 0.5, goals: ['recomp', 'bulk'], tips: '最接地气的练后快碳，配蛋白粉吃堪称完美' }
+            ],
+            muscleStats: {
+                '背部': { min: 70, max: 95 },
+                '胸部': { min: 50, max: 75 },
+                '肩部': { min: 50, max: 75 },
+                '腿部/臀': { min: 70, max: 105 },
+                '手臂': { min: 45, max: 70 },
+                '核心': { min: 35, max: 50 }
+            },
+            articles: [
+                { id: 'm1_1', module: '减脂底层逻辑', badge: 'badge-red', title: '体重停滞的假象：皮质醇与“水肿欺骗”', readTime: '5分钟', content: `<p>很多小白减脂，每天少吃多动，前几天掉秤很快，到了第二周体重却一动不动，甚至喝口水都能涨半斤。这时候80%的人会崩溃，选择暴饮暴食放弃。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">皮质醇 (Cortisol) 的锁水效应</h3><p>当你长时间制造极大的热量缺口，或者每天疯狂做有氧时，身体会认为你处于“逃生/生存危机”状态。此时，肾上腺会分泌大量的压力激素——<strong>皮质醇</strong>。</p><p>皮质醇不仅会分解你的肌肉，还会导致一种极端的生理现象：<strong>水钠潴留（Water Retention）</strong>。皮下细胞会像海绵一样死死锁住水分。事实上，你每天制造的缺口已经在燃烧脂肪了，脂肪细胞变空了，但立刻被水分填满撑起，所以在体重秤上，你的数字纹丝不动。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡硬核破局法 (The Whoosh Effect)：</strong>当遇到储水期，你需要立刻停止节食，吃一顿富含碳水化合物的高热量大餐（欺骗餐），并好好睡一觉。大量的碳水和放松的心情会瞬间压制皮质醇水平。第二天，你的身体会排出滞留的水分（医学上称为 Whoosh 效应），你会发现体重直接“尿崩”式下降 1-2 公斤。记住：看镜子里的维度，永远比看体重秤更准确。</div>` },
+                { id: 'm1_2', module: '减脂底层逻辑', badge: 'badge-red', title: '局部减脂谎言与“顽固脂肪”受体学说', readTime: '6分钟', content: `<p>“教练，我怎么才能只减肚子上的肉？” 这是健身界最大的谎言。你每天做100个卷腹，最后只会让腰椎间盘突出，肚子外面的肥肉依然存在。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">细胞学真相：α受体与β受体</h3><p>脂肪细胞内有两种受体决定了脂肪分解的难度：</p><ul><li><strong>β-2 受体：</strong> 促进脂肪分解的“加速器”。</li><li><strong>α-2 受体：</strong> 抑制脂肪分解的“刹车片”。</li></ul><p>由于人类基因的设定，我们的面部、手臂和胸部布满了 β-2 受体，所以只要一节食，脸和胸最先瘦；而腹部、腰间（Love Handles）以及女性的大腿根部，密灵活麻地长满了 α-2 受体，血液循环极差。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡实战指南：</strong>不要再花钱买什么“暴汗服”和“腹部按摩仪”了，那排出的只是水分。想要减掉腹部的顽固脂肪，没有任何捷径。你必须依靠<strong>持续、系统性的热量缺口</strong>。当你的脸和四肢脂肪被榨干后，身体为了生存，才会迫不得迫去调动腹部那些被 α-2 受体锁死的“顽固脂肪”。</div>` },
+                { id: 'm2_1', module: '增肌核心理论', badge: 'badge-green', title: '拒绝脏增肌：P-Ratio 分配率与体脂红线', readTime: '7分钟', content: `<p>很多人以为增肌期就是“放开吃”，汉堡炸鸡来者不拒，美其名曰“Dirty Bulk（脏增肌）”。结果练了半年，肌肉长了 1 斤，纯脂肪长了 10 斤。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">胰岛素敏感度与 P-Ratio</h3><p>运动营养学中有一个核心概念叫 <strong>P-Ratio (营养分配率)</strong>。当你吃下 500 大卡的盈余热量时，这 500 大卡有多少拿去合成肌肉，有多少变成脂肪储存起来，完全取决于你的 <strong>体脂率和胰岛素敏感度</strong>。</p><ul><li><strong>体脂越低（男<12%）：</strong> 你的肌肉细胞对胰岛素极度渴望。吃下去的碳水和蛋白，会优先被强行压进肌纤维里，肌肉合成率极高。</li><li><strong>体脂偏高（男>18%）：</strong> 身体处于轻度胰岛素抵抗状态。肌肉细胞对营养“关门拒客”，你吃下去的多余热量，只能被迫转化为脂肪堆积在肚子里。</li></ul><div class="highlight-box"><strong class="block mb-2 text-blue-700">体脂红线警告：</strong>如果你男性的体脂率超过 15%-18%（女性超过 25%-28%），<strong>绝对不要进行热量盈余的增肌！</strong> 你必须先通过减脂，把体脂率降到能隐约看到腹肌的健康水平（胰岛素敏感度恢复），然后再制造每天 300 大卡的小缺口进行“干净增肌（Clean Bulk）”。</div>` },
+                { id: 'm2_2', module: '增肌核心理论', badge: 'badge-green', title: '垃圾容量陷阱：为什么练了3小时却不长肉？', readTime: '6分钟', content: `<p>很多新手喜欢在健身房泡两三个小时，用极轻的重量做几十上百次，追求那种“肌肉酸痛灼烧”的感觉。但其实，这除了消耗体力，对肌肉生长毫无帮助。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">机械张力 (Mechanical Tension) 才是王道</h3><p>肌纤维变粗的唯一核心驱动力是“机械张力”，即肌肉在对抗大重量拉伸时产生的微小撕裂。而轻重量带来的酸痛，只是乳酸堆积造成的“代谢压力（Metabolic Stress）”。</p><p>什么是<strong>有效组（Effective Reps）</strong>？研究表明，只有当你做到离力竭还剩最后 3-4 个的时候（RIR 1-3），高门槛的运动单位才会被全面募集，那些粗大的肌纤维才会被真正刺激到。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡训练除垢法：</strong>如果你用 10kg 的哑铃能轻松做 20 个，那你前面做的 15 个全都是无效的“垃圾容量”，纯粹是在浪费中枢神经能量。立刻增加重量，把每组次数控制在 8-12 次，并且确保在做最后两三个的时候，你的脸部已经扭曲，动作极其吃力（但依然保持标准变形）。每天只需高质量的 45 分钟，肌肉生长效果秒杀在健身房瞎晃 3 小时。</div>` },
+                { id: 'm3_1', module: '结构力学与数据', badge: 'badge-purple', title: '深蹲剪切力与动作轨迹的 CV 视觉测算', readTime: '8分钟', content: `<p>在高阶力量领域，我们需要把人体看作一个<strong>精密的桁架结构</strong>：骨骼是承重构件，肌肉和肌腱是提供预应力的拉索。很多人深蹲时腰疼，是因为受力结构的失稳。</p><p>标准深蹲的核心是<strong>髋膝同步驱动</strong>。如果你的膝盖先动，重心前移，剪切力会全部压在膝关节上；如果你的髋部先动，身体过度前倾，剪切力会转移到腰椎。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">视觉测算技巧：</strong>侧面观察，杠铃的垂直投影线必须始终穿过你的足中位置。无论蹲起还是下落，保持这条线不动，你的关节受力就是最安全、最标准的。</div>` },
+                { id: 'm2_3', module: '增肌核心理论', badge: 'badge-green', title: '增肌停滞与暴涨怎么调？常见食物刺客避坑', readTime: '8分钟', content: `<p>执行了一个月计划，体重毫无变化或者飙升太快怎么办？很多新手在增肌期最容易陷入“死吃”或“不敢吃”的极端。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">增肌体重的“极慢速”原则</h3><p>建议男性每月体重增加<strong>不超过1kg</strong>，女性<strong>不超过0.5kg</strong>。想尽可能少长脂肪甚至可以再减半。为什么这么慢？因为肌肉合成速度比脂肪分解慢得多，平均每天能合成10g肌肉已经极其高效了，每月的纯肌肉增量最多也就300g。如果体重暴涨数倍于此，多出来的全都是未来的减脂累赘！增肌期的体重不需要严格每天上涨，只要有<strong>微弱的上行趋势</strong>即可。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">动态微调策略：</strong><br>• <strong>停滞不前（确实处于热量平衡）：</strong>每天增加碳水30-60g（约100-200g熟米饭）或者脂肪10-20g（30g坚果或2盒全脂牛奶），相当于增加一两百大卡。观察一周，还不长再加一次。<br>• <strong>增长过快（热量盈余过大）：</strong>反向操作，每天扣除上述碳水或脂肪额度。</div><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">为什么初期必须“定量称重”？</h3><p>新手对日常食物的碳蛋脂毫无概念，凭“感觉”吃饭大概率会导致总量严重偏差。我已经帮你把食物宏量算好了，你需要做的唯一事情就是<strong>买个食物秤，在初期（几天到一周时间）进行严格的定量饮食</strong>，建立起克数概念。当然，增肌期的容错率比减脂期高得多，不用过度焦虑和精细。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">🚨 常见食物刺客与硬核避坑指南</h3><ul><li><strong>面条/米线/卷饼（主食刺客）：</strong>饱腹感极低的主食！一顿能吃很多却感觉不到。一份外卖的碳水量常高达80-160g。如果经常吃，请务必自己称重定量一次。（碳水率参考：熟面条23%、凉面/米线33%、生鲜面/卷饼/烙饼50%、干面条70%）</li><li><strong>肉馅水饺/肉包（脂肪刺客）：</strong>它们不是纯碳水主食，而是“碳水+五花肉”。碳脂比例通常高达3:1甚至3:2。吃肉包子/饺子，会额外附赠20-40g脂肪，极其占脂肪配额。去包子铺请直接买白馒头/素包。</li><li><strong>瘦肉与内脏：</strong>表格里指的瘦肉是（不带白肉的猪牛羊+去皮鸡鸭肉+鱼虾）。内脏中，肝、肾、心、肚、血属于干净优质蛋白；脑、舌脂肪偏高只能浅尝；<strong>肠类（大肠小肠）脂肪极高，等同五花肉，坚决不吃！</strong></li><li><strong>快餐汉堡：</strong>若非要吃，只能选：去皮奥尔良/板烧鸡腿堡、双吉芝士堡、鳕鱼堡（宏量大致为碳30g/蛋20g/脂20g）。绝不要碰安格斯厚牛堡等脂肪炸弹。汉堡饱腹感极低，不建议做日常配餐，且如果吃一个碳水不够，吃两个脂肪又超标，很尴尬。</li><li><strong>外卖煎蛋/炒蛋（吸油海绵）：</strong>一个蛋6g蛋白，但外卖煎蛋像海绵一样吸油，能带入至少20g的隐形脂肪，花掉一大笔脂肪配额，血亏！除非自己在家用3-5g油煎。</li><li><strong>水果的本质是糖水：</strong>吃水果就是吃糖（果糖/葡萄糖/蔗糖）。它必须占据你当天的碳水配额，记得吃水果就要等比例减少主食摄入。</li></ul>` }
+            ]
         };
 
-        const MUSCLE_STATS = {
-            '背部': { min: 70, max: 95 },
-            '胸部': { min: 50, max: 75 },
-            '肩部': { min: 50, max: 75 },
-            '腿部/臀': { min: 70, max: 105 },
-            '手臂': { min: 45, max: 70 },
-            '核心': { min: 35, max: 50 }
+        const AppState = {
+            planner: {
+                goal: 'cut', gender: 'male', activity: '1.2', weight: null, height: null, age: null, workoutTime: 'evening_after',
+                plan: [], totalCal: 0, totalCarb: 0, totalPro: 0, totalFat: 0
+            },
+            tracker: { data: [] },
+            canteen: { meals: [] },
+            training: {
+                split: '3day', day: 'day1', goal: 'bulk', target: 'none', currentPlan: [], title: '', repsStr: '',
+                history: []
+            },
+            exec: {
+                isActive: false, currentGlobalSetIndex: 0, totalSets: 0, timer: null, elapsedSeconds: 0,
+                flatSetList: [], restSeconds: 60, restTimer: null, isResting: false, restRemaining: 0
+            }
         };
 
-        const articles = [
-            { id: 'm1_1', module: '减脂底层逻辑', badge: 'badge-red', title: '体重停滞的假象：皮质醇与“水肿欺骗”', readTime: '5分钟', content: `<p>很多小白减脂，每天少吃多动，前几天掉秤很快，到了第二周体重却一动不动，甚至喝口水都能涨半斤。这时候80%的人会崩溃，选择暴饮暴食放弃。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">皮质醇 (Cortisol) 的锁水效应</h3><p>当你长时间制造极大的热量缺口，或者每天疯狂做有氧时，身体会认为你处于“逃生/生存危机”状态。此时，肾上腺会分泌大量的压力激素——<strong>皮质醇</strong>。</p><p>皮质醇不仅会分解你的肌肉，还会导致一种极端的生理现象：<strong>水钠潴留（Water Retention）</strong>。皮下细胞会像海绵一样死死锁住水分。事实上，你每天制造的缺口已经在燃烧脂肪了，脂肪细胞变空了，但立刻被水分填满撑起，所以在体重秤上，你的数字纹丝不动。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡硬核破局法 (The Whoosh Effect)：</strong>当遇到储水期，你需要立刻停止节食，吃一顿富含碳水化合物的高热量大餐（欺骗餐），并好好睡一觉。大量的碳水和放松的心情会瞬间压制皮质醇水平。第二天，你的身体会排出滞留的水分（医学上称为 Whoosh 效应），你会发现体重直接“尿崩”式下降 1-2 公斤。记住：看镜子里的维度，永远比看体重秤更准确。</div>` },
-            { id: 'm1_2', module: '减脂底层逻辑', badge: 'badge-red', title: '局部减脂谎言与“顽固脂肪”受体学说', readTime: '6分钟', content: `<p>“教练，我怎么才能只减肚子上的肉？” 这是健身界最大的谎言。你每天做100个卷腹，最后只会让腰椎间盘突出，肚子外面的肥肉依然存在。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">细胞学真相：α受体与β受体</h3><p>脂肪细胞内有两种受体决定了脂肪分解的难度：</p><ul><li><strong>β-2 受体：</strong> 促进脂肪分解的“加速器”。</li><li><strong>α-2 受体：</strong> 抑制脂肪分解的“刹车片”。</li></ul><p>由于人类基因的设定，我们的面部、手臂和胸部布满了 β-2 受体，所以只要一节食，脸和胸最先瘦；而腹部、腰间（Love Handles）以及女性的大腿根部，密密麻麻地长满了 α-2 受体，血液循环极差。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡实战指南：</strong>不要再花钱买什么“暴汗服”和“腹部按摩仪”了，那排出的只是水分。想要减掉腹部的顽固脂肪，没有任何捷径。你必须依靠<strong>持续、系统性的热量缺口</strong>。当你的脸和四肢脂肪被榨干后，身体为了生存，才会迫不得迫去调动腹部那些被 α-2 受体锁死的“顽固脂肪”。</div>` },
-            { id: 'm2_1', module: '增肌核心理论', badge: 'badge-green', title: '拒绝脏增肌：P-Ratio 分配率与体脂红线', readTime: '7分钟', content: `<p>很多人以为增肌期就是“放开吃”，汉堡炸鸡来者不拒，美其名曰“Dirty Bulk（脏增肌）”。结果练了半年，肌肉长了 1 斤，纯脂肪长了 10 斤。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">胰岛素敏感度与 P-Ratio</h3><p>运动营养学中有一个核心概念叫 <strong>P-Ratio (营养分配率)</strong>。当你吃下 500 大卡的盈余热量时，这 500 大卡有多少拿去合成肌肉，有多少变成脂肪储存起来，完全取决于你的 <strong>体脂率和胰岛素敏感度</strong>。</p><ul><li><strong>体脂越低（男<12%）：</strong> 你的肌肉细胞对胰岛素极度渴望。吃下去的碳水和蛋白，会优先被强行压进肌纤维里，肌肉合成率极高。</li><li><strong>体脂偏高（男>18%）：</strong> 身体处于轻度胰岛素抵抗状态。肌肉细胞对营养“关门拒客”，你吃下去的多余热量，只能被迫转化为脂肪堆积在肚子里。</li></ul><div class="highlight-box"><strong class="block mb-2 text-blue-700">体脂红线警告：</strong>如果你男性的体脂率超过 15%-18%（女性超过 25%-28%），<strong>绝对不要进行热量盈余的增肌！</strong> 你必须先通过减脂，把体脂率降到能隐约看到腹肌的健康水平（胰岛素敏感度恢复），然后再制造每天 300 大卡的小缺口进行“干净增肌（Clean Bulk）”。</div>` },
-            { id: 'm2_2', module: '增肌核心理论', badge: 'badge-green', title: '垃圾容量陷阱：为什么练了3小时却不长肉？', readTime: '6分钟', content: `<p>很多新手喜欢在健身房泡两三个小时，用极轻的重量做几十上百次，追求那种“肌肉酸痛灼烧”的感觉。但其实，这除了消耗体力，对肌肉生长毫无帮助。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">机械张力 (Mechanical Tension) 才是王道</h3><p>肌纤维变粗的唯一核心驱动力是“机械张力”，即肌肉在对抗大重量拉伸时产生的微小撕裂。而轻重量带来的酸痛，只是乳酸堆积造成的“代谢压力（Metabolic Stress）”。</p><p>什么是<strong>有效组（Effective Reps）</strong>？研究表明，只有当你做到离力竭还剩最后 3-4 个的时候（RIR 1-3），高门槛的运动单位才会被全面募集，那些粗大的肌纤维才会被真正刺激到。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">小凡训练除垢法：</strong>如果你用 10kg 的哑铃能轻松做 20 个，那你前面做的 15 个全都是无效的“垃圾容量”，纯粹是在浪费中枢神经能量。立刻增加重量，把每组次数控制在 8-12 次，并且确保在做最后两三个的时候，你的脸部已经扭曲，动作极其吃力（但依然保持标准变形）。每天只需高质量的 45 分钟，肌肉生长效果秒杀在健身房瞎晃 3 小时。</div>` },
-            { id: 'm3_1', module: '结构力学与数据', badge: 'badge-purple', title: '深蹲剪切力与动作轨迹的 CV 视觉测算', readTime: '8分钟', content: `<p>在高阶力量领域，我们需要把人体看作一个<strong>精密的桁架结构</strong>：骨骼是承重构件，肌肉和肌腱是提供预应力的拉索。很多人深蹲时腰疼，是因为受力结构的失稳。</p><p>标准深蹲的核心是<strong>髋膝同步驱动</strong>。如果你的膝盖先动，重心前移，剪切力会全部压在膝关节上；如果你的髋部先动，身体过度前倾，剪切力会转移到腰椎。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">视觉测算技巧：</strong>侧面观察，杠铃的垂直投影线必须始终穿过你的足中位置。无论蹲起还是下落，保持这条线不动，你的关节受力就是最安全、最标准的。</div>` },
-            // 核心新增：增肌停滞微调与常见食物避坑指南
-            { id: 'm2_3', module: '增肌核心理论', badge: 'badge-green', title: '增肌停滞与暴涨怎么调？常见食物刺客避坑', readTime: '8分钟', content: `<p>执行了一个月计划，体重毫无变化或者飙升太快怎么办？很多新手在增肌期最容易陷入“死吃”或“不敢吃”的极端。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">增肌体重的“极慢速”原则</h3><p>建议男性每月体重增加<strong>不超过1kg</strong>，女性<strong>不超过0.5kg</strong>。想尽可能少长脂肪甚至可以再减半。为什么这么慢？因为肌肉合成速度比脂肪分解慢得多，平均每天能合成10g肌肉已经极其高效了，每月的纯肌肉增量最多也就300g。如果体重暴涨数倍于此，多出来的全都是未来的减脂累赘！增肌期的体重不需要严格每天上涨，只要有<strong>微弱的上行趋势</strong>即可。</p><div class="highlight-box"><strong class="block mb-2 text-blue-700">动态微调策略：</strong><br>• <strong>停滞不前（确实处于热量平衡）：</strong>每天增加碳水30-60g（约100-200g熟米饭）或者脂肪10-20g（30g坚果或2盒全脂牛奶），相当于增加一两百大卡。观察一周，还不长再加一次。<br>• <strong>增长过快（热量盈余过大）：</strong>反向操作，每天扣除上述碳水或脂肪额度。</div><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">为什么初期必须“定量称重”？</h3><p>新手对日常食物的碳蛋脂毫无概念，凭“感觉”吃饭大概率会导致总量严重偏差。我已经帮你把食物宏量算好了，你需要做的唯一事情就是<strong>买个食物秤，在初期（几天到一周时间）进行严格的定量饮食</strong>，建立起克数概念。当然，增肌期的容错率比减脂期高得多，不用过度焦虑和精细。</p><h3 class="text-lg font-bold text-gray-900 mt-6 mb-3">🚨 常见食物刺客与硬核避坑指南</h3><ul><li><strong>面条/米线/卷饼（主食刺客）：</strong>饱腹感极低的主食！一顿能吃很多却感觉不到。一份外卖的碳水量常高达80-160g。如果经常吃，请务必自己称重定量一次。（碳水率参考：熟面条23%、凉面/米线33%、生鲜面/卷饼/烙饼50%、干面条70%）</li><li><strong>肉馅水饺/肉包（脂肪刺客）：</strong>它们不是纯碳水主食，而是“碳水+五花肉”。碳脂比例通常高达3:1甚至3:2。吃肉包子/饺子，会额外附赠20-40g脂肪，极其占脂肪配额。去包子铺请直接买白馒头/素包。</li><li><strong>瘦肉与内脏：</strong>表格里指的瘦肉是（不带白肉的猪牛羊+去皮鸡鸭肉+鱼虾）。内脏中，肝、肾、心、肚、血属于干净优质蛋白；脑、舌脂肪偏高只能浅尝；<strong>肠类（大肠小肠）脂肪极高，等同五花肉，坚决不吃！</strong></li><li><strong>快餐汉堡：</strong>若非要吃，只能选：去皮奥尔良/板烧鸡腿堡、双吉芝士堡、鳕鱼堡（宏量大致为碳30g/蛋20g/脂20g）。绝不要碰安格斯厚牛堡等脂肪炸弹。汉堡饱腹感极低，不建议做日常配餐，且如果吃一个碳水不够，吃两个脂肪又超标，很尴尬。</li><li><strong>外卖煎蛋/炒蛋（吸油海绵）：</strong>一个蛋6g蛋白，但外卖煎蛋像海绵一样吸油，能带入至少20g的隐形脂肪，花掉一大笔脂肪配额，血亏！除非自己在家用3-5g油煎。</li><li><strong>水果的本质是糖水：</strong>吃水果就是吃糖（果糖/葡萄糖/蔗糖）。它必须占据你当天的碳水配额，记得吃水果就要等比例减少主食摄入。</li></ul>` }
-        ];
+        const StorageSvc = {
+            save(key, data) { try { localStorage.setItem(key, JSON.stringify(data)); } catch (e) {} },
+            load(key) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : null; } catch (e) { return null; } }
+        };
 
-        function switchTab(tabId) {
-            ['planner', 'training', 'food', 'learn', 'about'].forEach(id => {
-                document.getElementById('sec-' + id).classList.add('hidden');
-                document.getElementById('tab-' + id).classList.remove('nav-active');
-            });
-            document.getElementById('sec-' + tabId).classList.remove('hidden');
-            document.getElementById('tab-' + tabId).classList.add('nav-active');
-            
-            if(tabId === 'training') { updateTrainDays(); loadHistory(); }
-            if(tabId === 'learn') { initArticleNav(); }
-            if(tabId === 'food') { renderVisualFoodDB(); }
-        }
+        const PlannerModule = {
+            generate() {
+                const weight = parseFloat(document.getElementById('weight').value);
+                const height = parseFloat(document.getElementById('height').value);
+                const age = parseFloat(document.getElementById('age').value);
+                if (!weight || !height || !age) { alert('⚠️ 请先填写完整的体重、身高和年龄信息！'); return; }
 
-        // ================= 核心新增：本地缓存方案 =================
-        function loadPlanFromLocal() {
-            const saved = localStorage.getItem('userMealPlan');
-            if (saved) {
-                try {
-                    const data = JSON.parse(saved);
-                    if (data && data.plan && data.plan.length > 0) {
-                        currentMealPlan = data.plan;
-                        if(data.goal) document.getElementById('goal').value = data.goal;
-                        
-                        let tc = 0, tp = 0, tf = 0;
-                        currentMealPlan.forEach(m => { tc += m.carbs; tp += m.protein; tf += m.fat; });
-                        let tCal = Math.round(tc * 4 + tp * 4 + tf * 9);
-                        
-                        document.getElementById('res-cal').innerText = tCal;
-                        document.getElementById('res-carb').innerText = tc;
-                        document.getElementById('res-pro').innerText = tp;
-                        document.getElementById('res-fat').innerText = tf;
+                const goal = document.getElementById('goal').value;
+                const gender = document.getElementById('gender').value;
+                const activity = parseFloat(document.getElementById('activity').value);
+                const workoutTime = document.getElementById('workoutTime').value;
 
-                        const tbody = document.getElementById('meal-plan-body');
-                        tbody.innerHTML = '';
-                        currentMealPlan.forEach(meal => {
-                            const tr = document.createElement('tr');
-                            tr.innerHTML = `
-                                <td class="font-bold text-gray-800">${meal.name}</td>
-                                <td class="text-blue-600 font-bold text-center bg-blue-50/30">${meal.carbs}</td>
-                                <td class="text-green-600 font-bold text-center bg-green-50/30">${meal.protein}</td>
-                                <td class="text-yellow-600 font-bold text-center bg-yellow-50/30">${meal.fat}</td>
-                            `;
-                            tbody.appendChild(tr);
-                        });
+                let bmr = (gender === 'male') ? (10 * weight) + (6.25 * height) - (5 * age) + 5 : (10 * weight) + (6.25 * height) - (5 * age) - 161;
+                let tdee = bmr * activity;
+                let targetCal, protein, fat, carbs;
 
-                        document.getElementById('canteen-buttons-container').classList.remove('hidden');
-                        document.getElementById('result-section').classList.remove('hidden');
-                    }
-                } catch (e) {
-                    console.error("加载本地排餐数据失败", e);
-                }
-            }
-        }
+                if (goal === 'cut') { targetCal = tdee - 500; protein = weight * 2.0; fat = weight * 0.8; } 
+                else if (goal === 'recomp') { targetCal = tdee - 300; protein = weight * 1.8; fat = weight * 0.9; } 
+                else { targetCal = tdee + 300; protein = weight * 1.6; fat = weight * 1.0; }
+                carbs = Math.max((targetCal - (protein * 4) - (fat * 9)) / 4, 50);
 
-        function generatePlan() {
-            const goal = document.getElementById('goal').value;
-            const weightVal = document.getElementById('weight').value;
-            const heightVal = document.getElementById('height').value;
-            const ageVal = document.getElementById('age').value;
-            
-            // 核心修改：防呆保护，防止因为输入框为空导致计算 NaN 崩溃
-            if (!weightVal || !heightVal || !ageVal) {
-                alert('⚠️ 请先填写完整的体重、身高和年龄信息，再生成方案！');
-                return;
-            }
+                AppState.planner = { goal, gender, activity, weight, height, age, workoutTime, totalCal: Math.round(targetCal), totalCarb: Math.round(carbs), totalPro: Math.round(protein), totalFat: Math.round(fat), plan: [] };
 
-            const weight = parseFloat(weightVal);
-            const height = parseFloat(heightVal);
-            const age = parseFloat(ageVal);
-            const gender = document.getElementById('gender').value;
-            const activity = parseFloat(document.getElementById('activity').value);
-            const workoutTime = document.getElementById('workoutTime').value;
+                let meals = [];
+                if (workoutTime === 'morning') meals = [ { name: '🔥 早饭 (练前餐)', r: [0.3, 0.2, 0.3] }, { name: '🔥 练后加餐', r: [0.15, 0.2, 0] }, { name: '午饭', r: [0.35, 0.3, 0.35] }, { name: '晚饭', r: [0.2, 0.3, 0.35] } ];
+                else if (workoutTime === 'noon_before') meals = [ { name: '早饭', r: [0.25, 0.3, 0.35] }, { name: '🔥 午饭 (练前餐)', r: [0.25, 0.2, 0.25] }, { name: '🔥 练后加餐/午加', r: [0.15, 0.2, 0] }, { name: '晚饭', r: [0.35, 0.3, 0.4] } ];
+                else if (workoutTime === 'noon_after') meals = [ { name: '早饭', r: [0.25, 0.25, 0.35] }, { name: '🔥 午饭 (练前充碳)', r: [0.3, 0.2, 0.25] }, { name: '🔥 练后正餐 (下午)', r: [0.3, 0.3, 0.1] }, { name: '晚饭', r: [0.15, 0.25, 0.3] } ];
+                else if (workoutTime === 'evening_before') meals = [ { name: '早饭', r: [0.25, 0.25, 0.35] }, { name: '午饭', r: [0.3, 0.25, 0.35] }, { name: '🔥 练前加餐', r: [0.15, 0.1, 0] }, { name: '🔥 晚饭 (练后餐)', r: [0.3, 0.4, 0.3] } ];
+                else if (workoutTime === 'evening_after') meals = [ { name: '早饭', r: [0.25, 0.25, 0.33] }, { name: '午饭', r: [0.35, 0.3, 0.33] }, { name: '🔥 晚饭 (练前餐)', r: [0.25, 0.25, 0.34] }, { name: '🔥 练后加餐', r: [0.15, 0.2, 0] } ];
+                else if (workoutTime === 'night') meals = [ { name: '早饭', r: [0.25, 0.25, 0.33] }, { name: '午饭', r: [0.3, 0.3, 0.33] }, { name: '🔥 晚饭 (练前储备)', r: [0.35, 0.25, 0.34] }, { name: '🔥 练后夜宵', r: [0.1, 0.2, 0] } ];
+                else meals = [ { name: '早饭 (常规)', r: [0.3, 0.3, 0.33] }, { name: '午饭 (常规)', r: [0.4, 0.4, 0.33] }, { name: '晚饭 (常规)', r: [0.3, 0.3, 0.34] } ];
 
-            let bmr = (gender === 'male') 
-                ? (10 * weight) + (6.25 * height) - (5 * age) + 5 
-                : (10 * weight) + (6.25 * height) - (5 * age) - 161;
-
-            let tdee = bmr * activity;
-            let targetCal, protein, fat, carbs;
-
-            if (goal === 'cut') { targetCal = tdee - 500; protein = weight * 2.0; fat = weight * 0.8; } 
-            else if (goal === 'recomp') { targetCal = tdee - 300; protein = weight * 1.8; fat = weight * 0.9; } 
-            else { targetCal = tdee + 300; protein = weight * 1.6; fat = weight * 1.0; }
-            
-            carbs = (targetCal - (protein * 4) - (fat * 9)) / 4;
-            if(carbs < 50) carbs = 50; 
-
-            document.getElementById('res-cal').innerText = Math.round(targetCal);
-            document.getElementById('res-pro').innerText = Math.round(protein);
-            document.getElementById('res-fat').innerText = Math.round(fat);
-            document.getElementById('res-carb').innerText = Math.round(carbs);
-
-            let meals = [];
-            if (workoutTime === 'morning') {
-                meals = [ { name: '🔥 早饭 (练前餐)', r: [0.3, 0.2, 0.3] }, { name: '🔥 练后加餐', r: [0.15, 0.2, 0] }, { name: '午饭', r: [0.35, 0.3, 0.35] }, { name: '晚饭', r: [0.2, 0.3, 0.35] } ];
-            } else if (workoutTime === 'noon_before') {
-                meals = [ { name: '早饭', r: [0.25, 0.3, 0.35] }, { name: '🔥 午饭 (练前餐)', r: [0.25, 0.2, 0.25] }, { name: '🔥 练后加餐/午加', r: [0.15, 0.2, 0] }, { name: '晚饭', r: [0.35, 0.3, 0.4] } ];
-            } else if (workoutTime === 'noon_after') {
-                meals = [ { name: '早饭', r: [0.25, 0.25, 0.35] }, { name: '🔥 午饭 (练前充碳)', r: [0.3, 0.2, 0.25] }, { name: '🔥 练后正餐 (下午)', r: [0.3, 0.3, 0.1] }, { name: '晚饭', r: [0.15, 0.25, 0.3] } ];
-            } else if (workoutTime === 'evening_before') {
-                meals = [ { name: '早饭', r: [0.25, 0.25, 0.35] }, { name: '午饭', r: [0.3, 0.25, 0.35] }, { name: '🔥 练前加餐', r: [0.15, 0.1, 0] }, { name: '🔥 晚饭 (练后餐)', r: [0.3, 0.4, 0.3] } ];
-            } else if (workoutTime === 'evening_after') {
-                meals = [ { name: '早饭', r: [0.25, 0.25, 0.33] }, { name: '午饭', r: [0.35, 0.3, 0.33] }, { name: '🔥 晚饭 (练前餐)', r: [0.25, 0.25, 0.34] }, { name: '🔥 练后加餐', r: [0.15, 0.2, 0] } ];
-            } else if (workoutTime === 'night') {
-                meals = [ { name: '早饭', r: [0.25, 0.25, 0.33] }, { name: '午饭', r: [0.3, 0.3, 0.33] }, { name: '🔥 晚饭 (练前储备)', r: [0.35, 0.25, 0.34] }, { name: '🔥 练后夜宵', r: [0.1, 0.2, 0] } ];
-            } else { 
-                meals = [ { name: '早饭 (常规)', r: [0.3, 0.3, 0.33] }, { name: '午饭 (常规)', r: [0.4, 0.4, 0.33] }, { name: '晚饭 (常规)', r: [0.3, 0.3, 0.34] } ];
-            }
-
-            const tbody = document.getElementById('meal-plan-body');
-            tbody.innerHTML = '';
-            meals.forEach(meal => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td class="font-bold text-gray-800">${meal.name}</td>
-                    <td class="text-blue-600 font-bold text-center bg-blue-50/30">${Math.round(carbs * meal.r[0])}</td>
-                    <td class="text-green-600 font-bold text-center bg-green-50/30">${Math.round(protein * meal.r[1])}</td>
-                    <td class="text-yellow-600 font-bold text-center bg-yellow-50/30">${Math.round(fat * meal.r[2])}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            currentMealPlan = meals.map(meal => ({ name: meal.name, carbs: Math.round(carbs * meal.r[0]), protein: Math.round(protein * meal.r[1]), fat: Math.round(fat * meal.r[2]) }));
-            
-            // 核心新增：存储到本地
-            localStorage.setItem('userMealPlan', JSON.stringify({ plan: currentMealPlan, goal: goal }));
-
-            document.getElementById('canteen-buttons-container').classList.remove('hidden');
-            document.getElementById('custom-tracker-container').classList.add('hidden');
-            document.getElementById('canteen-meal-container').classList.add('hidden');
-            document.getElementById('result-section').classList.remove('hidden');
-            document.getElementById('result-section').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function showCustomTracker() {
-            // 核心新增：防呆拦截
-            if (!currentMealPlan || currentMealPlan.length === 0) {
-                alert('⚠️ 请先在上方填写体重信息并点击“生成数据化方案”！');
-                return;
-            }
-            document.getElementById('custom-tracker-container').classList.remove('hidden');
-            document.getElementById('canteen-meal-container').classList.add('hidden');
-            initTracker();
-            document.getElementById('custom-tracker-container').scrollIntoView({ behavior: 'smooth' });
-        }
-
-        function initTracker() {
-            const today = new Date().toLocaleDateString();
-            const saved = localStorage.getItem('trackerData');
-            if (saved) {
-                const parsed = JSON.parse(saved);
-                if (parsed.date === today) trackerData = parsed.data;
-                else trackerData = currentMealPlan.map(meal => ({...meal, actualCarbs: 0, actualProtein: 0, actualFat: 0}));
-            } else {
-                trackerData = currentMealPlan.map(meal => ({...meal, actualCarbs: 0, actualProtein: 0, actualFat: 0}));
-            }
-            renderTracker();
-        }
-
-        function renderTracker() {
-            const tbody = document.getElementById('tracker-tbody');
-            const tfoot = document.getElementById('tracker-tfoot');
-            tbody.innerHTML = '';
-            trackerData.forEach((meal, index) => {
-                const tr = document.createElement('tr');
-                const calorieDiff = calculateCalorieDiff(meal);
-                const completionRate = calculateCompletionRate(meal);
-                const status = completionRate >= 0.9 ? '✅ 达标' : completionRate < 0.7 ? '⚠️ 未达标' : '⏳ 进行中';
-                const statusClass = completionRate >= 0.9 ? 'text-green-600 font-bold' : completionRate < 0.7 ? 'text-red-600 font-bold' : 'text-yellow-600 font-bold';
+                AppState.planner.plan = meals.map(meal => ({ name: meal.name, carbs: Math.round(carbs * meal.r[0]), protein: Math.round(protein * meal.r[1]), fat: Math.round(fat * meal.r[2]) }));
+                StorageSvc.save('userMealPlan', { plan: AppState.planner.plan, goal: AppState.planner.goal });
                 
-                tr.innerHTML = `
-                    <td class="font-bold text-gray-800">${meal.name}</td>
-                    <td class="text-center">${meal.carbs}</td>
-                    <td class="text-center"><input type="number" class="sets-input" value="${meal.actualCarbs}" min="0" onchange="updateTrackerData(${index}, 'actualCarbs', this.value)"></td>
-                    <td class="text-center">${meal.protein}</td>
-                    <td class="text-center"><input type="number" class="sets-input" value="${meal.actualProtein}" min="0" onchange="updateTrackerData(${index}, 'actualProtein', this.value)"></td>
-                    <td class="text-center">${meal.fat}</td>
-                    <td class="text-center"><input type="number" class="sets-input" value="${meal.actualFat}" min="0" onchange="updateTrackerData(${index}, 'actualFat', this.value)"></td>
-                    <td class="text-center font-bold ${calorieDiff >= 0 ? 'text-green-600' : 'text-red-600'}">${calorieDiff >= 0 ? '+' : ''}${calorieDiff}</td>
-                    <td class="text-center ${statusClass}">${status}</td>
-                `;
-                tbody.appendChild(tr);
-            });
-            
-            const totals = calculateTotals();
-            tfoot.innerHTML = `
-                <tr class="bg-gray-50 font-bold">
-                    <td class="text-gray-900">当日汇总</td>
-                    <td class="text-center text-blue-600">${totals.targetCarbs}</td>
-                    <td class="text-center text-blue-600">${Math.round(totals.actualCarbs * 10) / 10}</td>
-                    <td class="text-center text-green-600">${totals.targetProtein}</td>
-                    <td class="text-center text-green-600">${Math.round(totals.actualProtein * 10) / 10}</td>
-                    <td class="text-center text-yellow-600">${totals.targetFat}</td>
-                    <td class="text-center text-yellow-600">${Math.round(totals.actualFat * 10) / 10}</td>
-                    <td class="text-center ${totals.totalCalorieDiff >= 0 ? 'text-green-600' : 'text-red-600'}">${totals.totalCalorieDiff >= 0 ? '+' : ''}${totals.totalCalorieDiff}</td>
-                    <td class="text-center text-purple-600">${Math.round(totals.totalCompletionRate * 100)}% 完成率</td>
-                </tr>
-            `;
-        }
-
-        function updateTrackerData(index, field, value) { trackerData[index][field] = parseFloat(value) || 0; renderTracker(); }
-        function calculateCalorieDiff(meal) { return Math.round((meal.actualCarbs * 4 + meal.actualProtein * 4 + meal.actualFat * 9) - (meal.carbs * 4 + meal.protein * 4 + meal.fat * 9)); }
-        function calculateCompletionRate(meal) { const t = meal.carbs + meal.protein + meal.fat; return t === 0 ? 1 : (meal.actualCarbs + meal.actualProtein + meal.actualFat) / t; }
-        
-        function calculateTotals() {
-            let tc = 0, ac = 0, tp = 0, ap = 0, tf = 0, af = 0;
-            trackerData.forEach(m => { tc+=m.carbs; ac+=m.actualCarbs; tp+=m.protein; ap+=m.actualProtein; tf+=m.fat; af+=m.actualFat; });
-            const tdiff = Math.round((ac*4+ap*4+af*9) - (tc*4+tp*4+tf*9));
-            const trate = (tc+tp+tf) === 0 ? 1 : (ac+ap+af)/(tc+tp+tf);
-            return { targetCarbs: tc, actualCarbs: ac, targetProtein: tp, actualProtein: ap, targetFat: tf, actualFat: af, totalCalorieDiff: tdiff, totalCompletionRate: trate };
-        }
-
-        function addSnackRow() { trackerData.push({ name: '🍪 加餐', carbs: 0, protein: 0, fat: 0, actualCarbs: 0, actualProtein: 0, actualFat: 0 }); renderTracker(); }
-        function clearTracker() { if (!confirm('确定要清空今日打卡数据吗？')) return; trackerData = trackerData.map(meal => ({...meal, actualCarbs: 0, actualProtein: 0, actualFat: 0})); renderTracker(); }
-        function saveTracker() { localStorage.setItem('trackerData', JSON.stringify({ date: new Date().toLocaleDateString(), data: trackerData })); alert('💾 今日打卡数据已保存！'); }
-
-        function generateCanteenMeal() {
-            // 核心新增：防呆拦截
-            if (!currentMealPlan || currentMealPlan.length === 0) {
-                alert('⚠️ 请先在上方填写体重信息并点击“生成数据化方案”！');
-                return;
+                UI.renderPlannerResult();
             }
-            document.getElementById('canteen-meal-container').classList.remove('hidden');
-            document.getElementById('custom-tracker-container').classList.add('hidden');
-            createCanteenMeal();
-            document.getElementById('canteen-meal-container').scrollIntoView({ behavior: 'smooth' });
-        }
+        };
 
-        function matchMeal(mealTarget, stapleFoods, proteinDishes, vegDishes, goal) {
-            let meal = { name: mealTarget.name, target: mealTarget, dishes: [], actual: { carbs: 0, protein: 0, fat: 0, calories: 0 } };
-            
-            // 1. 匹配主食
-            let staple = stapleFoods[Math.floor(Math.random() * stapleFoods.length)];
-            let stapleRatio = Math.max(0.3, Math.min(2.5, mealTarget.carbs / Math.max(staple.carbs, 1)));
-            let adjustedStaple = {
-                ...staple, weight: Math.round(staple.weight * stapleRatio), carbs: Math.round(staple.carbs * stapleRatio),
-                protein: Math.round(staple.protein * stapleRatio * 10) / 10, fat: Math.round(staple.fat * stapleRatio * 10) / 10,
-                calories: Math.round(staple.calories * stapleRatio)
-            };
-            meal.dishes.push(adjustedStaple);
-            meal.actual.carbs += adjustedStaple.carbs; meal.actual.protein += adjustedStaple.protein; meal.actual.fat += adjustedStaple.fat; meal.actual.calories += adjustedStaple.calories;
-            
-            // 2. 匹配主蛋白质菜品
-            let remainingProtein = mealTarget.protein - meal.actual.protein;
-            let suitableProteins = proteinDishes.filter(d => d.protein >= remainingProtein * 0.4 && d.protein <= remainingProtein * 1.5);
-            if(suitableProteins.length === 0 && proteinDishes.length > 0) suitableProteins = proteinDishes;
-            
-            let proteinDish1 = null;
-            if (suitableProteins.length > 0) {
-                proteinDish1 = suitableProteins[Math.floor(Math.random() * suitableProteins.length)];
-                meal.dishes.push(proteinDish1);
-                meal.actual.carbs += proteinDish1.carbs; meal.actual.protein += proteinDish1.protein; meal.actual.fat += proteinDish1.fat; meal.actual.calories += proteinDish1.calories;
-            }
+        const MealHelpers = {
+            initTracker() {
+                if (!AppState.planner.plan.length) return alert('⚠️ 请先生成方案！');
+                const today = new Date().toLocaleDateString();
+                const saved = StorageSvc.load('trackerData');
+                if (saved && saved.date === today) AppState.tracker.data = saved.data;
+                else AppState.tracker.data = AppState.planner.plan.map(m => ({...m, actualCarbs: 0, actualProtein: 0, actualFat: 0}));
+                UI.renderTracker();
+            },
+            updateTracker(index, field, value) { AppState.tracker.data[index][field] = parseFloat(value) || 0; UI.renderTracker(); },
+            addSnack() { AppState.tracker.data.push({ name: '🍪 加餐', carbs: 0, protein: 0, fat: 0, actualCarbs: 0, actualProtein: 0, actualFat: 0 }); UI.renderTracker(); },
+            clearTracker() { if (confirm('确定要清空今日打卡数据吗？')) { AppState.tracker.data = AppState.tracker.data.map(m => ({...m, actualCarbs: 0, actualProtein: 0, actualFat: 0})); UI.renderTracker(); } },
+            saveTracker() { StorageSvc.save('trackerData', { date: new Date().toLocaleDateString(), data: AppState.tracker.data }); alert('💾 今日打卡数据已保存！'); },
 
-            // 3. 匹配副蛋白质菜品 (针对午餐/晚餐/高蛋白需求餐次)
-            let stillNeed = mealTarget.protein - meal.actual.protein;
-            if (stillNeed > 10 && proteinDishes.length > 1) {
-                let smallProteins = proteinDishes.filter(d => d.name !== (proteinDish1 ? proteinDish1.name : '') && d.protein >= 6 && d.protein <= stillNeed * 1.5);
-                if (smallProteins.length > 0) {
-                    let proteinDish2 = smallProteins[Math.floor(Math.random() * smallProteins.length)];
-                    meal.dishes.push(proteinDish2);
-                    meal.actual.carbs += proteinDish2.carbs; meal.actual.protein += proteinDish2.protein; meal.actual.fat += proteinDish2.fat; meal.actual.calories += proteinDish2.calories;
+            _getDishesForMeal(mealName, filteredDishes) {
+                const isBreakfast = mealName.includes('早饭');
+                const isPostWorkout = mealName.includes('练后');
+                const isSnack = mealName.includes('加餐') || mealName.includes('夜宵');
+                const isMainMeal = mealName.includes('正餐') || mealName.includes('午饭') || mealName.includes('晚饭');
+
+                let stapleFoods, proteinDishes, vegDishes;
+
+                if (isBreakfast) {
+                    stapleFoods = filteredDishes.filter(d => (d.category === '中式早餐类' && d.carbs >= 15) || d.category === '主食类');
+                    proteinDishes = filteredDishes.filter(d => d.category === '高蛋白小食' || (d.category === '中式早餐类' && d.protein >= 6 && d.carbs < 15));
+                    vegDishes = []; 
+                } else if (isPostWorkout && isSnack) {
+                    stapleFoods = filteredDishes.filter(d => d.category === '水果快充类' || (d.category === '练后补剂类' && d.carbs > 15) || (d.category === '主食类' && (d.name.includes('馒头') || d.name.includes('米饭'))));
+                    proteinDishes = filteredDishes.filter(d => d.category === '练后补剂类' || d.category === '高蛋白小食');
+                    vegDishes = []; 
+                } else if (isPostWorkout && isMainMeal) {
+                    stapleFoods = filteredDishes.filter(d => d.category === '主食类');
+                    proteinDishes = filteredDishes.filter(d => (d.category === '大荤硬菜类' || d.category === '荤素搭配类' || d.category === '高蛋白小食') && d.fat <= 15);
+                    vegDishes = filteredDishes.filter(d => d.category === '素菜国民类');
+                } else {
+                    stapleFoods = filteredDishes.filter(d => d.category === '主食类');
+                    proteinDishes = filteredDishes.filter(d => d.category === '大荤硬菜类' || d.category === '荤素搭配类' || d.category === '高蛋白小食');
+                    vegDishes = filteredDishes.filter(d => d.category === '素菜国民类');
                 }
-            }
-            
-            // 4. 匹配蔬菜
-            if (!mealTarget.name.includes('加餐') && !mealTarget.name.includes('夜宵') && vegDishes.length > 0) {
-                let vegDish = vegDishes[Math.floor(Math.random() * vegDishes.length)];
-                meal.dishes.push(vegDish);
-                meal.actual.carbs += vegDish.carbs; meal.actual.protein += vegDish.protein; meal.actual.fat += vegDish.fat; meal.actual.calories += vegDish.calories;
-            }
-            
-            meal.diff = { calories: Math.round(meal.actual.calories - (mealTarget.carbs * 4 + mealTarget.protein * 4 + mealTarget.fat * 9)) };
-            return meal;
-        }
+                return { stapleFoods, proteinDishes, vegDishes };
+            },
 
-        // ================= 核心优化逻辑 (针对早饭及多场景练后餐) =================
-        function getDishesForMeal(mealName, filteredDishes) {
-            const isBreakfast = mealName.includes('早饭');
-            const isPostWorkout = mealName.includes('练后');
-            const isSnack = mealName.includes('加餐') || mealName.includes('夜宵');
-            const isMainMeal = mealName.includes('正餐') || mealName.includes('午饭') || mealName.includes('晚饭');
-
-            let stapleFoods, proteinDishes, vegDishes;
-
-            if (isBreakfast) {
-                stapleFoods = filteredDishes.filter(d => (d.category === '中式早餐类' && d.carbs >= 15) || d.category === '主食类');
-                proteinDishes = filteredDishes.filter(d => d.category === '高蛋白小食' || (d.category === '中式早餐类' && d.protein >= 6 && d.carbs < 15));
-                vegDishes = []; 
-            } else if (isPostWorkout && isSnack) {
-                // 场景 A：练后加餐/夜宵 (快充模式)
-                stapleFoods = filteredDishes.filter(d => d.category === '水果快充类' || (d.category === '练后补剂类' && d.carbs > 15) || (d.category === '主食类' && (d.name.includes('馒头') || d.name.includes('米饭'))));
-                proteinDishes = filteredDishes.filter(d => d.category === '练后补剂类' || d.category === '高蛋白小食');
-                vegDishes = []; // 快充不吃蔬菜
-            } else if (isPostWorkout && isMainMeal) {
-                // 场景 B：练后正餐 (干净大餐模式)
-                stapleFoods = filteredDishes.filter(d => d.category === '主食类');
-                // 练后正餐要求纯净高蛋白，过滤掉脂肪太高的大荤
-                proteinDishes = filteredDishes.filter(d => (d.category === '大荤硬菜类' || d.category === '荤素搭配类' || d.category === '高蛋白小食') && d.fat <= 15);
-                vegDishes = filteredDishes.filter(d => d.category === '素菜国民类');
-            } else {
-                // 场景 C：常规正餐
-                stapleFoods = filteredDishes.filter(d => d.category === '主食类');
-                proteinDishes = filteredDishes.filter(d => d.category === '大荤硬菜类' || d.category === '荤素搭配类' || d.category === '高蛋白小食');
-                vegDishes = filteredDishes.filter(d => d.category === '素菜国民类');
-            }
-            
-            return { stapleFoods, proteinDishes, vegDishes };
-        }
-
-        function createCanteenMeal() {
-            const goal = document.getElementById('goal').value;
-            let filteredDishes = CANTEEN_DATABASE.filter(dish => {
-                if (dish.goals && dish.goals.includes('none')) return false;
-                if (goal === 'cut') return dish.fat <= 20 && !dish.tips?.includes('减脂期慎选') && !dish.tips?.includes('减脂期别碰') && !dish.tips?.includes('减脂期禁用');
-                else if (goal === 'recomp') return dish.fat <= 30 && !dish.tips?.includes('减脂期别碰');
-                else return true;
-            });
-
-            currentCanteenMeal = currentMealPlan.map(meal => {
-                const { stapleFoods, proteinDishes, vegDishes } = getDishesForMeal(meal.name, filteredDishes);
-                return matchMeal(meal, stapleFoods, proteinDishes, vegDishes, goal);
-            });
-            renderCanteenMeal();
-        }
-
-        function regenerateSingleMeal(index) {
-            const goal = document.getElementById('goal').value;
-            let filteredDishes = CANTEEN_DATABASE.filter(dish => {
-                if (dish.goals && dish.goals.includes('none')) return false;
-                if (goal === 'cut') return dish.fat <= 20 && !dish.tips?.includes('减脂期慎选') && !dish.tips?.includes('减脂期别碰') && !dish.tips?.includes('减脂期禁用');
-                else if (goal === 'recomp') return dish.fat <= 30 && !dish.tips?.includes('减脂期别碰');
-                else return true;
-            });
-            
-            const mealTarget = currentMealPlan[index];
-            const { stapleFoods, proteinDishes, vegDishes } = getDishesForMeal(mealTarget.name, filteredDishes);
-            
-            currentCanteenMeal[index] = matchMeal(mealTarget, stapleFoods, proteinDishes, vegDishes, goal);
-            renderCanteenMeal();
-        }
-        // ======================================================================
-
-        function renderCanteenMeal() {
-            const summaryContainer = document.getElementById('canteen-meal-summary');
-            const listContainer = document.getElementById('canteen-meal-list');
-            let totalTarget = { carbs: 0, protein: 0, fat: 0, calories: 0 };
-            let totalActual = { carbs: 0, protein: 0, fat: 0, calories: 0 };
-            
-            currentCanteenMeal.forEach(meal => {
-                totalTarget.carbs += meal.target.carbs; totalTarget.protein += meal.target.protein; totalTarget.fat += meal.target.fat;
-                totalTarget.calories += meal.target.carbs * 4 + meal.target.protein * 4 + meal.target.fat * 9;
-                totalActual.carbs += meal.actual.carbs; totalActual.protein += meal.actual.protein; totalActual.fat += meal.actual.fat; totalActual.calories += meal.actual.calories;
-            });
-            
-            const carbRate = 1 - Math.abs(totalActual.carbs - totalTarget.carbs) / Math.max(totalTarget.carbs, 1);
-            const proteinRate = 1 - Math.abs(totalActual.protein - totalTarget.protein) / Math.max(totalTarget.protein, 1);
-            const fatRate = 1 - Math.abs(totalActual.fat - totalTarget.fat) / Math.max(totalTarget.fat, 1);
-            const totalRate = Math.round((carbRate + proteinRate + fatRate) / 3 * 100);
-            const goalNameMap = { 'cut': '严格减脂', 'recomp': '塑形线条', 'bulk': '干净增肌' };
-            const goal = document.getElementById('goal').value;
-
-            summaryContainer.innerHTML = `
-                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                    <div>
-                        <span class="badge ${goal === 'cut' ? 'badge-red' : goal === 'recomp' ? 'badge-purple' : 'badge-green'} mb-2">适配目标：${goalNameMap[goal]}</span>
-                        <h4 class="text-lg font-bold text-gray-900">今日食堂餐单总览</h4>
-                    </div>
-                    <div class="text-right">
-                        <p class="text-sm text-gray-500">总宏量达标率</p>
-                        <p class="text-3xl font-black ${totalRate >= 85 ? 'text-green-600' : totalRate >= 70 ? 'text-yellow-600' : 'text-red-600'}">${totalRate}%</p>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-gray-200">
-                    <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">总热量</p><p class="text-lg font-bold text-gray-900">${Math.round(totalActual.calories)} <span class="text-xs text-gray-400">/ ${totalTarget.calories} kcal</span></p></div>
-                    <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">碳水</p><p class="text-lg font-bold text-blue-600">${Math.round(totalActual.carbs*10)/10} <span class="text-xs text-gray-400">/ ${totalTarget.carbs} g</span></p></div>
-                    <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">蛋白</p><p class="text-lg font-bold text-green-600">${Math.round(totalActual.protein*10)/10} <span class="text-xs text-gray-400">/ ${totalTarget.protein} g</span></p></div>
-                    <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">脂肪</p><p class="text-lg font-bold text-yellow-600">${Math.round(totalActual.fat*10)/10} <span class="text-xs text-gray-400">/ ${totalTarget.fat} g</span></p></div>
-                </div>
-            `;
-            
-            listContainer.innerHTML = '';
-            currentCanteenMeal.forEach((meal, index) => {
-                const mealCard = document.createElement('div');
-                mealCard.className = 'bg-gray-50 rounded-xl p-4 border border-gray-200';
-                mealCard.innerHTML = `
-                    <div class="flex justify-between items-start mb-3 pb-2 border-b border-gray-200">
-                        <div class="flex items-center">
-                            <h5 class="font-bold text-gray-900 text-lg">${meal.name}</h5>
-                            <button onclick="regenerateSingleMeal(${index})" class="ml-3 bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-1 px-2 rounded transition duration-200 text-xs">🔄 换一换</button>
-                        </div>
-                        <div class="text-right text-xs">
-                            <p class="text-gray-500">目标宏量</p>
-                            <p class="font-medium">碳${meal.target.carbs}g · 蛋${meal.target.protein}g · 脂${meal.target.fat}g</p>
-                        </div>
-                    </div>
-                    <div class="space-y-2">
-                        ${meal.dishes.map(dish => `
-                            <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-gray-100">
-                                <div><p class="font-bold text-gray-800">${dish.name}</p><p class="text-xs text-gray-500">${dish.category} · ${dish.weight}g</p></div>
-                                <div class="text-right text-xs"><p class="text-gray-600">${Math.round(dish.calories)} kcal</p><p class="text-gray-400">碳${Math.round(dish.carbs*10)/10}g · 蛋${Math.round(dish.protein*10)/10}g · 脂${Math.round(dish.fat*10)/10}g</p></div>
-                            </div>
-                        `).join('')}
-                    </div>
-                    <div class="mt-3 pt-3 border-t border-gray-200 flex justify-between items-center text-sm">
-                        <div>
-                            <span class="text-gray-500">本餐实际：</span>
-                            <span class="font-bold text-blue-600">碳${Math.round(meal.actual.carbs*10)/10}g</span> · <span class="font-bold text-green-600">蛋${Math.round(meal.actual.protein*10)/10}g</span> · <span class="font-bold text-yellow-600">脂${Math.round(meal.actual.fat*10)/10}g</span> · <span class="font-bold text-gray-700">${Math.round(meal.actual.calories)}kcal</span>
-                        </div>
-                        <div class="text-right"><span class="text-gray-500">差值：</span><span class="${meal.diff.calories >= 0 ? 'text-green-600' : 'text-red-600'} font-bold">${meal.diff.calories >= 0 ? '+' : ''}${meal.diff.calories}kcal</span></div>
-                    </div>
-                    ${meal.dishes.some(d => d.tips) ? `<div class="mt-2 pt-2 border-t border-gray-200 text-xs text-yellow-700 bg-yellow-50 p-2 rounded"><strong>💡 提示：</strong>${meal.dishes.filter(d => d.tips).map(d => d.tips).join('；')}</div>` : ''}
-                `;
-                listContainer.appendChild(mealCard);
-            });
-        }
-        function regenerateCanteenMeal() { createCanteenMeal(); }
-
-        // ================= 智能训练引擎系统 =================
-        function updateTrainDays() {
-            const split = document.getElementById('trainSplit').value;
-            const daySelect = document.getElementById('trainDay');
-            if (split === '3day') {
-                daySelect.innerHTML = `<option value="day1">Day 1: 背 + 肩后束 + 肱二头</option><option value="day2">Day 2: 胸 + 肩前中束 + 肱三头</option><option value="day3">Day 3: 腿臀 + 腹部</option>`;
-            } else {
-                daySelect.innerHTML = `<option value="day1">Day 1: 背部 + 肱二头 (拉)</option><option value="day2">Day 2: 胸部 + 肱三头 (推)</option><option value="day3">Day 3: 腿臀 + 腹部 (下肢)</option><option value="day4">Day 4: 肩部整体轰炸 (前中后束)</option>`;
-            }
-        }
-        function syncSets(index, value) { if(currentTrainingPlan[index]) currentTrainingPlan[index].setsNum = Math.max(1, parseInt(value) || 3); }
-
-        function generateTraining() {
-            const split = document.getElementById('trainSplit').value;
-            const day = document.getElementById('trainDay').value;
-            const goal = document.getElementById('trainGoal').value;
-            const target = document.getElementById('targetMuscle').value;
-            const repsStr = goal === 'bulk' ? '10-15次 (保留1-2次余力)' : '12-20次 (高次数力竭)';
-            
-            document.getElementById('train-reps-display').innerText = repsStr;
-            let plan = [], title = '';
-            
-            if (split === '3day') {
-                if(day==='day1'){ title="三分化 Day1:核心拉力链"; plan=[{part:'背部(垂直拉)',name:'引体向上/高位下拉/直臂下压',sets:3},{part:'背部(水平拉)',name:'杠铃俯身划船/坐姿器械划船',sets:3},{part:'肩后束',name:'蝴蝶机反向飞鸟/哑铃俯身飞鸟',sets:3},{part:'肱二头肌',name:'哑铃交替弯举/牧师椅弯举',sets:3}]; if(target==='back') plan.splice(1,0,{part:'🔥背部(强化宽度)',name:'宽距高位下拉',sets:3}); }
-                if(day==='day2'){ title="三分化 Day2:核心推力链"; plan=[{part:'胸部(中胸)',name:'平板杠铃卧推/哑铃卧推',sets:3},{part:'胸部(上/下胸)',name:'上斜卧推/蝴蝶机夹胸',sets:3},{part:'肩前中束',name:'哑铃推举/哑铃侧平举',sets:3},{part:'肱三头肌',name:'龙门架绳索下压/颈后臂屈伸',sets:3}]; if(target==='chest') plan.splice(2,0,{part:'🔥胸部(强化厚度)',name:'双杠臂屈伸',sets:3}); if(target==='shoulder') plan.push({part:'🔥肩部(强化饱满度)',name:'单臂绳索侧平举',sets:3}); }
-                if(day==='day3'){ title="三分化 Day3:下肢与核心"; plan=[{part:'大腿前侧',name:'杠铃深蹲/倒蹬机',sets:3},{part:'大腿后侧',name:'罗马尼亚硬拉/俯卧腿弯举',sets:3},{part:'臀部',name:'杠铃臀推/史密斯臀冲',sets:3},{part:'核心腹部',name:'卷腹/悬垂举腿',sets:3}]; if(target==='legs') plan.splice(2,0,{part:'🔥腿臀(强化下肢)',name:'保加利亚单腿分腿蹲',sets:3}); }
-            } else {
-                if(day==='day1'){ title="四分化 Day1:纯粹拉力"; plan=[{part:'背部(垂直拉)',name:'引体向上/宽距高位下拉',sets:3},{part:'背部(水平拉)',name:'杠铃划船/T杠划船',sets:3},{part:'背部(孤立)',name:'直臂下压',sets:3},{part:'肱二头肌',name:'杠铃弯举/哑铃锤式弯举',sets:3}]; if(target==='back') plan.splice(2,0,{part:'🔥背部(强化宽度)',name:'单臂哑铃划船',sets:3}); }
-                if(day==='day2'){ title="四分化 Day2:纯粹推力"; plan=[{part:'胸部(中胸)',name:'平板杠铃卧推',sets:3},{part:'胸部(上胸)',name:'上斜哑铃卧推',sets:3},{part:'胸部(中缝)',name:'蝴蝶机夹胸',sets:3},{part:'肱三头肌',name:'绳索直杆下压',sets:3}]; if(target==='chest') plan.splice(2,0,{part:'🔥胸部(强化下沿)',name:'双杠臂屈伸',sets:3}); }
-                if(day==='day3'){ title="四分化 Day3:下肢系统"; plan=[{part:'大腿前侧',name:'杠铃深蹲/哈克深蹲',sets:3},{part:'大腿后侧',name:'罗马尼亚硬拉',sets:3},{part:'臀部',name:'杠铃臀推/箭步蹲',sets:3},{part:'核心腹部',name:'负重卷腹',sets:3}]; if(target==='legs') plan.splice(2,0,{part:'🔥腿臀(强化线条)',name:'保加利亚分腿蹲',sets:3}); }
-                if(day==='day4'){ title="四分化 Day4:肩部3D轰炸"; plan=[{part:'肩前束',name:'哑铃肩推/史密斯推举',sets:3},{part:'肩中束',name:'哑铃侧平举/绳索侧平举',sets:3},{part:'肩后束',name:'反向蝴蝶机/绳索面拉',sets:3},{part:'斜方肌',name:'哑铃耸肩',sets:3}]; if(target==='shoulder') plan.splice(2,0,{part:'🔥肩部(强化宽度)',name:'绳索Y字平举',sets:3}); }
-            }
-            
-            currentTrainingPlan = plan.map(item => ({...item, setsNum: item.sets}));
-            document.getElementById('train-title-display').innerText = title;
-            const tbody = document.getElementById('training-plan-body');
-            tbody.innerHTML = '';
-            plan.forEach((item, index) => {
-                const tr = document.createElement('tr');
-                const isTarget = item.part.includes('🔥');
-                tr.innerHTML = `<td class="${isTarget ? 'text-red-600' : 'text-gray-800'} font-bold">${item.part}</td><td class="${isTarget ? 'text-gray-900' : 'text-gray-600'}">${item.name}</td><td><input type="number" class="sets-input" value="3" min="1" onchange="syncSets(${index}, this.value)"></td><td class="text-xs text-gray-400">${repsStr}</td>`;
-                tbody.appendChild(tr);
-            });
-            document.getElementById('training-result-section').classList.remove('hidden');
-            document.getElementById('history-section').classList.remove('hidden');
-        }
-
-        // ================= 执行器逻辑 =================
-        function startExecution() {
-            if(currentTrainingPlan.length === 0) {alert('先生成训练计划！');return;}
-            let flatList = [];
-            currentTrainingPlan.forEach((exercise, exIndex) => {
-                for(let i=1; i<=exercise.setsNum; i++) flatList.push({ id: `${exIndex}-${i}`, exerciseIndex: exIndex, setNum: i, name: exercise.name, part: exercise.part, isCompleted: false, weight: 0 });
-            });
-            execState = { isActive: true, currentGlobalSetIndex: 0, totalSets: flatList.length, timer: null, elapsedSeconds: 0, flatSetList: flatList, restSeconds: 60, restTimer: null, isResting: false, restRemaining: 0 };
-            document.getElementById('plan-generator-area').classList.add('hidden');
-            document.getElementById('executor-area').classList.remove('hidden');
-            document.getElementById('workout-record').classList.add('hidden');
-            document.getElementById('rest-timer-box').classList.add('hidden');
-            renderSetList(); updateExecutorUI(); startMainTimer();
-        }
-
-        function renderSetList() {
-            const container = document.getElementById('set-list-container'); container.innerHTML = '';
-            let lastPart = '';
-            execState.flatSetList.forEach((item, index) => {
-                const currentPart = currentTrainingPlan[item.exerciseIndex].part;
-                if(currentPart !== lastPart) {
-                    const header = document.createElement('div'); header.className = 'px-4 py-2 bg-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200'; header.innerText = currentPart;
-                    container.appendChild(header); lastPart = currentPart;
+            _matchMeal(mealTarget, stapleFoods, proteinDishes, vegDishes) {
+                let meal = { name: mealTarget.name, target: mealTarget, dishes: [], actual: { carbs: 0, protein: 0, fat: 0, calories: 0 } };
+                
+                let staple = stapleFoods[Math.floor(Math.random() * stapleFoods.length)];
+                if(staple) {
+                    let stapleRatio = Math.max(0.3, Math.min(2.5, mealTarget.carbs / Math.max(staple.carbs, 1)));
+                    let adjustedStaple = {
+                        ...staple, weight: Math.round(staple.weight * stapleRatio), carbs: Math.round(staple.carbs * stapleRatio),
+                        protein: Math.round(staple.protein * stapleRatio * 10) / 10, fat: Math.round(staple.fat * stapleRatio * 10) / 10,
+                        calories: Math.round(staple.calories * stapleRatio)
+                    };
+                    meal.dishes.push(adjustedStaple);
+                    meal.actual.carbs += adjustedStaple.carbs; meal.actual.protein += adjustedStaple.protein; meal.actual.fat += adjustedStaple.fat; meal.actual.calories += adjustedStaple.calories;
                 }
-                const div = document.createElement('div');
-                div.className = `set-item ${item.isCompleted ? 'completed' : ''} ${index === execState.currentGlobalSetIndex && !item.isCompleted && !execState.isResting ? 'active' : ''}`;
-                div.id = `set-item-${index}`;
-                div.innerHTML = `<div class="flex items-center gap-3"><div class="check-circle">${item.isCompleted ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}</div><div><p class="font-bold text-gray-900 set-text">${item.name}</p><p class="text-xs text-gray-500">第 ${item.setNum} 组</p></div></div>${item.isCompleted && item.weight > 0 ? `<span class="text-sm font-bold text-gray-400">${item.weight}kg</span>` : ''}`;
-                container.appendChild(div);
-            });
-        }
+                
+                let remainingProtein = mealTarget.protein - meal.actual.protein;
+                let suitableProteins = proteinDishes.filter(d => d.protein >= remainingProtein * 0.4 && d.protein <= remainingProtein * 1.5);
+                if(suitableProteins.length === 0 && proteinDishes.length > 0) suitableProteins = proteinDishes;
+                
+                let proteinDish1 = null;
+                if (suitableProteins.length > 0) {
+                    proteinDish1 = suitableProteins[Math.floor(Math.random() * suitableProteins.length)];
+                    meal.dishes.push(proteinDish1);
+                    meal.actual.carbs += proteinDish1.carbs; meal.actual.protein += proteinDish1.protein; meal.actual.fat += proteinDish1.fat; meal.actual.calories += proteinDish1.calories;
+                }
 
-        function startMainTimer() { updateTimerDisplay(); execState.timer = setInterval(() => { execState.elapsedSeconds++; updateTimerDisplay(); }, 1000); }
-        function updateTimerDisplay() { document.getElementById('timer-display').innerText = `${String(Math.floor(execState.elapsedSeconds / 60)).padStart(2, '0')}:${String(execState.elapsedSeconds % 60).padStart(2, '0')}`; }
+                let stillNeed = mealTarget.protein - meal.actual.protein;
+                if (stillNeed > 10 && proteinDishes.length > 1) {
+                    let smallProteins = proteinDishes.filter(d => d.name !== (proteinDish1 ? proteinDish1.name : '') && d.protein >= 6 && d.protein <= stillNeed * 1.5);
+                    if (smallProteins.length > 0) {
+                        let proteinDish2 = smallProteins[Math.floor(Math.random() * smallProteins.length)];
+                        meal.dishes.push(proteinDish2);
+                        meal.actual.carbs += proteinDish2.carbs; meal.actual.protein += proteinDish2.protein; meal.actual.fat += proteinDish2.fat; meal.actual.calories += proteinDish2.calories;
+                    }
+                }
+                
+                if (!mealTarget.name.includes('加餐') && !mealTarget.name.includes('夜宵') && vegDishes.length > 0) {
+                    let vegDish = vegDishes[Math.floor(Math.random() * vegDishes.length)];
+                    meal.dishes.push(vegDish);
+                    meal.actual.carbs += vegDish.carbs; meal.actual.protein += vegDish.protein; meal.actual.fat += vegDish.fat; meal.actual.calories += vegDish.calories;
+                }
+                
+                meal.diff = { calories: Math.round(meal.actual.calories - (mealTarget.carbs * 4 + mealTarget.protein * 4 + mealTarget.fat * 9)) };
+                return meal;
+            },
 
-        function startRestTimer() {
-            execState.restSeconds = parseInt(document.getElementById('exec-rest-input').value) || 60;
-            execState.restRemaining = execState.restSeconds; execState.isResting = true;
-            document.getElementById('rest-timer-box').classList.remove('hidden');
-            const btn = document.getElementById('btn-finish-set');
-            btn.className = 'exec-btn exec-btn-rest flex-1 cursor-pointer';
-            btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>跳过休息`;
-            btn.onclick = endRest;
-            updateRestDisplay();
-            execState.restTimer = setInterval(() => { execState.restRemaining--; updateRestDisplay(); if(execState.restRemaining <= 0) endRest(); }, 1000);
-        }
-
-        function updateRestDisplay() { document.getElementById('rest-display').innerText = `${String(Math.floor(execState.restRemaining / 60)).padStart(2, '0')}:${String(execState.restRemaining % 60).padStart(2, '0')}`; }
-
-        function endRest() {
-            clearInterval(execState.restTimer); execState.isResting = false;
-            document.getElementById('rest-timer-box').classList.add('hidden');
-            const btn = document.getElementById('btn-finish-set');
-            btn.className = 'exec-btn exec-btn-success flex-1';
-            btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
-            btn.onclick = finishCurrentSet;
-        }
-
-        function updateExecutorUI() {
-            const currentItem = execState.flatSetList[execState.currentGlobalSetIndex];
-            document.getElementById('exec-current-exercise').value = currentItem ? currentItem.name : '';
-            document.getElementById('exec-progress-text').innerText = currentItem ? `进行中: ${currentItem.part}` : '全部完成';
-            document.getElementById('exec-set-counter').innerText = `${execState.currentGlobalSetIndex}/${execState.totalSets}`;
-            document.getElementById('exec-progress-bar').style.width = `${Math.min((execState.currentGlobalSetIndex / execState.totalSets) * 100, 100)}%`;
-            const btn = document.getElementById('btn-finish-set');
-            if (execState.currentGlobalSetIndex >= execState.totalSets) btn.innerText = '查看记录';
-            else if(!execState.isResting) btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg> 完成这一组`;
-        }
-
-        function finishCurrentSet() {
-            if(execState.isResting) return;
-            if (execState.currentGlobalSetIndex >= execState.totalSets) { finalizeWorkout(); return; }
-            const currentItem = execState.flatSetList[execState.currentGlobalSetIndex];
-            const weight = parseFloat(document.getElementById('exec-weight-input').value) || 0;
-            currentItem.isCompleted = true; currentItem.weight = weight;
-            workoutRecordData.push({ exercise: currentItem.name, part: currentItem.part, weight: weight, set: currentItem.setNum, date: new Date().toLocaleDateString() });
-            execState.currentGlobalSetIndex++;
-            renderSetList(); updateExecutorUI();
-            const nextEl = document.getElementById(`set-item-${execState.currentGlobalSetIndex}`);
-            if(nextEl) nextEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
-            if(execState.currentGlobalSetIndex < execState.totalSets) startRestTimer();
-            if(execState.currentGlobalSetIndex >= execState.totalSets) finalizeWorkout();
-        }
-
-        function exitExecution() { clearInterval(execState.timer); clearInterval(execState.restTimer); document.getElementById('executor-area').classList.add('hidden'); document.getElementById('plan-generator-area').classList.remove('hidden'); }
-        function finalizeWorkout() { clearInterval(execState.timer); clearInterval(execState.restTimer); saveWorkoutRecord(); renderWorkoutRecord(); document.getElementById('workout-record').classList.remove('hidden'); document.getElementById('exec-workout-state').classList.add('hidden'); }
-
-        // ================= 历史记录与统计 =================
-        function saveWorkoutRecord() { localStorage.setItem('workoutHistory', JSON.stringify(workoutRecordData)); loadHistory(); }
-        function loadHistory() { const data = localStorage.getItem('workoutHistory'); workoutRecordData = data ? JSON.parse(data) : []; renderHistory(); calculateMonthlyStats(); }
-
-        function calculateMonthlyStats() {
-            const stats = {}; 
-            workoutRecordData.forEach(item => { 
-                const part = item.part.replace('🔥','').replace(/\(.*\)/,'').trim(); 
-                stats[part] = (stats[part] || 0) + 1; 
-            });
-            const container = document.getElementById('monthly-stats'); 
-            
-            let html = `
-                <div class="mb-5">
-                    <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center">
-                        <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
-                        本月肌群容量监控 (Sets/Month)
-                    </h4>
-                    <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
-            `;
-            
-            Object.entries(MUSCLE_STATS).forEach(([part, cfg]) => {
-                const current = stats[part] || 0;
-                let level = '标准'; let statusColor = 'text-green-500'; let barColor = 'bg-green-500'; let pct = (current / cfg.max) * 100;
-                if (current < cfg.min) { level = '容量不足'; statusColor = 'text-yellow-500'; barColor = 'bg-yellow-400'; pct = (current / cfg.min) * 100; } 
-                else if (current > cfg.max) { level = '存在超量'; statusColor = 'text-red-500'; barColor = 'bg-red-500'; pct = 100; }
-                html += `
-                    <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-                        <p class="text-xs font-bold text-gray-400 mb-1">${part}</p>
-                        <div class="flex items-baseline gap-1 mb-2"><span class="text-2xl font-black text-gray-800 leading-none">${current}</span><span class="text-xs font-medium text-gray-400">组</span></div>
-                        <div class="w-full bg-gray-100 rounded-full h-1.5 mb-2 overflow-hidden"><div class="${barColor} h-1.5 rounded-full transition-all duration-500" style="width: ${Math.min(pct, 100)}%"></div></div>
-                        <div class="flex justify-between items-center text-[0.65rem] font-bold"><span class="text-gray-400">${cfg.min}-${cfg.max}组</span><span class="${statusColor}">${level}</span></div>
-                    </div>
-                `;
-            });
-            html += `</div></div>`; container.innerHTML = html;
-        }
-
-        function renderHistory() {
-            const container = document.getElementById('history-list'); 
-            container.innerHTML = `<div class="flex items-center justify-between mb-4 mt-8"><h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0121 12z"></path></svg>详细训练日志</h4></div>`;
-            const listWrapper = document.createElement('div'); listWrapper.className = 'space-y-3 max-h-72 overflow-y-auto pr-2 custom-scrollbar';
-            const grouped = {}; workoutRecordData.forEach(item => { if(!grouped[item.date]) grouped[item.date] = []; grouped[item.date].push(item); });
-            
-            if(Object.keys(grouped).length === 0) { listWrapper.innerHTML = '<div class="text-center py-8 text-gray-400 text-sm">暂无训练记录</div>'; } 
-            else {
-                Object.keys(grouped).reverse().forEach(date => {
-                    const records = grouped[date]; const div = document.createElement('div'); 
-                    div.className = 'group bg-white border border-gray-100 p-4 rounded-xl shadow-sm hover:shadow-md hover:border-blue-100 transition-all flex justify-between items-center';
-                    let d = new Date(date); let dayStr = isNaN(d.getTime()) ? date.slice(-2) + '日' : d.getDate() + '日';
-                    div.innerHTML = `
-                        <div class="flex items-center gap-4">
-                            <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">${dayStr}</div>
-                            <div><p class="font-bold text-gray-900 text-sm">${date}</p><p class="text-xs text-gray-500 font-medium mt-0.5">共完成 <span class="text-blue-600 font-bold">${records.length}</span> 组有效训练</p></div>
-                        </div>
-                        <button class="opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all p-2 rounded-lg hover:bg-red-50" onclick="deleteDateRecord('${date}')" title="删除该日记录"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
-                    `;
-                    listWrapper.appendChild(div);
+            generateCanteen() {
+                if (!AppState.planner.plan.length) return alert('⚠️ 请先在上方填写体重信息并点击“生成数据化方案”！');
+                const goal = AppState.planner.goal;
+                
+                let filteredDishes = AppDB.canteenFoods.filter(dish => {
+                    if (dish.goals && dish.goals.includes('none')) return false;
+                    if (goal === 'cut') return dish.fat <= 20 && !dish.tips?.includes('减脂期慎选') && !dish.tips?.includes('减脂期别碰') && !dish.tips?.includes('减脂期禁用');
+                    if (goal === 'recomp') return dish.fat <= 30 && !dish.tips?.includes('减脂期别碰');
+                    return true;
                 });
-            }
-            container.appendChild(listWrapper);
-        }
+                
+                AppState.canteen.meals = AppState.planner.plan.map(mealTarget => {
+                    const { stapleFoods, proteinDishes, vegDishes } = this._getDishesForMeal(mealTarget.name, filteredDishes);
+                    return this._matchMeal(mealTarget, stapleFoods, proteinDishes, vegDishes);
+                });
+                UI.renderCanteen();
+            },
 
-        function deleteDateRecord(date) { workoutRecordData = workoutRecordData.filter(item => item.date !== date); saveWorkoutRecord(); }
-        function clearAllHistory() { if(!confirm('确定清空所有历史训练记录吗？此操作无法撤销。')) return; workoutRecordData = []; saveWorkoutRecord(); }
-        function renderWorkoutRecord() {
-            const container = document.getElementById('record-content'); container.innerHTML = '';
-            const title = document.getElementById('train-title-display')?.innerText || '训练记录'; const duration = document.getElementById('timer-display')?.innerText || '00:00';
-            container.innerHTML = `<p class="text-center font-bold text-lg">${title}</p><p class="text-center text-sm text-gray-500 mb-4">总时长: ${duration}</p>`;
-            const todayRecords = workoutRecordData.filter(item=>item.date === new Date().toLocaleDateString());
-            const displayMap = {};
-            todayRecords.forEach(r => {
-                if(!displayMap[r.exercise]) displayMap[r.exercise] = { part: r.part, sets: 0, maxW: 0 };
-                displayMap[r.exercise].sets++;
-                if(r.weight > displayMap[r.exercise].maxW) displayMap[r.exercise].maxW = r.weight;
-            });
-            for(const [name, data] of Object.entries(displayMap)) container.innerHTML += `<div class="p-3 bg-gray-50 rounded flex justify-between"><span class="font-medium text-gray-800">${name}</span><span class="text-gray-500 font-bold">${data.sets}组 / 极限 ${data.maxW}kg</span></div>`;
-        }
-        function copyRecord() { navigator.clipboard.writeText(document.getElementById('record-content').innerText).then(()=>alert('复制成功！')); }
+            regenerateSingleMeal(index) {
+                if (!AppState.planner.plan.length) return;
+                const goal = AppState.planner.goal;
+                let filteredDishes = AppDB.canteenFoods.filter(dish => {
+                    if (dish.goals && dish.goals.includes('none')) return false;
+                    if (goal === 'cut') return dish.fat <= 20 && !dish.tips?.includes('减脂期慎选') && !dish.tips?.includes('减脂期别碰') && !dish.tips?.includes('减脂期禁用');
+                    if (goal === 'recomp') return dish.fat <= 30 && !dish.tips?.includes('减脂期别碰');
+                    return true;
+                });
+                
+                const mealTarget = AppState.planner.plan[index];
+                const { stapleFoods, proteinDishes, vegDishes } = this._getDishesForMeal(mealTarget.name, filteredDishes);
+                AppState.canteen.meals[index] = this._matchMeal(mealTarget, stapleFoods, proteinDishes, vegDishes);
+                UI.renderCanteen();
+            },
 
-        // ================= 知识库图鉴渲染 =================
-        function initArticleNav() {
-            const container = document.getElementById('article-nav-container'); container.innerHTML = '';
-            articles.forEach(article => {
-                const btn = document.createElement('button'); btn.className = 'article-btn'; btn.onclick = () => showArticle(article.id);
-                btn.innerHTML = `<span class="badge ${article.badge} mr-2">${article.module}</span>${article.title}`;
-                container.appendChild(btn);
-            });
-            if(articles.length > 0) showArticle(articles[0].id);
-        }
+            // 新增核心功能：替换餐单里的单个菜品
+            regenerateSingleDish(mealIndex, dishIndex) {
+                if (!AppState.planner.plan.length) return;
+                const meal = AppState.canteen.meals[mealIndex];
+                const oldDish = meal.dishes[dishIndex];
+                const mealTarget = meal.target;
+                const goal = AppState.planner.goal;
+                
+                let filteredDishes = AppDB.canteenFoods.filter(dish => {
+                    if (dish.goals && dish.goals.includes('none')) return false;
+                    if (goal === 'cut') return dish.fat <= 20 && !dish.tips?.includes('减脂期慎选') && !dish.tips?.includes('减脂期别碰') && !dish.tips?.includes('减脂期禁用');
+                    if (goal === 'recomp') return dish.fat <= 30 && !dish.tips?.includes('减脂期别碰');
+                    return true;
+                });
 
-        function showArticle(articleId) {
-            const article = articles.find(a => a.id === articleId); if(!article) return;
-            document.querySelectorAll('.article-btn').forEach(btn => btn.classList.remove('article-active'));
-            const activeBtn = Array.from(document.querySelectorAll('.article-btn')).find(btn => btn.innerText.includes(article.title));
-            if(activeBtn) activeBtn.classList.add('article-active');
-            document.getElementById('article-content-container').innerHTML = `<div class="border-b border-gray-100 pb-4 mb-4"><h2 class="text-xl font-bold text-gray-900">${article.title}</h2><p class="text-xs text-gray-500 mt-2">阅读时长：${article.readTime}</p></div><div class="content-box">${article.content}</div>`;
-        }
+                const { stapleFoods, proteinDishes, vegDishes } = this._getDishesForMeal(meal.name, filteredDishes);
+                let newDish = null;
 
-        function renderVisualFoodDB() {
-            const container = document.getElementById('visual-db-grid'); 
-            if(!container) return;
-            
-            container.innerHTML = '';
-            container.className = 'space-y-10'; 
+                const isStaple = stapleFoods.some(d => d.name === oldDish.name) || oldDish.category === '主食类' || oldDish.category === '中式早餐类' || oldDish.category === '水果快充类';
+                const isVeg = vegDishes.some(d => d.name === oldDish.name) || oldDish.category === '素菜国民类';
 
-            const iconMap = { 
-                '主食类': '🍚', '大荤硬菜类': '🥩', '荤素搭配类': '🥘', 
-                '素菜国民类': '🥬', '特色档口类': '🍜', '高蛋白小食': '🥚', 
-                '中式早餐类': '🥟', '水果快充类': '🍎', '练后补剂类': '🥤' 
-            };
-
-            const zones = [
-                {
-                    title: '🌅 晨间唤醒 (早八人专属)',
-                    colorText: 'text-orange-600',
-                    colorBorder: 'border-orange-200',
-                    categories: ['中式早餐类']
-                },
-                {
-                    title: '🍱 食堂正餐 (午晚吃饱)',
-                    colorText: 'text-blue-600',
-                    colorBorder: 'border-blue-200',
-                    categories: ['大荤硬菜类', '荤素搭配类', '素菜国民类', '特色档口类', '主食类']
-                },
-                {
-                    title: '⚡ 练后快充与加餐',
-                    colorText: 'text-green-600',
-                    colorBorder: 'border-green-200',
-                    categories: ['水果快充类', '练后补剂类', '高蛋白小食']
+                if (dishIndex === 0 || isStaple) {
+                    let pool = stapleFoods.length > 1 ? stapleFoods.filter(d => d.name !== oldDish.name) : stapleFoods;
+                    if (pool.length > 0) {
+                        let staple = pool[Math.floor(Math.random() * pool.length)];
+                        let stapleRatio = Math.max(0.3, Math.min(2.5, mealTarget.carbs / Math.max(staple.carbs, 1)));
+                        newDish = {
+                            ...staple, weight: Math.round(staple.weight * stapleRatio), carbs: Math.round(staple.carbs * stapleRatio),
+                            protein: Math.round(staple.protein * stapleRatio * 10) / 10, fat: Math.round(staple.fat * stapleRatio * 10) / 10,
+                            calories: Math.round(staple.calories * stapleRatio)
+                        };
+                    }
+                } else if (isVeg) {
+                    let pool = vegDishes.length > 1 ? vegDishes.filter(d => d.name !== oldDish.name) : vegDishes;
+                    if (pool.length > 0) newDish = pool[Math.floor(Math.random() * pool.length)];
+                } else {
+                    let remainingProtein = mealTarget.protein - (meal.actual.protein - oldDish.protein);
+                    let suitableProteins = proteinDishes.filter(d => d.protein >= remainingProtein * 0.4 && d.protein <= remainingProtein * 1.5 && d.name !== oldDish.name);
+                    if(suitableProteins.length === 0) suitableProteins = proteinDishes.filter(d => d.name !== oldDish.name);
+                    if(suitableProteins.length === 0) suitableProteins = proteinDishes;
+                    if(suitableProteins.length > 0) newDish = suitableProteins[Math.floor(Math.random() * suitableProteins.length)];
                 }
-            ];
 
-            zones.forEach(zone => {
-                const zoneFoods = CANTEEN_DATABASE.filter(food => zone.categories.includes(food.category));
-                if (zoneFoods.length === 0) return;
+                if (newDish) {
+                    meal.actual.carbs -= oldDish.carbs;
+                    meal.actual.protein -= oldDish.protein;
+                    meal.actual.fat -= oldDish.fat;
+                    meal.actual.calories -= oldDish.calories;
 
-                let html = `
-                    <div class="animation-fade-in">
-                        <h3 class="text-xl font-black ${zone.colorText} mb-5 flex items-center border-b ${zone.colorBorder} pb-2">
-                            ${zone.title}
-                        </h3>
-                        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                    meal.dishes[dishIndex] = newDish;
+                    
+                    meal.actual.carbs += newDish.carbs;
+                    meal.actual.protein += newDish.protein;
+                    meal.actual.fat += newDish.fat;
+                    meal.actual.calories += newDish.calories;
+
+                    meal.diff = { calories: Math.round(meal.actual.calories - (mealTarget.carbs * 4 + mealTarget.protein * 4 + mealTarget.fat * 9)) };
+                    UI.renderCanteen();
+                }
+            }
+        };
+
+        const TrainingModule = {
+            updateDays() {
+                const split = document.getElementById('trainSplit').value;
+                const daySelect = document.getElementById('trainDay');
+                if (split === '3day') daySelect.innerHTML = `<option value="day1">Day 1: 背 + 肩后束 + 肱二头</option><option value="day2">Day 2: 胸 + 肩前中束 + 肱三头</option><option value="day3">Day 3: 腿臀 + 腹部</option>`;
+                else daySelect.innerHTML = `<option value="day1">Day 1: 背部 + 肱二头 (拉)</option><option value="day2">Day 2: 胸部 + 肱三头 (推)</option><option value="day3">Day 3: 腿臀 + 腹部 (下肢)</option><option value="day4">Day 4: 肩部整体轰炸 (前中后束)</option>`;
+            },
+            generate() {
+                const split = document.getElementById('trainSplit').value;
+                const day = document.getElementById('trainDay').value;
+                const goal = document.getElementById('trainGoal').value;
+                const target = document.getElementById('targetMuscle').value;
+                
+                AppState.training.repsStr = goal === 'bulk' ? '10-15次 (保留1-2次余力)' : '12-20次 (高次数力竭)';
+                let plan = []; let title = '';
+                if (split === '3day') {
+                    if(day==='day1'){ title="三分化 Day1:核心拉力链"; plan=[{part:'背部(垂直拉)',name:'引体向上/高位下拉',sets:3},{part:'背部(水平拉)',name:'杠铃俯身划船',sets:3},{part:'肩后束',name:'哑铃俯身飞鸟',sets:3},{part:'肱二头肌',name:'哑铃交替弯举',sets:3}]; if(target==='back') plan.splice(1,0,{part:'🔥背部(强化宽度)',name:'宽距高位下拉',sets:3}); }
+                    if(day==='day2'){ title="三分化 Day2:核心推力链"; plan=[{part:'胸部(中胸)',name:'平板杠铃卧推',sets:3},{part:'胸部(上胸)',name:'上斜卧推',sets:3},{part:'肩前中束',name:'哑铃推举',sets:3},{part:'肱三头肌',name:'绳索下压',sets:3}]; if(target==='chest') plan.splice(2,0,{part:'🔥胸部(强化厚度)',name:'双杠臂屈伸',sets:3}); if(target==='shoulder') plan.push({part:'🔥肩部(强化饱满度)',name:'单臂绳索侧平举',sets:3}); }
+                    if(day==='day3'){ title="三分化 Day3:下肢与核心"; plan=[{part:'大腿前侧',name:'杠铃深蹲',sets:3},{part:'大腿后侧',name:'罗马尼亚硬拉',sets:3},{part:'臀部',name:'杠铃臀推',sets:3},{part:'核心腹部',name:'卷腹',sets:3}]; if(target==='legs') plan.splice(2,0,{part:'🔥腿臀(强化下肢)',name:'保加利亚单腿蹲',sets:3}); }
+                } else {
+                    if(day==='day1'){ title="四分化 Day1:纯粹拉力"; plan=[{part:'背部(垂直拉)',name:'引体向上/宽距高位下拉',sets:3},{part:'背部(水平拉)',name:'杠铃划船',sets:3},{part:'背部(孤立)',name:'直臂下压',sets:3},{part:'肱二头肌',name:'杠铃弯举',sets:3}]; if(target==='back') plan.splice(2,0,{part:'🔥背部(强化宽度)',name:'单臂哑铃划船',sets:3}); }
+                    if(day==='day2'){ title="四分化 Day2:纯粹推力"; plan=[{part:'胸部(中胸)',name:'平板卧推',sets:3},{part:'胸部(上胸)',name:'上斜哑铃卧推',sets:3},{part:'胸部(中缝)',name:'蝴蝶机夹胸',sets:3},{part:'肱三头肌',name:'绳索下压',sets:3}]; if(target==='chest') plan.splice(2,0,{part:'🔥胸部(强化下沿)',name:'双杠臂屈伸',sets:3}); }
+                    if(day==='day3'){ title="四分化 Day3:下肢系统"; plan=[{part:'大腿前侧',name:'深蹲',sets:3},{part:'大腿后侧',name:'硬拉',sets:3},{part:'臀部',name:'臀推',sets:3},{part:'核心腹部',name:'负重卷腹',sets:3}]; if(target==='legs') plan.splice(2,0,{part:'🔥腿臀(强化线条)',name:'保加利亚分腿蹲',sets:3}); }
+                    if(day==='day4'){ title="四分化 Day4:肩部3D轰炸"; plan=[{part:'肩前束',name:'哑铃肩推',sets:3},{part:'肩中束',name:'侧平举',sets:3},{part:'肩后束',name:'反向蝴蝶机',sets:3},{part:'斜方肌',name:'耸肩',sets:3}]; if(target==='shoulder') plan.splice(2,0,{part:'🔥肩部(强化宽度)',name:'绳索Y字平举',sets:3}); }
+                }
+                AppState.training.title = title;
+                AppState.training.currentPlan = plan.map(item => ({...item, setsNum: item.sets}));
+                UI.renderTraining();
+            },
+            syncSets(index, val) { if(AppState.training.currentPlan[index]) AppState.training.currentPlan[index].setsNum = Math.max(1, parseInt(val) || 3); },
+            deleteDateRecord(date) {
+                let history = StorageSvc.load('workoutHistory') || [];
+                history = history.filter(item => item.date !== date);
+                StorageSvc.save('workoutHistory', history);
+                UI.renderHistoryStats();
+            },
+            clearAllHistory() {
+                if(!confirm('确定清空所有历史训练记录吗？此操作无法撤销。')) return;
+                StorageSvc.save('workoutHistory', []);
+                UI.renderHistoryStats();
+            }
+        };
+
+        const ExecutorModule = {
+            start() {
+                if(!AppState.training.currentPlan.length) return alert('先生成训练计划！');
+                let flatList = [];
+                AppState.training.currentPlan.forEach((ex, idx) => {
+                    for(let i=1; i<=ex.setsNum; i++) flatList.push({ id: `${idx}-${i}`, name: ex.name, part: ex.part, setNum: i, isCompleted: false, weight: 0 });
+                });
+                AppState.exec = { isActive: true, currentGlobalSetIndex: 0, totalSets: flatList.length, timer: null, elapsedSeconds: 0, flatSetList: flatList, restSeconds: 60, restTimer: null, isResting: false, restRemaining: 0 };
+                
+                document.getElementById('plan-generator-area').classList.add('hidden');
+                document.getElementById('executor-area').classList.remove('hidden');
+                document.getElementById('workout-record').classList.add('hidden');
+                document.getElementById('exec-workout-state').classList.remove('hidden');
+                
+                this.startMainTimer();
+                UI.renderExecutor();
+            },
+            startMainTimer() { AppState.exec.timer = setInterval(() => { AppState.exec.elapsedSeconds++; UI.updateExecTime(); }, 1000); },
+            startRestTimer() {
+                AppState.exec.restSeconds = parseInt(document.getElementById('exec-rest-input').value) || 60;
+                AppState.exec.restRemaining = AppState.exec.restSeconds; AppState.exec.isResting = true;
+                UI.renderExecutor();
+                AppState.exec.restTimer = setInterval(() => { AppState.exec.restRemaining--; UI.updateRestTime(); if(AppState.exec.restRemaining <= 0) this.endRest(); }, 1000);
+            },
+            endRest() { clearInterval(AppState.exec.restTimer); AppState.exec.isResting = false; UI.renderExecutor(); },
+            finishSet() {
+                if(AppState.exec.isResting) return;
+                if (AppState.exec.currentGlobalSetIndex >= AppState.exec.totalSets) return this.finalize();
+                
+                const curr = AppState.exec.flatSetList[AppState.exec.currentGlobalSetIndex];
+                curr.weight = parseFloat(document.getElementById('exec-weight-input').value) || 0;
+                curr.isCompleted = true;
+                
+                AppState.training.history.push({ exercise: curr.name, part: curr.part, weight: curr.weight, date: new Date().toLocaleDateString() });
+                
+                AppState.exec.currentGlobalSetIndex++;
+                if(AppState.exec.currentGlobalSetIndex < AppState.exec.totalSets) this.startRestTimer();
+                else this.finalize();
+                UI.renderExecutor();
+            },
+            finalize() {
+                clearInterval(AppState.exec.timer); clearInterval(AppState.exec.restTimer);
+                const oldHistory = StorageSvc.load('workoutHistory') || [];
+                StorageSvc.save('workoutHistory', [...oldHistory, ...AppState.training.history]);
+                UI.renderWorkoutRecord();
+                UI.renderHistoryStats();
+                document.getElementById('exec-workout-state').classList.add('hidden');
+                document.getElementById('workout-record').classList.remove('hidden');
+            },
+            exit() { clearInterval(AppState.exec.timer); clearInterval(AppState.exec.restTimer); document.getElementById('executor-area').classList.add('hidden'); document.getElementById('plan-generator-area').classList.remove('hidden'); }
+        };
+
+        const UI = {
+            switchTab(tabId) {
+                document.querySelectorAll('.view-section').forEach(el => el.classList.add('hidden'));
+                document.querySelectorAll('.nav-btn').forEach(btn => btn.classList.remove('nav-active'));
+                
+                document.getElementById('sec-' + tabId).classList.remove('hidden');
+                document.querySelector(`[data-tab="${tabId}"]`).classList.add('nav-active');
+
+                if(tabId === 'training') { TrainingModule.updateDays(); this.renderHistoryStats(); }
+                if(tabId === 'food') this.renderFoodDB();
+                if(tabId === 'learn') this.renderArticles();
+            },
+
+            renderPlannerResult() {
+                const state = AppState.planner;
+                document.getElementById('res-cal').innerText = state.totalCal;
+                document.getElementById('res-carb').innerText = state.totalCarb;
+                document.getElementById('res-pro').innerText = state.totalPro;
+                document.getElementById('res-fat').innerText = state.totalFat;
+
+                const tbody = document.getElementById('meal-plan-body');
+                tbody.innerHTML = '';
+                state.plan.forEach(m => {
+                    tbody.innerHTML += `<tr><td class="font-bold text-gray-800 whitespace-nowrap">${m.name}</td><td class="text-blue-600 font-bold bg-blue-50/30">${m.carbs}</td><td class="text-green-600 font-bold bg-green-50/30">${m.protein}</td><td class="text-yellow-600 font-bold bg-yellow-50/30">${m.fat}</td></tr>`;
+                });
+                
+                document.getElementById('custom-tracker-container').classList.add('hidden');
+                document.getElementById('canteen-meal-container').classList.add('hidden');
+                document.getElementById('result-section').classList.remove('hidden');
+                document.getElementById('canteen-buttons-container').classList.remove('hidden');
+            },
+
+            renderTracker() {
+                const tbody = document.getElementById('tracker-tbody'); tbody.innerHTML = '';
+                let tc=0, ac=0, tp=0, ap=0, tf=0, af=0;
+                
+                AppState.tracker.data.forEach((m, i) => {
+                    tc+=m.carbs; ac+=m.actualCarbs; tp+=m.protein; ap+=m.actualProtein; tf+=m.fat; af+=m.actualFat;
+                    const diff = Math.round((m.actualCarbs*4+m.actualProtein*4+m.actualFat*9) - (m.carbs*4+m.protein*4+m.fat*9));
+                    const rate = (m.carbs+m.protein+m.fat)===0 ? 1 : (m.actualCarbs+m.actualProtein+m.actualFat)/(m.carbs+m.protein+m.fat);
+                    const statusClass = rate >= 0.9 ? 'text-green-600 font-bold' : rate < 0.7 ? 'text-red-600 font-bold' : 'text-yellow-600 font-bold';
+                    const status = rate >= 0.9 ? '✅ 达标' : rate < 0.7 ? '⚠️ 未达标' : '⏳ 进行中';
+                    
+                    tbody.innerHTML += `<tr><td class="font-bold text-gray-800 whitespace-nowrap">${m.name}</td><td>${m.carbs}</td>
+                    <td><input type="number" class="sets-input" value="${m.actualCarbs}" onchange="MealHelpers.updateTracker(${i}, 'actualCarbs', this.value)"></td>
+                    <td>${m.protein}</td><td><input type="number" class="sets-input" value="${m.actualProtein}" onchange="MealHelpers.updateTracker(${i}, 'actualProtein', this.value)"></td>
+                    <td>${m.fat}</td><td><input type="number" class="sets-input" value="${m.actualFat}" onchange="MealHelpers.updateTracker(${i}, 'actualFat', this.value)"></td>
+                    <td class="font-bold ${diff>=0?'text-green-600':'text-red-600'}">${diff>0?'+':''}${diff}</td><td class="${statusClass} whitespace-nowrap">${status}</td></tr>`;
+                });
+                
+                const tdiff = Math.round((ac*4+ap*4+af*9) - (tc*4+tp*4+tf*9));
+                const trate = (tc+tp+tf) === 0 ? 1 : (ac+ap+af)/(tc+tp+tf);
+                document.getElementById('tracker-tfoot').innerHTML = `<tr class="bg-gray-50 font-bold"><td class="text-gray-900 whitespace-nowrap">当日汇总</td><td class="text-blue-600">${tc}</td><td class="text-blue-600">${Math.round(ac*10)/10}</td><td class="text-green-600">${tp}</td><td class="text-green-600">${Math.round(ap*10)/10}</td><td class="text-yellow-600">${tf}</td><td class="text-yellow-600">${Math.round(af*10)/10}</td><td class="${tdiff>=0?'text-green-600':'text-red-600'}">${tdiff>0?'+':''}${tdiff}</td><td class="text-purple-600 whitespace-nowrap">${Math.round(trate*100)}% 完成率</td></tr>`;
+                document.getElementById('custom-tracker-container').classList.remove('hidden');
+                document.getElementById('canteen-meal-container').classList.add('hidden');
+            },
+
+            renderCanteen() {
+                const listContainer = document.getElementById('canteen-meal-list'); listContainer.innerHTML = '';
+                const summaryContainer = document.getElementById('canteen-meal-summary');
+                
+                let totalTarget = { carbs: 0, protein: 0, fat: 0, calories: 0 };
+                let totalActual = { carbs: 0, protein: 0, fat: 0, calories: 0 };
+                
+                AppState.canteen.meals.forEach(meal => {
+                    totalTarget.carbs += meal.target.carbs; totalTarget.protein += meal.target.protein; totalTarget.fat += meal.target.fat;
+                    totalTarget.calories += meal.target.carbs * 4 + meal.target.protein * 4 + meal.target.fat * 9;
+                    totalActual.carbs += meal.actual.carbs; totalActual.protein += meal.actual.protein; totalActual.fat += meal.actual.fat; totalActual.calories += meal.actual.calories;
+                });
+                
+                const carbRate = 1 - Math.abs(totalActual.carbs - totalTarget.carbs) / Math.max(totalTarget.carbs, 1);
+                const proteinRate = 1 - Math.abs(totalActual.protein - totalTarget.protein) / Math.max(totalTarget.protein, 1);
+                const fatRate = 1 - Math.abs(totalActual.fat - totalTarget.fat) / Math.max(totalTarget.fat, 1);
+                const totalRate = Math.round((carbRate + proteinRate + fatRate) / 3 * 100);
+                const goalNameMap = { 'cut': '严格减脂', 'recomp': '塑形线条', 'bulk': '干净增肌' };
+                const goal = AppState.planner.goal;
+
+                summaryContainer.innerHTML = `
+                    <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                        <div>
+                            <span class="badge ${goal === 'cut' ? 'badge-red' : goal === 'recomp' ? 'badge-purple' : 'badge-green'} mb-2">适配目标：${goalNameMap[goal]}</span>
+                            <h4 class="text-lg font-bold text-gray-900">今日食堂餐单总览</h4>
+                        </div>
+                        <div class="text-right">
+                            <p class="text-sm text-gray-500">总宏量达标率</p>
+                            <p class="text-3xl font-black ${totalRate >= 85 ? 'text-green-600' : totalRate >= 70 ? 'text-yellow-600' : 'text-red-600'}">${totalRate}%</p>
+                        </div>
+                    </div>
+                    <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mt-4 pt-4 border-t border-gray-200">
+                        <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">总热量</p><p class="text-lg font-bold text-gray-900">${Math.round(totalActual.calories)} <span class="text-xs text-gray-400">/ ${totalTarget.calories} kcal</span></p></div>
+                        <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">碳水</p><p class="text-lg font-bold text-blue-600">${Math.round(totalActual.carbs*10)/10} <span class="text-xs text-gray-400">/ ${totalTarget.carbs} g</span></p></div>
+                        <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">蛋白</p><p class="text-lg font-bold text-green-600">${Math.round(totalActual.protein*10)/10} <span class="text-xs text-gray-400">/ ${totalTarget.protein} g</span></p></div>
+                        <div class="text-center"><p class="text-xs text-gray-500 uppercase tracking-wider font-bold">脂肪</p><p class="text-lg font-bold text-yellow-600">${Math.round(totalActual.fat*10)/10} <span class="text-xs text-gray-400">/ ${totalTarget.fat} g</span></p></div>
+                    </div>
                 `;
 
-                zoneFoods.forEach(food => {
-                    const icon = iconMap[food.category] || '🍽️'; 
-                    const totalMacros = food.carbs + food.protein + food.fat;
-                    const cPct = totalMacros > 0 ? (food.carbs / totalMacros * 100) : 0; 
-                    const pPct = totalMacros > 0 ? (food.protein / totalMacros * 100) : 0; 
-                    const fPct = totalMacros > 0 ? (food.fat / totalMacros * 100) : 0;
-                    
+                AppState.canteen.meals.forEach((meal, index) => {
+                    listContainer.innerHTML += `
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+                        <div class="flex justify-between items-start mb-3 pb-2 border-b border-gray-200">
+                            <div class="flex items-center">
+                                <h5 class="font-bold text-gray-900 text-lg">${meal.name}</h5>
+                                <button onclick="window.regenerateSingleMeal(${index})" class="ml-3 bg-blue-100 hover:bg-blue-200 text-blue-700 font-bold py-1 px-2 rounded transition duration-200 text-xs whitespace-nowrap">🔄 换一整餐</button>
+                            </div>
+                            <div class="text-right text-xs hidden md:block">
+                                <p class="text-gray-500">目标宏量</p>
+                                <p class="font-medium">碳${meal.target.carbs}g · 蛋${meal.target.protein}g · 脂${meal.target.fat}g</p>
+                            </div>
+                        </div>
+                        <div class="space-y-2">
+                            ${meal.dishes.map((dish, dIdx) => `
+                                <div class="flex justify-between items-center bg-white p-3 rounded-lg border border-gray-100">
+                                    <div>
+                                        <p class="font-bold text-gray-800 flex items-center">
+                                            ${dish.name}
+                                            <button onclick="window.regenerateSingleDish(${index}, ${dIdx})" class="ml-2 text-gray-400 hover:text-blue-600 transition-colors" title="换一换此菜">🔄</button>
+                                        </p>
+                                        <p class="text-xs text-gray-500">${dish.category} · ${dish.weight}g</p>
+                                    </div>
+                                    <div class="text-right text-xs"><p class="text-gray-600">${Math.round(dish.calories)} kcal</p><p class="text-gray-400">碳${Math.round(dish.carbs*10)/10}g · 蛋${Math.round(dish.protein*10)/10}g · 脂${Math.round(dish.fat*10)/10}g</p></div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="mt-3 pt-3 border-t border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center text-sm gap-2">
+                            <div>
+                                <span class="text-gray-500">本餐实际：</span>
+                                <span class="font-bold text-blue-600">碳${Math.round(meal.actual.carbs*10)/10}g</span> · <span class="font-bold text-green-600">蛋${Math.round(meal.actual.protein*10)/10}g</span> · <span class="font-bold text-yellow-600">脂${Math.round(meal.actual.fat*10)/10}g</span> · <span class="font-bold text-gray-700">${Math.round(meal.actual.calories)}kcal</span>
+                            </div>
+                            <div class="text-right w-full md:w-auto"><span class="text-gray-500">差值：</span><span class="${meal.diff.calories >= 0 ? 'text-green-600' : 'text-red-600'} font-bold">${meal.diff.calories >= 0 ? '+' : ''}${meal.diff.calories}kcal</span></div>
+                        </div>
+                    </div>`;
+                });
+                document.getElementById('canteen-meal-container').classList.remove('hidden');
+                document.getElementById('custom-tracker-container').classList.add('hidden');
+            },
+
+            renderTraining() {
+                document.getElementById('train-title-display').innerText = AppState.training.title;
+                document.getElementById('train-reps-display').innerText = AppState.training.repsStr;
+                const tbody = document.getElementById('training-plan-body'); tbody.innerHTML = '';
+                AppState.training.currentPlan.forEach((item, i) => {
+                    const isT = item.part.includes('🔥');
+                    tbody.innerHTML += `<tr><td class="${isT?'text-red-600':'text-gray-800'} font-bold">${item.part}</td><td class="${isT?'text-gray-900':'text-gray-600'}">${item.name}</td><td><input type="number" class="sets-input" value="${item.setsNum}" onchange="TrainingModule.syncSets(${i}, this.value)"></td><td class="text-xs text-gray-400 hidden md:table-cell">${AppState.training.repsStr}</td></tr>`;
+                });
+                document.getElementById('training-result-section').classList.remove('hidden');
+                document.getElementById('history-section').classList.remove('hidden');
+            },
+
+            renderExecutor() {
+                const s = AppState.exec;
+                document.getElementById('exec-progress-bar').style.width = `${Math.min((s.currentGlobalSetIndex/s.totalSets)*100, 100)}%`;
+                document.getElementById('exec-set-counter').innerText = `${s.currentGlobalSetIndex}/${s.totalSets}`;
+                document.getElementById('exec-progress-text').innerText = s.currentGlobalSetIndex >= s.totalSets ? '全部完成' : `进行中: ${s.flatSetList[s.currentGlobalSetIndex]?.part}`;
+                
+                if (s.isResting) {
+                    document.getElementById('rest-timer-box').classList.remove('hidden');
+                    const btn = document.getElementById('btn-finish-set');
+                    btn.className = 'exec-btn exec-btn-rest flex-[2]'; btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>跳过休息`;
+                } else {
+                    document.getElementById('rest-timer-box').classList.add('hidden');
+                    const curr = s.flatSetList[s.currentGlobalSetIndex];
+                    if(curr) document.getElementById('exec-current-exercise').value = curr.name;
+                    const btn = document.getElementById('btn-finish-set');
+                    btn.className = 'exec-btn exec-btn-success flex-[2]'; btn.innerHTML = s.currentGlobalSetIndex >= s.totalSets ? '查看记录' : `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
+                }
+
+                const container = document.getElementById('set-list-container'); container.innerHTML = '';
+                let lastPart = '';
+                s.flatSetList.forEach((item, index) => {
+                    if(item.part !== lastPart) {
+                        container.innerHTML += `<div class="px-4 py-2 bg-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">${item.part}</div>`;
+                        lastPart = item.part;
+                    }
+                    container.innerHTML += `<div id="set-item-${index}" class="set-item ${item.isCompleted ? 'completed' : ''} ${index === s.currentGlobalSetIndex && !item.isCompleted && !s.isResting ? 'active' : ''}">
+                        <div class="flex items-center gap-3"><div class="check-circle">${item.isCompleted ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}</div><div><p class="font-bold text-gray-900 set-text">${item.name}</p><p class="text-xs text-gray-500">第 ${item.setNum} 组</p></div></div>
+                        ${item.isCompleted && item.weight > 0 ? `<span class="text-sm font-bold text-gray-400">${item.weight}kg</span>` : ''}
+                    </div>`;
+                });
+                
+                const activeEl = document.getElementById(`set-item-${s.currentGlobalSetIndex}`);
+                if (activeEl) activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            },
+            updateExecTime() { document.getElementById('timer-display').innerText = `${String(Math.floor(AppState.exec.elapsedSeconds/60)).padStart(2,'0')}:${String(AppState.exec.elapsedSeconds%60).padStart(2,'0')}`; },
+            updateRestTime() { document.getElementById('rest-display').innerText = `${String(Math.floor(AppState.exec.restRemaining/60)).padStart(2,'0')}:${String(AppState.exec.restRemaining%60).padStart(2,'0')}`; },
+
+            renderWorkoutRecord() {
+                const container = document.getElementById('record-content'); container.innerHTML = '';
+                const title = AppState.training.title || '训练记录'; 
+                const duration = document.getElementById('timer-display').innerText;
+                container.innerHTML = `<p class="text-center font-bold text-lg">${title}</p><p class="text-center text-sm text-gray-500 mb-4">总时长: ${duration}</p>`;
+                
+                const todayRecords = AppState.training.history.filter(item=>item.date === new Date().toLocaleDateString());
+                const displayMap = {};
+                todayRecords.forEach(r => {
+                    if(!displayMap[r.exercise]) displayMap[r.exercise] = { sets: 0, maxW: 0 };
+                    displayMap[r.exercise].sets++;
+                    if(r.weight > displayMap[r.exercise].maxW) displayMap[r.exercise].maxW = r.weight;
+                });
+                for(const [name, data] of Object.entries(displayMap)) container.innerHTML += `<div class="p-3 bg-gray-50 rounded flex justify-between"><span class="font-medium text-gray-800">${name}</span><span class="text-gray-500 font-bold">${data.sets}组 / 极限 ${data.maxW}kg</span></div>`;
+            },
+            
+            renderHistoryStats() {
+                const history = StorageSvc.load('workoutHistory') || [];
+                const stats = {}; 
+                history.forEach(item => { 
+                    const part = item.part.replace('🔥','').replace(/\(.*\)/,'').trim(); 
+                    stats[part] = (stats[part] || 0) + 1; 
+                });
+                
+                const statsContainer = document.getElementById('monthly-stats'); 
+                let html = `
+                    <div class="mb-5">
+                        <h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider mb-4 flex items-center">
+                            <svg class="w-4 h-4 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"></path></svg>
+                            本月肌群容量监控
+                        </h4>
+                        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
+                `;
+                
+                Object.entries(AppDB.muscleStats).forEach(([part, cfg]) => {
+                    const current = stats[part] || 0;
+                    let level = '标准'; let statusColor = 'text-green-500'; let barColor = 'bg-green-500'; let pct = (current / cfg.max) * 100;
+                    if (current < cfg.min) { level = '不足'; statusColor = 'text-yellow-500'; barColor = 'bg-yellow-400'; pct = (current / cfg.min) * 100; } 
+                    else if (current > cfg.max) { level = '超量'; statusColor = 'text-red-500'; barColor = 'bg-red-500'; pct = 100; }
                     html += `
-                        <div class="border border-gray-100 rounded-2xl p-5 bg-white hover:shadow-lg transition-all relative overflow-hidden group flex flex-col justify-between h-full">
+                        <div class="bg-white border border-gray-100 rounded-xl p-4 shadow-sm flex flex-col justify-between">
+                            <p class="text-xs font-bold text-gray-400 mb-1">${part}</p>
+                            <div class="flex items-baseline gap-1 mb-2"><span class="text-2xl font-black text-gray-800 leading-none">${current}</span><span class="text-xs font-medium text-gray-400">组</span></div>
+                            <div class="w-full bg-gray-100 rounded-full h-1.5 mb-2 overflow-hidden"><div class="${barColor} h-1.5 rounded-full transition-all duration-500" style="width: ${Math.min(pct, 100)}%"></div></div>
+                            <div class="flex justify-between items-center text-[0.65rem] font-bold"><span class="text-gray-400">${cfg.min}-${cfg.max}组</span><span class="${statusColor}">${level}</span></div>
+                        </div>
+                    `;
+                });
+                html += `</div></div>`; 
+                statsContainer.innerHTML = html;
+
+                const listContainer = document.getElementById('history-list'); 
+                listContainer.innerHTML = `<div class="flex items-center justify-between mb-4 mt-8"><h4 class="text-sm font-bold text-gray-500 uppercase tracking-wider flex items-center"><svg class="w-4 h-4 mr-2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0121 12z"></path></svg>详细训练日志</h4></div>`;
+                const listWrapper = document.createElement('div'); listWrapper.className = 'space-y-3 max-h-72 overflow-y-auto pr-2 custom-scrollbar';
+                const grouped = {}; history.forEach(item => { if(!grouped[item.date]) grouped[item.date] = []; grouped[item.date].push(item); });
+                
+                if(Object.keys(grouped).length === 0) { listWrapper.innerHTML = '<div class="text-center py-8 text-gray-400 text-sm">暂无训练记录</div>'; } 
+                else {
+                    Object.keys(grouped).reverse().forEach(date => {
+                        const records = grouped[date]; const div = document.createElement('div'); 
+                        div.className = 'group bg-white border border-gray-100 p-4 rounded-xl shadow-sm transition-all flex justify-between items-center';
+                        let d = new Date(date); let dayStr = isNaN(d.getTime()) ? date.slice(-2) + '日' : d.getDate() + '日';
+                        div.innerHTML = `
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center font-bold text-xs shrink-0">${dayStr}</div>
+                                <div><p class="font-bold text-gray-900 text-sm">${date}</p><p class="text-xs text-gray-500 font-medium mt-0.5">共 <span class="text-blue-600 font-bold">${records.length}</span> 组</p></div>
+                            </div>
+                            <button class="md:opacity-0 group-hover:opacity-100 text-gray-400 hover:text-red-500 transition-all p-2 rounded-lg hover:bg-red-50" onclick="window.deleteRecord('${date}')" title="删除记录"><svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg></button>
+                        `;
+                        listWrapper.appendChild(div);
+                    });
+                }
+                listContainer.appendChild(listWrapper);
+            },
+
+            renderFoodDB() {
+                const container = document.getElementById('visual-db-grid'); if(container.innerHTML !== '') return;
+                const iconMap = { '主食类': '🍚', '大荤硬菜类': '🥩', '荤素搭配类': '🥘', '素菜国民类': '🥬', '特色档口类': '🍜', '高蛋白小食': '🥚', '中式早餐类': '🥟', '水果快充类': '🍎', '练后补剂类': '🥤' };
+                const zones = [ 
+                    {title:'🌅 晨间唤醒 (早八人专属)', colorText:'text-orange-600', colorBorder:'border-orange-200', cats:['中式早餐类']}, 
+                    {title:'🍱 食堂正餐 (午晚吃饱)', colorText:'text-blue-600', colorBorder:'border-blue-200', cats:['大荤硬菜类', '荤素搭配类', '素菜国民类', '特色档口类', '主食类']}, 
+                    {title:'⚡ 练后快充与加餐', colorText:'text-green-600', colorBorder:'border-green-200', cats:['水果快充类', '练后补剂类', '高蛋白小食']} 
+                ];
+                zones.forEach(z => {
+                    const foods = AppDB.canteenFoods.filter(f => z.cats.includes(f.category));
+                    if(!foods.length) return;
+                    let html = `<div class="animation-fade-in"><h3 class="text-xl font-black ${z.colorText} mb-5 flex items-center border-b ${z.colorBorder} pb-2">${z.title}</h3><div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">`;
+                    foods.forEach(f => {
+                        const icon = iconMap[f.category] || '🍽️';
+                        const total = f.carbs + f.protein + f.fat || 1;
+                        html += `<div class="border border-gray-100 rounded-2xl p-5 bg-white hover:shadow-lg transition-all relative overflow-hidden group flex flex-col justify-between h-full">
                             <div>
                                 <div class="flex justify-between items-start mb-3">
-                                    <div>
-                                        <span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md mb-2 inline-block">${icon} ${food.category}</span>
-                                        <h3 class="font-bold text-gray-900 text-lg">${food.name}</h3>
-                                    </div>
-                                    <div class="text-right bg-blue-50 px-2 py-1 rounded-lg">
-                                        <span class="text-base font-black text-blue-700">${food.calories}</span>
-                                        <span class="text-[10px] text-blue-400 block -mt-1">kcal/${food.weight}g</span>
-                                    </div>
+                                    <div><span class="text-xs font-bold text-gray-500 bg-gray-100 px-2 py-1 rounded-md mb-2 inline-block">${icon} ${f.category}</span><h3 class="font-bold text-gray-900 text-lg">${f.name}</h3></div>
+                                    <div class="text-right bg-blue-50 px-2 py-1 rounded-lg"><span class="text-base font-black text-blue-700">${f.calories}</span><span class="text-[10px] text-blue-400 block -mt-1">kcal/${f.weight}g</span></div>
                                 </div>
-                                <div class="w-full h-1.5 flex rounded-full overflow-hidden mb-2 mt-4 bg-gray-100">
-                                    <div style="width: ${cPct}%" class="bg-blue-400" title="碳水"></div>
-                                    <div style="width: ${pPct}%" class="bg-green-400" title="蛋白"></div>
-                                    <div style="width: ${fPct}%" class="bg-yellow-400" title="脂肪"></div>
-                                </div>
-                                <div class="flex justify-between text-xs font-bold text-gray-600 mb-4">
-                                    <span class="text-blue-600">碳水 ${food.carbs}g</span>
-                                    <span class="text-green-600">蛋白 ${food.protein}g</span>
-                                    <span class="text-yellow-600">脂肪 ${food.fat}g</span>
-                                </div>
+                                <div class="w-full h-1.5 flex rounded-full overflow-hidden mb-2 mt-4 bg-gray-100"><div style="width:${(f.carbs/total)*100}%" class="bg-blue-400"></div><div style="width:${(f.protein/total)*100}%" class="bg-green-400"></div><div style="width:${(f.fat/total)*100}%" class="bg-yellow-400"></div></div>
+                                <div class="flex justify-between text-xs font-bold text-gray-600 mb-4"><span class="text-blue-600">碳水 ${f.carbs}g</span><span class="text-green-600">蛋白 ${f.protein}g</span><span class="text-yellow-600">脂肪 ${f.fat}g</span></div>
                             </div>
-                            <div class="text-xs text-gray-500 bg-gray-50/80 border border-gray-100 p-2.5 rounded-lg leading-relaxed mt-auto">
-                                💡 ${food.tips}
-                            </div>
+                            <div class="text-xs text-gray-500 bg-gray-50/80 border border-gray-100 p-2.5 rounded-lg leading-relaxed mt-auto">💡 ${f.tips}</div>
                         </div>`;
+                    });
+                    container.innerHTML += html + `</div></div>`;
                 });
+            },
 
-                html += `</div></div>`;
-                container.innerHTML += html;
-            });
-        }
-
-        window.onload = function() {
-            updateTrainDays(); 
-            loadHistory(); 
-            renderVisualFoodDB();
-            loadPlanFromLocal(); // 加载页面时自动恢复本地数据
+            renderArticles() {
+                const nav = document.getElementById('article-nav-container'); const content = document.getElementById('article-content-container');
+                if(nav.innerHTML !== '') return;
+                AppDB.articles.forEach((a, i) => {
+                    const btn = document.createElement('button'); btn.className = `article-btn ${i===0?'article-active':''}`;
+                    btn.innerHTML = `<span class="badge ${a.badge} mr-2">${a.module}</span>${a.title}`;
+                    btn.onclick = () => { document.querySelectorAll('.article-btn').forEach(b=>b.classList.remove('article-active')); btn.classList.add('article-active'); content.innerHTML = `<div class="border-b border-gray-100 pb-4 mb-4"><h2 class="text-xl font-bold text-gray-900">${a.title}</h2><p class="text-xs text-gray-500 mt-2">阅读时长：${a.readTime}</p></div><div class="content-box">${a.content}</div>`; };
+                    nav.appendChild(btn);
+                });
+                if(AppDB.articles.length > 0) content.innerHTML = `<div class="border-b border-gray-100 pb-4 mb-4"><h2 class="text-xl font-bold text-gray-900">${AppDB.articles[0].title}</h2><p class="text-xs text-gray-500 mt-2">阅读时长：${AppDB.articles[0].readTime}</p></div><div class="content-box">${AppDB.articles[0].content}</div>`;
+            }
         };
+
+        // 将方法暴露给全局，供动态生成的 HTML 内联 onclick 调用
+        window.deleteRecord = function(date) { TrainingModule.deleteDateRecord(date); };
+        window.regenerateSingleMeal = function(index) { MealHelpers.regenerateSingleMeal(index); };
+        window.regenerateSingleDish = function(mealIndex, dishIndex) { MealHelpers.regenerateSingleDish(mealIndex, dishIndex); };
+
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('main-nav').addEventListener('click', (e) => { if (e.target.dataset.tab) UI.switchTab(e.target.dataset.tab); });
+            document.getElementById('btn-generate-plan').addEventListener('click', () => PlannerModule.generate());
+            
+            document.getElementById('btn-show-tracker').addEventListener('click', () => MealHelpers.initTracker());
+            document.getElementById('btn-show-canteen').addEventListener('click', () => MealHelpers.generateCanteen());
+            document.getElementById('btn-add-snack').addEventListener('click', () => MealHelpers.addSnack());
+            document.getElementById('btn-clear-tracker').addEventListener('click', () => MealHelpers.clearTracker());
+            document.getElementById('btn-save-tracker').addEventListener('click', () => MealHelpers.saveTracker());
+            document.getElementById('btn-regenerate-canteen').addEventListener('click', () => MealHelpers.generateCanteen());
+            
+            document.getElementById('trainSplit').addEventListener('change', () => TrainingModule.updateDays());
+            document.getElementById('btn-generate-training').addEventListener('click', () => TrainingModule.generate());
+            document.getElementById('btn-start-exec').addEventListener('click', () => ExecutorModule.start());
+            document.getElementById('btn-finish-set').addEventListener('click', () => ExecutorModule.finishSet());
+            document.getElementById('btn-exit-exec').addEventListener('click', () => ExecutorModule.exit());
+            
+            document.getElementById('btn-clear-history').addEventListener('click', () => TrainingModule.clearAllHistory());
+            document.getElementById('btn-copy-record').addEventListener('click', () => {
+                navigator.clipboard.writeText(document.getElementById('record-content').innerText).then(()=>alert('复制成功！'));
+            });
+
+            TrainingModule.updateDays();
+            const savedPlan = StorageSvc.load('userMealPlan');
+            if(savedPlan && savedPlan.plan && savedPlan.plan.length > 0) {
+                AppState.planner.plan = savedPlan.plan;
+                
+                AppState.planner.goal = savedPlan.goal || 'cut';
+                const goalSelect = document.getElementById('goal');
+                if (goalSelect) goalSelect.value = AppState.planner.goal;
+
+                AppState.planner.totalCal = savedPlan.plan.reduce((sum,m)=>sum+(m.carbs*4+m.protein*4+m.fat*9),0);
+                AppState.planner.totalCarb = savedPlan.plan.reduce((sum,m)=>sum+m.carbs,0);
+                AppState.planner.totalPro = savedPlan.plan.reduce((sum,m)=>sum+m.protein,0);
+                AppState.planner.totalFat = savedPlan.plan.reduce((sum,m)=>sum+m.fat,0);
+                UI.renderPlannerResult();
+            }
+        });
     </script>
     <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
 
