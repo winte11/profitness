@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>小凡健身 PRO - 终极知识库与排餐中枢</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
+    
     <style>
         body { background-color: #f8fafc; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; color: #334155; -webkit-tap-highlight-color: transparent; }
         .brand-color { color: #2563eb; }
@@ -13,11 +16,9 @@
         .bg-brand:active { transform: translateY(0); }
         .border-brand { border-color: #2563eb; }
         
-        /* 移动端适配：缩小卡片内边距以节省屏幕空间 */
         .card { background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); padding: 1.25rem; border: 1px solid #f1f5f9; }
         @media (min-width: 768px) { .card { padding: 2rem; } }
         
-        /* 移动端适配：强制16px防iOS自动缩放，调整高度 */
         select, input { border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.6rem 0.75rem; width: 100%; outline: none; transition: all 0.2s ease; background-color: #f8fafc; color: #1e293b; font-weight: 500; font-size: 16px !important; }
         select:focus, input:focus { border-color: #2563eb; background-color: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         label { font-weight: 600; color: #475569; margin-bottom: 0.3rem; display: block; font-size: 0.875rem;}
@@ -41,7 +42,6 @@
         .badge-gray { background-color: #f1f5f9; color: #475569; }
 
         nav { backdrop-filter: blur(8px); background-color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid #e2e8f0; }
-        /* 移动端适配：开启 iOS 平滑惯性滚动 */
         #main-nav { -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
         .nav-btn { cursor: pointer; padding: 1rem 1.25rem; font-weight: 600; color: #64748b; border-bottom: 3px solid transparent; transition: all 0.2s; font-size: 0.95rem; white-space: nowrap; }
         .nav-btn:hover { color: #1e293b; }
@@ -65,8 +65,6 @@
         .data-matrix-unit { font-size: 0.875rem; font-weight: 500; color: #94a3b8; margin-left: 0.2rem;}
 
         .executor-container { display: flex; flex-direction: column; align-items: center; min-height: 500px; }
-        
-        /* 移动端适配：调整计时器字体大小防溢出 */
         .exec-timer-display { font-size: 3.5rem; font-weight: 900; color: #0f172a; font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: -0.02em; }
         @media (min-width: 768px) { .exec-timer-display { font-size: 4rem; } }
         .rest-timer-display { font-size: 2.5rem; font-weight: 900; color: #f59e0b; font-variant-numeric: tabular-nums; line-height: 1; }
@@ -94,7 +92,6 @@
         .record-card { margin-top: 2rem; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 表格容器滚动顺滑 */
         .overflow-x-auto { -webkit-overflow-scrolling: touch; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; border-radius: 4px; }
@@ -104,6 +101,29 @@
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
+    <div id="activation-wall" class="fixed inset-0 z-[9999] bg-slate-900/95 backdrop-blur-xl flex items-center justify-center transition-opacity duration-500">
+        <div class="bg-white rounded-3xl max-w-md w-full p-8 shadow-2xl mx-4 transform transition-all text-center">
+            <div class="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <span class="text-3xl">💎</span>
+            </div>
+            <h2 class="text-2xl font-black text-gray-900 mb-2">小凡健身 PRO</h2>
+            <p class="text-sm text-gray-500 mb-8">此为完整付费版专属链接<br>请验证您的设备授权以进入自动化系统</p>
+            
+            <div class="space-y-4">
+                <div>
+                    <input type="text" id="pro-activation-code" placeholder="在此输入永久激活码" class="w-full text-center text-lg font-bold text-gray-800 tracking-widest border-2 border-gray-200 rounded-xl py-3 outline-none focus:border-blue-500 transition-colors bg-gray-50">
+                </div>
+                <button id="btn-activate" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition-all transform hover:-translate-y-0.5" onclick="verifyAndActivate(this)">
+                    立即绑定设备并解锁
+                </button>
+            </div>
+            
+            <div class="mt-8 pt-6 border-t border-gray-100">
+                <p class="text-xs text-gray-400 mb-1">还没有获取激活码？</p>
+                <p class="text-sm font-bold text-gray-600">请联系作者小红书：<span class="text-blue-600 select-all">95127631290</span></p>
+            </div>
+        </div>
+    </div>
     <nav class="sticky top-0 z-50">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
@@ -576,6 +596,61 @@
     </footer>
 
     <script>
+        // ----------------- PRO 激活逻辑 -----------------
+        document.addEventListener('DOMContentLoaded', () => {
+            const isPro = localStorage.getItem('xf_is_pro') === 'true';
+            const wall = document.getElementById('activation-wall');
+            
+            if (isPro) {
+                // 已经激活，隐藏拦截网，允许页面滚动
+                wall.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            } else {
+                // 未激活，显示拦截网，禁止页面滚动
+                wall.style.display = 'flex';
+                document.body.style.overflow = 'hidden';
+            }
+        });
+
+        async function verifyAndActivate(btnElement) {
+            const inputCode = document.getElementById('pro-activation-code').value.trim();
+            if(!inputCode) return alert("请输入激活码！");
+            
+            // 真实 API 接口链接
+            const API_URL = "https://profitness.2462795033.workers.dev";
+            
+            try {
+                btnElement.innerHTML = "验证中...";
+                
+                // 获取设备指纹
+                const fp = await FingerprintJS.load();
+                const result = await fp.get();
+                const deviceId = result.visitorId; 
+
+                // 请求云端验证
+                const res = await fetch(API_URL, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ code: inputCode, deviceId: deviceId })
+                });
+                
+                const data = await res.json();
+                
+                if (data.success) {
+                    alert(data.msg);
+                    localStorage.setItem('xf_is_pro', 'true');
+                    location.reload(); // 验证成功刷新页面，拦截网将自动隐藏
+                } else {
+                    alert(data.msg); 
+                    btnElement.innerHTML = "立即绑定设备并解锁";
+                }
+            } catch(e) {
+                alert("网络请求失败，请检查网络或稍后再试");
+                btnElement.innerHTML = "立即绑定设备并解锁";
+            }
+        }
+
+        // ----------------- 完整版应用核心数据 -----------------
         const AppDB = {
             canteenFoods: [
                 { category: '大荤硬菜类', name: '红烧肉', weight: 120, calories: 480, carbs: 2, protein: 12, fat: 45, goals: ['bulk'], tips: '脂肪含量极高，减脂期慎选' },
@@ -674,6 +749,7 @@
             load(key) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : null; } catch (e) { return null; } }
         };
 
+        // ================= 核心业务模块 =================
         const PlannerModule = {
             generate() {
                 const weight = parseFloat(document.getElementById('weight').value);
@@ -835,7 +911,6 @@
                 UI.renderCanteen();
             },
 
-            // 新增核心功能：替换餐单里的单个菜品
             regenerateSingleDish(mealIndex, dishIndex) {
                 if (!AppState.planner.plan.length) return;
                 const meal = AppState.canteen.meals[mealIndex];
@@ -1152,26 +1227,26 @@
                     btn.className = 'exec-btn exec-btn-rest flex-[2]'; btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>跳过休息`;
                 } else {
                     document.getElementById('rest-timer-box').classList.add('hidden');
-                    const curr = s.flatSetList[s.currentGlobalSetIndex];
+                    const curr = .flatSetList[.currentGlobalSetIndex];
                     if(curr) document.getElementById('exec-current-exercise').value = curr.name;
                     const btn = document.getElementById('btn-finish-set');
-                    btn.className = 'exec-btn exec-btn-success flex-[2]'; btn.innerHTML = s.currentGlobalSetIndex >= s.totalSets ? '查看记录' : `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
+                    btn.className = 'exec-btn exec-btn-success flex-[2]'; btn.innerHTML = .currentGlobalSetIndex >= .totalSets ? '查看记录' : `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
                 }
 
                 const container = document.getElementById('set-list-container'); container.innerHTML = '';
                 let lastPart = '';
-                s.flatSetList.forEach((item, index) => {
+                .flatSetList.forEach((item, index) => {
                     if(item.part !== lastPart) {
                         container.innerHTML += `<div class="px-4 py-2 bg-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">${item.part}</div>`;
                         lastPart = item.part;
                     }
-                    container.innerHTML += `<div id="set-item-${index}" class="set-item ${item.isCompleted ? 'completed' : ''} ${index === s.currentGlobalSetIndex && !item.isCompleted && !s.isResting ? 'active' : ''}">
+                    container.innerHTML += `<div id="set-item-${index}" class="set-item ${item.isCompleted ? 'completed' : ''} ${index === .currentGlobalSetIndex && !item.isCompleted && !.isResting ? 'active' : ''}">
                         <div class="flex items-center gap-3"><div class="check-circle">${item.isCompleted ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}</div><div><p class="font-bold text-gray-900 set-text">${item.name}</p><p class="text-xs text-gray-500">第 ${item.setNum} 组</p></div></div>
                         ${item.isCompleted && item.weight > 0 ? `<span class="text-sm font-bold text-gray-400">${item.weight}kg</span>` : ''}
                     </div>`;
                 });
                 
-                const activeEl = document.getElementById(`set-item-${s.currentGlobalSetIndex}`);
+                const activeEl = document.getElementById(`set-item-${.currentGlobalSetIndex}`);
                 if (activeEl) activeEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
             },
             updateExecTime() { document.getElementById('timer-display').innerText = `${String(Math.floor(AppState.exec.elapsedSeconds/60)).padStart(2,'0')}:${String(AppState.exec.elapsedSeconds%60).padStart(2,'0')}`; },
@@ -1305,8 +1380,8 @@
             document.getElementById('main-nav').addEventListener('click', (e) => { if (e.target.dataset.tab) UI.switchTab(e.target.dataset.tab); });
             document.getElementById('btn-generate-plan').addEventListener('click', () => PlannerModule.generate());
             
-            document.getElementById('btn-show-tracker').addEventListener('click', () => MealHelpers.initTracker());
-            document.getElementById('btn-show-canteen').addEventListener('click', () => MealHelpers.generateCanteen());
+            document.getElementById('btn-show-tracker').addEventListener('click', () => { if(isPro()) MealHelpers.initTracker(); else triggerPaywall('开启打卡表需要授权'); });
+            document.getElementById('btn-show-canteen').addEventListener('click', () => { if(isPro()) MealHelpers.generateCanteen(); else triggerPaywall('一键生成食堂餐单需要授权'); });
             document.getElementById('btn-add-snack').addEventListener('click', () => MealHelpers.addSnack());
             document.getElementById('btn-clear-tracker').addEventListener('click', () => MealHelpers.clearTracker());
             document.getElementById('btn-save-tracker').addEventListener('click', () => MealHelpers.saveTracker());
@@ -1314,7 +1389,7 @@
             
             document.getElementById('trainSplit').addEventListener('change', () => TrainingModule.updateDays());
             document.getElementById('btn-generate-training').addEventListener('click', () => TrainingModule.generate());
-            document.getElementById('btn-start-exec').addEventListener('click', () => ExecutorModule.start());
+            document.getElementById('btn-start-exec').addEventListener('click', () => { if(isPro()) ExecutorModule.start(); else triggerPaywall('启动执行器需要授权'); });
             document.getElementById('btn-finish-set').addEventListener('click', () => ExecutorModule.finishSet());
             document.getElementById('btn-exit-exec').addEventListener('click', () => ExecutorModule.exit());
             
@@ -1327,7 +1402,6 @@
             const savedPlan = StorageSvc.load('userMealPlan');
             if(savedPlan && savedPlan.plan && savedPlan.plan.length > 0) {
                 AppState.planner.plan = savedPlan.plan;
-                
                 AppState.planner.goal = savedPlan.goal || 'cut';
                 const goalSelect = document.getElementById('goal');
                 if (goalSelect) goalSelect.value = AppState.planner.goal;
@@ -1340,76 +1414,5 @@
             }
         });
     </script>
-    <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script>
-
-    <script>
-        async function activatePro(btnElement) {
-            const inputCode = document.getElementById('activation-code-input').value.trim();
-            if(!inputCode) return alert("请输入激活码！");
-            
-            // ⚠️ 注意：一定要把下面这行网址，换成你 Cloudflare Worker 的真实网址！
-            const API_URL = "https://xf-auth-api.2462795033.workers.dev/";
-            
-            try {
-                btnElement.innerHTML = "验证中...";
-                
-                // 1. 获取设备唯一指纹
-                const fp = await FingerprintJS.load();
-                const result = await fp.get();
-                const deviceId = result.visitorId; 
-
-                // 2. 发送给 Cloudflare 查验
-                const res = await fetch(API_URL, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ code: inputCode, deviceId: deviceId })
-                });
-                
-                const data = await res.json();
-                
-                if (data.success) {
-                    alert(data.msg);
-                    // 激活成功，本地打上永久标记
-                    localStorage.setItem('xf_is_pro', 'true');
-                    // 刷新页面，让所有锁定的功能开放
-                    location.reload(); 
-                } else {
-                    alert(data.msg); // 报错：已被绑定或无效
-                    btnElement.innerHTML = "🚀 立即永久激活";
-                }
-            } catch(e) {
-                alert("网络请求失败，请检查网络或稍后再试");
-                btnElement.innerHTML = "🚀 立即永久激活";
-            }
-        }
-
-        // 页面加载时检查是否已经激活过 PRO
-        document.addEventListener('DOMContentLoaded', () => {
-            if(localStorage.getItem('xf_is_pro') === 'true') {
-                // 如果已经激活，去掉所有锁图标
-                document.querySelectorAll('.btn-locked').forEach(btn => {
-                    btn.classList.remove('btn-locked');
-                    btn.innerHTML = btn.innerHTML.replace('🔒', '✅').replace('PRO版', '已解锁').replace('PRO版专属', '已解锁');
-                    
-                    // 重点：移除弹窗拦截，恢复按钮原本的功能（你需要在这里把按钮原始的功能加回来）
-                    btn.onclick = () => {
-                        alert("功能已解锁！(这里可以接回你原始的函数，比如：MealHelpers.generateCanteen() 等)");
-                    };
-                });
-
-                // 把底部的激活框隐藏掉，告诉用户已经激活
-                const authBox = document.getElementById('activation-code-input')?.parentElement;
-                if(authBox) {
-                    authBox.innerHTML = '<p class="text-green-600 font-bold text-lg">✅ PRO 版永久授权已激活</p><p class="text-xs text-gray-500 mt-1">当前设备已绑定</p>';
-                }
-            }
-        });
-    </script>
-    ```
-
-### 贴完之后的检查步骤：
-1. 贴进去之后，检查一下代码里的 `API_URL` 有没有换成你在 Cloudflare 里复制的那个真实链接。
-2. 点击 GitHub 绿色的 **Commit changes** 保存。
-3. 等一两分钟刷新你的网页，随便输个错的激活码测试一下，如果弹出“网络请求失败”或者“激活码无效”，就说明前端代码已经成功跑起来，并且去敲你后端的门了！
 </body>
 </html>
