@@ -1314,153 +1314,117 @@
             }
         };
 
-// --- 1. 将方法暴露给全局 ---
+// --- 1. 全局方法 ---
 window.deleteRecord = function(date) { TrainingModule.deleteDateRecord(date); };
 window.regenerateSingleMeal = function(index) { MealHelpers.regenerateSingleMeal(index); };
 window.regenerateSingleDish = function(mealIndex, dishIndex) { MealHelpers.regenerateSingleDish(mealIndex, dishIndex); };
 
-// --- 2. 主程序入口 ---
+// --- 2. 主入口 ---
 document.addEventListener('DOMContentLoaded', function() {
-    
-    // ================= 激活码校验模块 =================
-    var AuthModule = {
-        API_URL: "https://xf-auth-api.2462795033.workers.dev",
-        overlay: document.getElementById('activation-overlay'),
-        deviceId: "",
+    var API_URL = "https://xf-auth-api.2462795033.workers.dev";
+    var overlay = document.getElementById('activation-overlay');
+    var deviceId = "";
 
-        // 使用标准的函数写法，解决 Unexpected token '=' 报错
-        init: async function() {
-            if (localStorage.getItem('xf_pro_activated') === 'true') {
-                if (this.overlay) this.overlay.style.display = 'none'; 
-                return;
-            }
-            try {
-                var fpPromise = FingerprintJS.load();
-                var fp = await fpPromise;
-                var result = await fp.get();
-                this.deviceId = result.visitorId;
-            } catch (err) {
-                var fallbackId = localStorage.getItem('xf_fallback_id') || ("fallback-" + Math.random().toString(36).substring(2, 15));
-                localStorage.setItem('xf_fallback_id', fallbackId);
-                this.deviceId = fallbackId;
-            }
-            var btn = document.getElementById('btn-activate');
-            var _this = this; // 锁定 this 指向
-            if (btn) {
-                btn.addEventListener('click', function() {
-                    _this.verifyCode();
-                });
-            }
-        },
-
-        verifyCode: async function() {
-            var btn = document.getElementById('btn-activate');
-            var errorMsg = document.getElementById('activation-error');
-            var codeInput = document.getElementById('activation-code-input').value.trim();
-            
-            if (!codeInput) {
-                errorMsg.innerText = "请输入激活码"; 
-                errorMsg.classList.remove('hidden');
-                return;
-            }
-            
-            btn.innerText = "正在验证..."; 
-            btn.disabled = true; 
-            errorMsg.classList.add('hidden');
-            
-            try {
-                var response = await fetch(this.API_URL, {
-                    method: "POST", 
-                    headers: { "Content-Type": "application/json" },
-                    body: JSON.stringify({ code: codeInput, deviceId: this.deviceId })
-                });
-                var resData = await response.json();
-                if (resData.code === 200) {
-                    localStorage.setItem('xf_pro_activated', 'true');
-                    alert("🎉 " + resData.msg);
-                    if (this.overlay) this.overlay.style.display = 'none'; 
-                } else {
-                    errorMsg.innerText = resData.msg; 
-                    errorMsg.classList.remove('hidden');
-                }
-            } catch (error) {
-                errorMsg.innerText = "网络请求失败"; 
-                errorMsg.classList.remove('hidden');
-            } finally {
-                btn.innerText = "立即绑定本设备"; 
-                btn.disabled = false;
-            }
+    // 激活校验函数
+    function startAuth() {
+        if (localStorage.getItem('xf_pro_activated') === 'true') {
+            if (overlay) overlay.style.display = 'none';
+            return;
         }
-    };
 
-    // 执行验证初始化
-    AuthModule.init();
-
-    // ================= 下面是你原本的业务逻辑事件绑定 =================
-    // 确保这些 ID 在你的 HTML 里都存在
-    var mainNav = document.getElementById('main-nav');
-    if (mainNav) {
-        mainNav.addEventListener('click', function(e) { 
-            if (e.target.dataset.tab) UI.switchTab(e.target.dataset.tab); 
+        // 获取指纹
+        FingerprintJS.load().then(function(fp) {
+            return fp.get();
+        }).then(function(result) {
+            deviceId = result.visitorId;
+        })['catch'](function(err) {
+            deviceId = localStorage.getItem('xf_fallback_id') || ("fb-" + Math.random().toString(36).slice(2));
+            localStorage.setItem('xf_fallback_id', deviceId);
         });
+
+        var btn = document.getElementById('btn-activate');
+        if (btn) {
+            btn.onclick = function() {
+                var codeInput = document.getElementById('activation-code-input').value.trim();
+                var errorMsg = document.getElementById('activation-error');
+                if (!codeInput) {
+                    errorMsg.innerText = "请输入激活码";
+                    errorMsg.classList.remove('hidden');
+                    return;
+                }
+                btn.innerText = "正在验证...";
+                btn.disabled = true;
+                
+                fetch(API_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify({ code: codeInput, deviceId: deviceId })
+                }).then(function(r) { return r.json(); })
+                .then(function(res) {
+                    if (res.code === 200) {
+                        localStorage.setItem('xf_pro_activated', 'true');
+                        alert("🎉 " + res.msg);
+                        if (overlay) overlay.style.display = 'none';
+                    } else {
+                        errorMsg.innerText = res.msg;
+                        errorMsg.classList.remove('hidden');
+                    }
+                })['catch'](function() {
+                    errorMsg.innerText = "网络请求失败";
+                    errorMsg.classList.remove('hidden');
+                }).finally(function() {
+                    btn.innerText = "立即绑定本设备";
+                    btn.disabled = false;
+                });
+            };
+        }
     }
 
-    var btnGenPlan = document.getElementById('btn-generate-plan');
-    if (btnGenPlan) btnGenPlan.addEventListener('click', function() { PlannerModule.generate(); });
+    // 执行
+    startAuth();
 
-    // 饮食系统
-    var ids = ['btn-show-tracker', 'btn-show-canteen', 'btn-add-snack', 'btn-clear-tracker', 'btn-save-tracker', 'btn-regenerate-canteen'];
-    ids.forEach(function(id) {
+    // --- 以下是原本的业务逻辑绑定 (修正了 ID 检查) ---
+    var bindClick = function(id, fn) {
         var el = document.getElementById(id);
-        if (el) {
-            el.addEventListener('click', function() {
-                if (id === 'btn-show-tracker') MealHelpers.initTracker();
-                if (id === 'btn-show-canteen') MealHelpers.generateCanteen();
-                if (id === 'btn-add-snack') MealHelpers.addSnack();
-                if (id === 'btn-clear-tracker') MealHelpers.clearTracker();
-                if (id === 'btn-save-tracker') MealHelpers.saveTracker();
-                if (id === 'btn-regenerate-canteen') MealHelpers.generateCanteen();
-            });
-        }
+        if (el) el.addEventListener('click', fn);
+    };
+
+    bindClick('main-nav', function(e) { if (e.target.dataset.tab) UI.switchTab(e.target.dataset.tab); });
+    bindClick('btn-generate-plan', function() { PlannerModule.generate(); });
+    bindClick('btn-show-tracker', function() { MealHelpers.initTracker(); });
+    bindClick('btn-show-canteen', function() { MealHelpers.generateCanteen(); });
+    bindClick('btn-add-snack', function() { MealHelpers.addSnack(); });
+    bindClick('btn-clear-tracker', function() { MealHelpers.clearTracker(); });
+    bindClick('btn-save-tracker', function() { MealHelpers.saveTracker(); });
+    bindClick('btn-regenerate-canteen', function() { MealHelpers.generateCanteen(); });
+    
+    var ts = document.getElementById('trainSplit');
+    if (ts) ts.onchange = function() { TrainingModule.updateDays(); };
+
+    bindClick('btn-generate-training', function() { TrainingModule.generate(); });
+    bindClick('btn-start-exec', function() { ExecutorModule.start(); });
+    bindClick('btn-finish-set', function() { ExecutorModule.finishSet(); });
+    bindClick('btn-exit-exec', function() { ExecutorModule.exit(); });
+    bindClick('btn-clear-history', function() { TrainingModule.clearAllHistory(); });
+    
+    bindClick('btn-copy-record', function() {
+        navigator.clipboard.writeText(document.getElementById('record-content').innerText).then(function() {
+            alert('复制成功！');
+        });
     });
 
-    // 训练系统
-    var trainSplit = document.getElementById('trainSplit');
-    if (trainSplit) trainSplit.addEventListener('change', function() { TrainingModule.updateDays(); });
-
-    var trainIds = {
-        'btn-generate-training': function() { TrainingModule.generate(); },
-        'btn-start-exec': function() { ExecutorModule.start(); },
-        'btn-finish-set': function() { ExecutorModule.finishSet(); },
-        'btn-exit-exec': function() { ExecutorModule.exit(); },
-        'btn-clear-history': function() { TrainingModule.clearAllHistory(); }
-    };
-    for (var k in trainIds) {
-        var el = document.getElementById(k);
-        if (el) el.addEventListener('click', trainIds[k]);
-    }
-
-    var btnCopy = document.getElementById('btn-copy-record');
-    if (btnCopy) {
-        btnCopy.addEventListener('click', function() {
-            navigator.clipboard.writeText(document.getElementById('record-content').innerText).then(function() {
-                alert('复制成功！');
-            });
-        });
-    }
-
-    // 页面逻辑初始化
+    // 初始化页面
     TrainingModule.updateDays();
-    var savedPlan = StorageSvc.load('userMealPlan');
-    if(savedPlan && savedPlan.plan && savedPlan.plan.length > 0) {
-        AppState.planner.plan = savedPlan.plan;
-        AppState.planner.goal = savedPlan.goal || 'cut';
-        var goalSelect = document.getElementById('goal');
-        if (goalSelect) goalSelect.value = AppState.planner.goal;
-        AppState.planner.totalCal = savedPlan.plan.reduce(function(sum, m) { return sum + (m.carbs * 4 + m.protein * 4 + m.fat * 9); }, 0);
-        AppState.planner.totalCarb = savedPlan.plan.reduce(function(sum, m) { return sum + m.carbs; }, 0);
-        AppState.planner.totalPro = savedPlan.plan.reduce(function(sum, m) { return sum + m.protein; }, 0);
-        AppState.planner.totalFat = savedPlan.plan.reduce(function(sum, m) { return sum + m.fat; }, 0);
+    var saved = StorageSvc.load('userMealPlan');
+    if(saved && saved.plan && saved.plan.length > 0) {
+        AppState.planner.plan = saved.plan;
+        AppState.planner.goal = saved.goal || 'cut';
+        var gs = document.getElementById('goal');
+        if (gs) gs.value = AppState.planner.goal;
+        AppState.planner.totalCal = saved.plan.reduce(function(, m) { return  + (m.carbs * 4 + m.protein * 4 + m.fat * 9); }, 0);
+        AppState.planner.totalCarb = saved.plan.reduce(function(, m) { return  + m.carbs; }, 0);
+        AppState.planner.totalPro = saved.plan.reduce(function(, m) { return  + m.protein; }, 0);
+        AppState.planner.totalFat = saved.plan.reduce(function(, m) { return  + m.fat; }, 0);
         UI.renderPlannerResult();
     }
 });
