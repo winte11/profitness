@@ -14,11 +14,9 @@
         .bg-brand:active { transform: translateY(0); }
         .border-brand { border-color: #2563eb; }
         
-        /* 移动端适配：缩小卡片内边距以节省屏幕空间 */
         .card { background-color: white; border-radius: 1rem; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03); padding: 1.25rem; border: 1px solid #f1f5f9; }
         @media (min-width: 768px) { .card { padding: 2rem; } }
         
-        /* 移动端适配：强制16px防iOS自动缩放，调整高度 */
         select, input { border: 1px solid #e2e8f0; border-radius: 0.5rem; padding: 0.6rem 0.75rem; width: 100%; outline: none; transition: all 0.2s ease; background-color: #f8fafc; color: #1e293b; font-weight: 500; font-size: 16px !important; }
         select:focus, input:focus { border-color: #2563eb; background-color: white; box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1); }
         label { font-weight: 600; color: #475569; margin-bottom: 0.3rem; display: block; font-size: 0.875rem;}
@@ -42,7 +40,6 @@
         .badge-gray { background-color: #f1f5f9; color: #475569; }
 
         nav { backdrop-filter: blur(8px); background-color: rgba(255, 255, 255, 0.9); border-bottom: 1px solid #e2e8f0; }
-        /* 移动端适配：开启 iOS 平滑惯性滚动 */
         #main-nav { -webkit-overflow-scrolling: touch; scroll-behavior: smooth; }
         .nav-btn { cursor: pointer; padding: 1rem 1.25rem; font-weight: 600; color: #64748b; border-bottom: 3px solid transparent; transition: all 0.2s; font-size: 0.95rem; white-space: nowrap; }
         .nav-btn:hover { color: #1e293b; }
@@ -67,7 +64,6 @@
 
         .executor-container { display: flex; flex-direction: column; align-items: center; min-height: 500px; }
         
-        /* 移动端适配：调整计时器字体大小防溢出 */
         .exec-timer-display { font-size: 3.5rem; font-weight: 900; color: #0f172a; font-variant-numeric: tabular-nums; line-height: 1; letter-spacing: -0.02em; }
         @media (min-width: 768px) { .exec-timer-display { font-size: 4rem; } }
         .rest-timer-display { font-size: 2.5rem; font-weight: 900; color: #f59e0b; font-variant-numeric: tabular-nums; line-height: 1; }
@@ -95,19 +91,18 @@
         .record-card { margin-top: 2rem; animation: fadeIn 0.5s ease; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
 
-        /* 表格容器滚动顺滑 */
         .overflow-x-auto { -webkit-overflow-scrolling: touch; }
         .custom-scrollbar::-webkit-scrollbar { width: 6px; height: 6px; }
         .custom-scrollbar::-webkit-scrollbar-track { background: #f8fafc; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
         .custom-scrollbar::-webkit-scrollbar-thumb:hover { background: #94a3b8; }
 
-        /* 新增：激活遮罩平滑过渡 */
         #activation-overlay { transition: opacity 0.5s ease; }
     </style>
 </head>
 <body class="antialiased min-h-screen flex flex-col">
 
+    
     <div id="activation-overlay" class="fixed inset-0 z-[9999] bg-white flex flex-col items-center justify-center">
         <div class="p-8 max-w-sm w-full text-center">
             <h2 class="text-3xl font-black text-gray-900 mb-2">小凡健身 <span class="text-blue-600">PRO</span></h2>
@@ -387,30 +382,46 @@
                             <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2">训练时长</p>
                             <div class="exec-timer-display" id="timer-display">00:00</div>
                         </div>
-                        <div class="mb-8 text-center hidden" id="rest-timer-box">
+                        
+                        <div class="mb-8 text-center hidden w-full" id="rest-timer-box">
                             <p class="text-sm font-bold text-orange-400 uppercase tracking-widest mb-2">组间休息</p>
-                            <div class="rest-timer-display" id="rest-display">00:00</div>
+                            <div class="rest-timer-display mb-4" id="rest-display">00:00</div>
+                            <div class="flex justify-center gap-4">
+                                <button onclick="window.adjustRest(-15)" class="px-4 py-2 bg-orange-50 text-orange-600 rounded-lg font-bold text-sm hover:bg-orange-100 transition-colors shadow-sm">-15秒</button>
+                                <button onclick="window.adjustRest(15)" class="px-4 py-2 bg-orange-50 text-orange-600 rounded-lg font-bold text-sm hover:bg-orange-100 transition-colors shadow-sm">+15秒</button>
+                            </div>
                         </div>
+
                         <div class="w-full max-w-md mb-8">
                             <p class="text-sm font-bold text-gray-400 uppercase tracking-widest mb-2 text-center">当前动作</p>
                             <input type="text" id="exec-current-exercise" class="exec-input w-full text-center text-2xl font-black text-gray-900" readonly />
-                            <div class="mt-6 flex items-center justify-center gap-4 flex-wrap">
+                            
+                            <p id="exec-history-hint" class="text-center text-xs font-bold text-blue-500 mt-2 h-4"></p>
+
+                            <div class="mt-4 flex items-center justify-center gap-4 flex-wrap">
                                 <div>
                                     <label class="text-xs font-bold text-gray-500 block text-center">重量(kg)</label>
-                                    <input type="number" id="exec-weight-input" class="weight-input border border-gray-200 rounded-lg mt-1" value="0">
+                                    <input type="number" id="exec-weight-input" class="weight-input border border-gray-200 rounded-lg mt-1" value="0" min="0" step="0.5">
+                                </div>
+                                <div>
+                                    <label class="text-xs font-bold text-gray-500 block text-center">次数(次)</label>
+                                    <input type="number" id="exec-reps-input" class="weight-input border border-gray-200 rounded-lg mt-1" value="12" min="1" step="1">
                                 </div>
                                 <div>
                                     <label class="text-xs font-bold text-gray-500 block text-center">休息(秒)</label>
-                                    <input type="number" id="exec-rest-input" class="rest-input border border-gray-200 rounded-lg mt-1" value="60">
+                                    <input type="number" id="exec-rest-input" class="rest-input border border-gray-200 rounded-lg mt-1" value="60" min="10" step="5">
                                 </div>
                             </div>
                         </div>
+
                         <div class="w-full max-w-2xl bg-gray-50 rounded-xl border border-gray-200 overflow-hidden mb-8">
                             <div class="p-4 border-b border-gray-200 bg-white"><h3 class="font-bold text-gray-900">今日组次清单</h3></div>
                             <div id="set-list-container" class="max-h-64 overflow-y-auto custom-scrollbar"></div>
                         </div>
-                        <div class="flex gap-4 w-full justify-center max-w-md">
-                            <button id="btn-exit-exec" class="exec-btn bg-gray-100 text-gray-600 hover:bg-gray-200 flex-1 md:flex-none">退出</button>
+                        
+                        <div class="flex gap-3 w-full justify-center max-w-md">
+                            <button id="btn-exit-exec" class="exec-btn bg-gray-100 text-gray-600 hover:bg-gray-200 flex-1 md:flex-none text-sm">退出</button>
+                            <button id="btn-undo-set" class="exec-btn bg-gray-100 text-gray-600 hover:bg-gray-200 flex-1 md:flex-none text-sm hidden">撤销</button>
                             <button id="btn-finish-set" class="exec-btn exec-btn-success flex-[2]">完成这一组</button>
                         </div>
                     </div>
@@ -669,7 +680,6 @@
         };
 
         const AppState = {
-            // 新增：全局设备 ID 用于激活绑定
             deviceId: "",
             planner: {
                 goal: 'cut', gender: 'male', activity: '1.2', weight: null, height: null, age: null, workoutTime: 'evening_after',
@@ -692,47 +702,32 @@
             load(key) { try { const d = localStorage.getItem(key); return d ? JSON.parse(d) : null; } catch (e) { return null; } }
         };
 
-        // 新增：核心激活验证模块
         const AuthModule = {
-            API_URL: "https://xf-auth-api.2462795033.workers.dev",
-            
+            API_URL: "https://tsnfy1bkmw.sealosbja.site/verifyCode",
             init: function() {
-                // 如果已经激活，直接移除遮罩
                 if (localStorage.getItem('xf_pro_activated') === 'true') {
                     document.getElementById('activation-overlay').style.display = 'none';
                     return;
                 }
-
-                // 生成指纹
                 FingerprintJS.load().then(fp => fp.get()).then(result => {
                     AppState.deviceId = result.visitorId;
                 }).catch(() => {
                     AppState.deviceId = localStorage.getItem('xf_fallback_id') || "fb-" + Math.random().toString(36).substring(2);
                     localStorage.setItem('xf_fallback_id', AppState.deviceId);
                 });
-
-                // 绑定按钮
                 document.getElementById('btn-activate').addEventListener('click', () => this.verify());
             },
-
             verify: function() {
                 const btn = document.getElementById('btn-activate');
                 const err = document.getElementById('activation-error');
                 const code = document.getElementById('activation-code-input').value.trim();
 
-                if (!code) {
-                    err.innerText = "请输入激活码";
-                    err.classList.remove('hidden');
-                    return;
-                }
+                if (!code) { err.innerText = "请输入激活码"; err.classList.remove('hidden'); return; }
 
-                btn.innerText = "校验中...";
-                btn.disabled = true;
-                err.classList.add('hidden');
+                btn.innerText = "校验中..."; btn.disabled = true; err.classList.add('hidden');
 
                 fetch(this.API_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "application/json" },
+                    method: "POST", headers: { "Content-Type": "application/json" },
                     body: JSON.stringify({ code: code, deviceId: AppState.deviceId })
                 })
                 .then(res => res.json())
@@ -742,19 +737,10 @@
                         alert("🎉 解锁成功！欢迎使用 PRO 版");
                         document.getElementById('activation-overlay').style.opacity = '0';
                         setTimeout(() => { document.getElementById('activation-overlay').style.display = 'none'; }, 500);
-                    } else {
-                        err.innerText = data.msg;
-                        err.classList.remove('hidden');
-                    }
+                    } else { err.innerText = data.msg; err.classList.remove('hidden'); }
                 })
-                .catch(() => {
-                    err.innerText = "连接服务器失败，请稍后重试";
-                    err.classList.remove('hidden');
-                })
-                .finally(() => {
-                    btn.innerText = "立即绑定并解锁";
-                    btn.disabled = false;
-                });
+                .catch(() => { err.innerText = "连接服务器失败，请稍后重试"; err.classList.remove('hidden'); })
+                .finally(() => { btn.innerText = "立即绑定并解锁"; btn.disabled = false; });
             }
         };
 
@@ -1023,12 +1009,14 @@
             }
         };
 
+        let wakeLock = null;
+        
         const ExecutorModule = {
-            start() {
+            async start() {
                 if(!AppState.training.currentPlan.length) return alert('先生成训练计划！');
                 let flatList = [];
                 AppState.training.currentPlan.forEach((ex, idx) => {
-                    for(let i=1; i<=ex.setsNum; i++) flatList.push({ id: `${idx}-${i}`, name: ex.name, part: ex.part, setNum: i, isCompleted: false, weight: 0 });
+                    for(let i=1; i<=ex.setsNum; i++) flatList.push({ id: `${idx}-${i}`, name: ex.name, part: ex.part, setNum: i, isCompleted: false, weight: 0, reps: 0 });
                 });
                 AppState.exec = { isActive: true, currentGlobalSetIndex: 0, totalSets: flatList.length, timer: null, elapsedSeconds: 0, flatSetList: flatList, restSeconds: 60, restTimer: null, isResting: false, restRemaining: 0 };
                 
@@ -1036,6 +1024,8 @@
                 document.getElementById('executor-area').classList.remove('hidden');
                 document.getElementById('workout-record').classList.add('hidden');
                 document.getElementById('exec-workout-state').classList.remove('hidden');
+                
+                try { if ('wakeLock' in navigator) { wakeLock = await navigator.wakeLock.request('screen'); } } catch (err) {}
                 
                 this.startMainTimer();
                 UI.renderExecutor();
@@ -1045,26 +1035,82 @@
                 AppState.exec.restSeconds = parseInt(document.getElementById('exec-rest-input').value) || 60;
                 AppState.exec.restRemaining = AppState.exec.restSeconds; AppState.exec.isResting = true;
                 UI.renderExecutor();
-                AppState.exec.restTimer = setInterval(() => { AppState.exec.restRemaining--; UI.updateRestTime(); if(AppState.exec.restRemaining <= 0) this.endRest(); }, 1000);
+                AppState.exec.restTimer = setInterval(() => { 
+                    AppState.exec.restRemaining--; 
+                    UI.updateRestTime(); 
+                    if(AppState.exec.restRemaining <= 0) this.endRest(); 
+                }, 1000);
             },
             endRest() { clearInterval(AppState.exec.restTimer); AppState.exec.isResting = false; UI.renderExecutor(); },
+            
+            adjustRest(seconds) {
+                if (!AppState.exec.isResting) return;
+                AppState.exec.restRemaining += seconds;
+                if (AppState.exec.restRemaining < 0) AppState.exec.restRemaining = 0;
+                UI.updateRestTime();
+            },
+
+            handleMainAction() {
+                if (AppState.exec.isResting) {
+                    this.endRest();
+                } else {
+                    this.finishSet();
+                }
+            },
+
             finishSet() {
-                if(AppState.exec.isResting) return;
                 if (AppState.exec.currentGlobalSetIndex >= AppState.exec.totalSets) return this.finalize();
                 
                 const curr = AppState.exec.flatSetList[AppState.exec.currentGlobalSetIndex];
                 curr.weight = parseFloat(document.getElementById('exec-weight-input').value) || 0;
+                curr.reps = parseInt(document.getElementById('exec-reps-input').value) || 0;
                 curr.isCompleted = true;
                 
-                AppState.training.history.push({ exercise: curr.name, part: curr.part, weight: curr.weight, date: new Date().toLocaleDateString() });
+                AppState.training.history.push({ exercise: curr.name, part: curr.part, weight: curr.weight, reps: curr.reps, date: new Date().toLocaleDateString() });
                 
                 AppState.exec.currentGlobalSetIndex++;
                 if(AppState.exec.currentGlobalSetIndex < AppState.exec.totalSets) this.startRestTimer();
                 else this.finalize();
                 UI.renderExecutor();
             },
+
+            undoSet() {
+                if (AppState.exec.currentGlobalSetIndex === 0) return;
+                if (AppState.exec.isResting) { clearInterval(AppState.exec.restTimer); AppState.exec.isResting = false; }
+                
+                AppState.exec.currentGlobalSetIndex--;
+                AppState.exec.flatSetList[AppState.exec.currentGlobalSetIndex].isCompleted = false;
+                AppState.training.history.pop();
+                UI.renderExecutor();
+            },
+
+            getHistoryHint(exerciseName) {
+                const history = StorageSvc.load('workoutHistory') || [];
+                const related = history.filter(item => item.exercise === exerciseName);
+                if (related.length === 0) return '💡 暂无历史数据，先用轻重量热身';
+                const maxWeight = Math.max(...related.map(r => r.weight));
+                return `💡 历史极限：${maxWeight} kg`;
+            },
+
+            getSuggestedData(exerciseName) {
+                const sessionSets = AppState.exec.flatSetList.filter(s => s.name === exerciseName && s.isCompleted);
+                if (sessionSets.length > 0) {
+                    const last = sessionSets[sessionSets.length - 1];
+                    return { weight: last.weight, reps: last.reps };
+                }
+                const history = StorageSvc.load('workoutHistory') || [];
+                const related = history.filter(item => item.exercise === exerciseName);
+                if (related.length > 0) {
+                    const last = related[related.length - 1];
+                    return { weight: last.weight || 0, reps: last.reps || 12 };
+                }
+                return { weight: 0, reps: 12 };
+            },
+
             finalize() {
                 clearInterval(AppState.exec.timer); clearInterval(AppState.exec.restTimer);
+                if (wakeLock !== null) { wakeLock.release().then(() => { wakeLock = null; }); }
+                
                 const oldHistory = StorageSvc.load('workoutHistory') || [];
                 StorageSvc.save('workoutHistory', [...oldHistory, ...AppState.training.history]);
                 UI.renderWorkoutRecord();
@@ -1072,7 +1118,12 @@
                 document.getElementById('exec-workout-state').classList.add('hidden');
                 document.getElementById('workout-record').classList.remove('hidden');
             },
-            exit() { clearInterval(AppState.exec.timer); clearInterval(AppState.exec.restTimer); document.getElementById('executor-area').classList.add('hidden'); document.getElementById('plan-generator-area').classList.remove('hidden'); }
+            exit() { 
+                clearInterval(AppState.exec.timer); clearInterval(AppState.exec.restTimer); 
+                if (wakeLock !== null) { wakeLock.release().then(() => { wakeLock = null; }); }
+                document.getElementById('executor-area').classList.add('hidden'); 
+                document.getElementById('plan-generator-area').classList.remove('hidden'); 
+            }
         };
 
         const UI = {
@@ -1229,15 +1280,25 @@
                 document.getElementById('exec-set-counter').innerText = `${s.currentGlobalSetIndex}/${s.totalSets}`;
                 document.getElementById('exec-progress-text').innerText = s.currentGlobalSetIndex >= s.totalSets ? '全部完成' : `进行中: ${s.flatSetList[s.currentGlobalSetIndex]?.part}`;
                 
+                const undoBtn = document.getElementById('btn-undo-set');
+                if (s.currentGlobalSetIndex > 0) undoBtn.classList.remove('hidden');
+                else undoBtn.classList.add('hidden');
+
+                const btn = document.getElementById('btn-finish-set');
+
                 if (s.isResting) {
                     document.getElementById('rest-timer-box').classList.remove('hidden');
-                    const btn = document.getElementById('btn-finish-set');
                     btn.className = 'exec-btn exec-btn-rest flex-[2]'; btn.innerHTML = `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"></path></svg>跳过休息`;
                 } else {
                     document.getElementById('rest-timer-box').classList.add('hidden');
                     const curr = s.flatSetList[s.currentGlobalSetIndex];
-                    if(curr) document.getElementById('exec-current-exercise').value = curr.name;
-                    const btn = document.getElementById('btn-finish-set');
+                    if(curr) {
+                        document.getElementById('exec-current-exercise').value = curr.name;
+                        document.getElementById('exec-history-hint').innerText = ExecutorModule.getHistoryHint(curr.name);
+                        const sugg = ExecutorModule.getSuggestedData(curr.name);
+                        document.getElementById('exec-weight-input').value = sugg.weight;
+                        document.getElementById('exec-reps-input').value = sugg.reps;
+                    }
                     btn.className = 'exec-btn exec-btn-success flex-[2]'; btn.innerHTML = s.currentGlobalSetIndex >= s.totalSets ? '查看记录' : `<svg class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>完成这一组`;
                 }
 
@@ -1250,7 +1311,7 @@
                     }
                     container.innerHTML += `<div id="set-item-${index}" class="set-item ${item.isCompleted ? 'completed' : ''} ${index === s.currentGlobalSetIndex && !item.isCompleted && !s.isResting ? 'active' : ''}">
                         <div class="flex items-center gap-3"><div class="check-circle">${item.isCompleted ? '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M5 13l4 4L19 7"></path></svg>' : ''}</div><div><p class="font-bold text-gray-900 set-text">${item.name}</p><p class="text-xs text-gray-500">第 ${item.setNum} 组</p></div></div>
-                        ${item.isCompleted && item.weight > 0 ? `<span class="text-sm font-bold text-gray-400">${item.weight}kg</span>` : ''}
+                        ${item.isCompleted && item.weight > 0 ? `<span class="text-sm font-bold text-gray-400">${item.weight}kg x ${item.reps}次</span>` : ''}
                     </div>`;
                 });
                 
@@ -1269,11 +1330,14 @@
                 const todayRecords = AppState.training.history.filter(item=>item.date === new Date().toLocaleDateString());
                 const displayMap = {};
                 todayRecords.forEach(r => {
-                    if(!displayMap[r.exercise]) displayMap[r.exercise] = { sets: 0, maxW: 0 };
+                    if(!displayMap[r.exercise]) displayMap[r.exercise] = { sets: 0, maxW: 0, maxReps: 0 };
                     displayMap[r.exercise].sets++;
-                    if(r.weight > displayMap[r.exercise].maxW) displayMap[r.exercise].maxW = r.weight;
+                    if(r.weight >= displayMap[r.exercise].maxW) {
+                        displayMap[r.exercise].maxW = r.weight;
+                        displayMap[r.exercise].maxReps = r.reps || 0;
+                    }
                 });
-                for(const [name, data] of Object.entries(displayMap)) container.innerHTML += `<div class="p-3 bg-gray-50 rounded flex justify-between"><span class="font-medium text-gray-800">${name}</span><span class="text-gray-500 font-bold">${data.sets}组 / 极限 ${data.maxW}kg</span></div>`;
+                for(const [name, data] of Object.entries(displayMap)) container.innerHTML += `<div class="p-3 bg-gray-50 rounded flex justify-between"><span class="font-medium text-gray-800">${name}</span><span class="text-gray-500 font-bold">${data.sets}组 / 极限 ${data.maxW}kg x ${data.maxReps}次</span></div>`;
             },
             
             renderHistoryStats() {
@@ -1379,13 +1443,12 @@
             }
         };
 
-        // 将方法暴露给全局，供动态生成的 HTML 内联 onclick 调用
         window.deleteRecord = function(date) { TrainingModule.deleteDateRecord(date); };
         window.regenerateSingleMeal = function(index) { MealHelpers.regenerateSingleMeal(index); };
         window.regenerateSingleDish = function(mealIndex, dishIndex) { MealHelpers.regenerateSingleDish(mealIndex, dishIndex); };
+        window.adjustRest = function(sec) { ExecutorModule.adjustRest(sec); };
 
         document.addEventListener('DOMContentLoaded', () => {
-            // 新增：DOM 加载完成后第一时间初始化鉴权模块
             AuthModule.init();
 
             document.getElementById('main-nav').addEventListener('click', (e) => { if (e.target.dataset.tab) UI.switchTab(e.target.dataset.tab); });
@@ -1400,9 +1463,12 @@
             
             document.getElementById('trainSplit').addEventListener('change', () => TrainingModule.updateDays());
             document.getElementById('btn-generate-training').addEventListener('click', () => TrainingModule.generate());
+            
             document.getElementById('btn-start-exec').addEventListener('click', () => ExecutorModule.start());
-            document.getElementById('btn-finish-set').addEventListener('click', () => ExecutorModule.finishSet());
+            // 核心修复：单一入口处理按钮点击，避免事件冲突
+            document.getElementById('btn-finish-set').addEventListener('click', () => ExecutorModule.handleMainAction());
             document.getElementById('btn-exit-exec').addEventListener('click', () => ExecutorModule.exit());
+            document.getElementById('btn-undo-set').addEventListener('click', () => ExecutorModule.undoSet());
             
             document.getElementById('btn-clear-history').addEventListener('click', () => TrainingModule.clearAllHistory());
             document.getElementById('btn-copy-record').addEventListener('click', () => {
